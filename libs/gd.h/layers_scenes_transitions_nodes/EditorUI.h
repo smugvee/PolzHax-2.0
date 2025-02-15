@@ -219,6 +219,16 @@ namespace gd {
 		int m_playerColor; // 0x210
 		bool m_isBlending; // 0x214
 		float m_opacity; // 0x218
+
+		auto getPickerColor() { return *reinterpret_cast<cocos2d::ccColor3B*>(reinterpret_cast<uintptr_t>(m_colorPicker) + 0x144); }
+		void setPickerColor(cocos2d::ccColor3B color) {
+			// fod spent like 5 hours trying to get this working on cocos-headers, so fuck it
+			const static auto address = GetProcAddress(
+				GetModuleHandleA("libExtensions.dll"),
+				"?setColorValue@CCControlColourPicker@extension@cocos2d@@UAEXABU_ccColor3B@3@@Z"
+			);
+			reinterpret_cast<void(__thiscall*)(cocos2d::extension::CCControlColourPicker*, const cocos2d::ccColor3B&)>(address)(m_colorPicker, color);
+		}
 	};
 }
 

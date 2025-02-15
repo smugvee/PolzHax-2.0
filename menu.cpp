@@ -113,12 +113,12 @@ void imgui_render() {
 
 		// Bypass
 
-		if (setting().onCharFilter) {
-			sequence_patch((uint32_t)gd::base + 0x1e3d7, { 0x90, 0x75 });
-		}
-		else {
-			sequence_patch((uint32_t)gd::base + 0x1e3d7, { 0x75, 0x04 });
-		}
+		//if (setting().onCharFilter) {
+		//	sequence_patch((uint32_t)gd::base + 0x1e3d7, { 0x90, 0x75 });
+		//}
+		//else {
+		//	sequence_patch((uint32_t)gd::base + 0x1e3d7, { 0x75, 0x04 });
+		//}
 
 		if (setting().onTheVault) {
 			sequence_patch((uint32_t)gd::base + 0x1567fb, { 0xe9, 0x72, 0x01, 0x00, 0x00, 0x90 });
@@ -152,12 +152,12 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x2a57b, { 0x76, 0x07 });
 		}
 
-		if (setting().onTextLength) {
-			sequence_patch((uint32_t)gd::base + 0x1e40e, { 0xeb, 0x04 });
-		}
-		else {
-			sequence_patch((uint32_t)gd::base + 0x1e40e, { 0x7c, 0x04 });
-		}
+		//if (setting().onTextLength) {
+		//	sequence_patch((uint32_t)gd::base + 0x1e40e, { 0xeb, 0x04 });
+		//}
+		//else {
+		//	sequence_patch((uint32_t)gd::base + 0x1e40e, { 0x7c, 0x04 });
+		//}
 
 		// Cosmetic
 
@@ -486,6 +486,7 @@ void imgui_render() {
 				float creator_xPos;
 				float level_xPos;
 				float universal_xPos;
+				float addingSpeedhackY;
 
 				if (ImGui::Begin("PolzHax", nullptr)) {
 					ImGui::SetWindowPos({ 5,5 });
@@ -511,20 +512,23 @@ void imgui_render() {
 					ImGui::SetWindowPos({ creator_xPos, 5 });
 					level_xPos = creator_xPos + ImGui::GetWindowWidth() + 5;
 				}
+
+				if (ImGui::Begin("Universal", nullptr)) {
+					ImGui::SetWindowPos({ level_xPos, 5 });
+					universal_xPos = level_xPos + ImGui::GetWindowWidth() + 5;
+					addingSpeedhackY = ImGui::GetWindowHeight() + 10;
+				}
+
+				if (ImGui::Begin("Speedhack", nullptr)) {
+					ImGui::SetWindowPos({ level_xPos, addingSpeedhackY });
+				}
 			}
 		}
 
 		if (ImGui::Begin("Bypass", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
 			ImGui::SetWindowFontScale(setting().UISize);
 
-			if (ImGui::Checkbox("Character Filter", &setting().onCharFilter)) {
-				if (setting().onCharFilter) {
-					sequence_patch((uint32_t)gd::base + 0x1e3d7, { 0x90, 0x90 });
-				}
-				else {
-					sequence_patch((uint32_t)gd::base + 0x1e3d7, { 0x75, 0x04 });
-				}
-			}
+			ImGui::Checkbox("Character Filter", &setting().onCharFilter);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Lets you input any character in text fields.");
 
@@ -578,14 +582,7 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Lets sliders be dragged beyond the visible limit.");
 
-			if (ImGui::Checkbox("Text Length", &setting().onTextLength)) {
-				if (setting().onTextLength) {
-					sequence_patch((uint32_t)gd::base + 0x1e40e, { 0xeb, 0x04 });
-				}
-				else {
-					sequence_patch((uint32_t)gd::base + 0x1e40e, { 0x7c, 0x04 });
-				}
-			}
+			ImGui::Checkbox("Text Length", &setting().onTextLength);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Allows for unlimited text length in text inputs.");
 		}
@@ -1088,27 +1085,27 @@ void imgui_init() {
 	color1.x = setting().Overlaycolor[0];
 	color1.y = setting().Overlaycolor[1];
 	color1.z = setting().Overlaycolor[2];
-	color1.w = setting().Overlaycolor[3] - 0.4;
+	color1.w = setting().Overlaycolor[3] - 0.4f;
 
 	color2.x = setting().Overlaycolor[0];
 	color2.y = setting().Overlaycolor[1];
 	color2.z = setting().Overlaycolor[2];
-	color2.w = 1;
+	color2.w = 1.f;
 
-	color3.x = setting().Overlaycolor[0] + 0.3;
-	color3.y = setting().Overlaycolor[1] + 0.3;
-	color3.z = setting().Overlaycolor[2] + 0.3;
-	color3.w = setting().Overlaycolor[3] + 0.3;
+	color3.x = setting().Overlaycolor[0] + 0.3f;
+	color3.y = setting().Overlaycolor[1] + 0.3f;
+	color3.z = setting().Overlaycolor[2] + 0.3f;
+	color3.w = setting().Overlaycolor[3] + 0.3f;
 
-	color4.x = setting().Overlaycolor[0] - 0.1;
-	color4.y = setting().Overlaycolor[1] - 0.1;
-	color4.z = setting().Overlaycolor[2] - 0.1;
-	color4.w = setting().Overlaycolor[3] - 0.1;
+	color4.x = setting().Overlaycolor[0] - 0.1f;
+	color4.y = setting().Overlaycolor[1] - 0.1f;
+	color4.z = setting().Overlaycolor[2] - 0.1f;
+	color4.w = setting().Overlaycolor[3] - 0.1f;
 
-	color5.x = setting().Overlaycolor[0] + 0.1;
-	color5.y = setting().Overlaycolor[1] + 0.1;
-	color5.z = setting().Overlaycolor[2] + 0.1;
-	color5.w = setting().Overlaycolor[3] + 0.1;
+	color5.x = setting().Overlaycolor[0] + 0.1f;
+	color5.y = setting().Overlaycolor[1] + 0.1f;
+	color5.z = setting().Overlaycolor[2] + 0.1f;
+	color5.w = setting().Overlaycolor[3] + 0.1f;
 
 	color6.x = setting().BGcolor[0];
 	color6.y = setting().BGcolor[1];
@@ -1122,11 +1119,11 @@ void imgui_init() {
 	colors[ImGuiCol_Button] = color3;
 	colors[ImGuiCol_ButtonHovered] = color1;
 	colors[ImGuiCol_ButtonActive] = color1;
-	colors[ImGuiCol_CheckMark] = ImVec4(1, 1, 1, 1);
+	colors[ImGuiCol_CheckMark] = ImVec4(1.f, 1.f, 1.f, 1.f);
 	colors[ImGuiCol_FrameBg] = color1;
 	colors[ImGuiCol_FrameBgHovered] = color3;
 	colors[ImGuiCol_FrameBgActive] = color3;
-	colors[ImGuiCol_Tab] = ImVec4(color5.x, color5.y, color5.z, color5.w - 0.2);
+	colors[ImGuiCol_Tab] = ImVec4(color5.x, color5.y, color5.z, color5.w - 0.2f);
 	colors[ImGuiCol_TabHovered] = color3;
 	colors[ImGuiCol_TabActive] = color3;
 	colors[ImGuiCol_TitleBg] = color3;
@@ -1138,7 +1135,7 @@ void imgui_init() {
 	colors[ImGuiCol_Header] = color1;
 	colors[ImGuiCol_HeaderHovered] = color1;
 	colors[ImGuiCol_HeaderActive] = color2;
-	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0, 0, 0, 0);
+	colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.f, 0.f, 0.f, 0.f);
 }
 
 void setup_imgui_menu() {

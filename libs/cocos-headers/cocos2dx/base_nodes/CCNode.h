@@ -1259,7 +1259,7 @@ public:
      //Robtop Modification
     virtual CCAffineTransform nodeToParentTransform(void) {
         auto cocosbase = GetModuleHandleA("libcocos2d.dll");
-        return reinterpret_cast<CCAffineTransform(__thiscall*)()>(GetProcAddress(cocosbase, "?nodeToParentTransform@CCNode@cocos2d@@UAE?BUCCAffineTransform@2@XZ"))();
+        return reinterpret_cast<CCAffineTransform(__thiscall*)(CCNode*)>(GetProcAddress(cocosbase, "?nodeToParentTransform@CCNode@cocos2d@@UAE?BUCCAffineTransform@2@XZ"))(this);
     }
 
     /** 
@@ -1268,7 +1268,7 @@ public:
      */
     virtual const CCAffineTransform parentToNodeTransform(void) {
         auto cocosbase = GetModuleHandleA("libcocos2d.dll");
-        return reinterpret_cast<CCAffineTransform(__thiscall*)()>(GetProcAddress(cocosbase, "?parentToNodeTransform@CCNode@cocos2d@@UAE?BUCCAffineTransform@2@XZ"))();
+        return reinterpret_cast<CCAffineTransform(__thiscall*)(CCNode*)>(GetProcAddress(cocosbase, "?parentToNodeTransform@CCNode@cocos2d@@UAE?BUCCAffineTransform@2@XZ"))(this);
     }
 
     /** 

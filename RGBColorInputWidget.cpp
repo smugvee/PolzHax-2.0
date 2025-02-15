@@ -31,46 +31,46 @@ bool RGBColorInputWidget::init(gd::ColorSelectPopup* parent) {
 
     red_input = gd::CCTextInputNode::create("R", this, "bigFont.fnt", 30.f, 20.f);
     red_input->setAllowedChars("0123456789");
-    //red_input->setMaxLabelLength(3);
-    //red_input->setMaxLabelScale(0.6f);
-    //red_input->setLabelPlaceholderColor(placeholder_color);
-    //red_input->setLabelPlaceholerScale(0.5f);
-    //red_input->setPositionX(r_xpos);
-    //red_input->setDelegate(this);
+    red_input->setMaxLabelLength(3);
+    red_input->setMaxLabelScale(0.6f);
+    red_input->setLabelPlaceholderColor(placeholder_color);
+    red_input->setLabelPlaceholerScale(0.5f);
+    red_input->setPositionX(r_xpos);
+    red_input->setDelegate(this);
 
-    //green_input = gd::CCTextInputNode::create("G", this, "bigFont.fnt", 30.f, 20.f);
-    //green_input->setAllowedChars("0123456789");
-    //green_input->setMaxLabelLength(3);
-    //green_input->setMaxLabelScale(0.6f);
-    //green_input->setLabelPlaceholderColor(placeholder_color);
-    //green_input->setLabelPlaceholerScale(0.5f);
-    //green_input->setPositionX(0.f);
-    //green_input->setDelegate(this);
+    green_input = gd::CCTextInputNode::create("G", this, "bigFont.fnt", 30.f, 20.f);
+    green_input->setAllowedChars("0123456789");
+    green_input->setMaxLabelLength(3);
+    green_input->setMaxLabelScale(0.6f);
+    green_input->setLabelPlaceholderColor(placeholder_color);
+    green_input->setLabelPlaceholerScale(0.5f);
+    green_input->setPositionX(0.f);
+    green_input->setDelegate(this);
 
-    //blue_input = gd::CCTextInputNode::create("B", this, "bigFont.fnt", 30.f, 20.f);
-    //blue_input->setAllowedChars("0123456789");
-    //blue_input->setMaxLabelLength(3);
-    //blue_input->setMaxLabelScale(0.6f);
-    //blue_input->setLabelPlaceholderColor(placeholder_color);
-    //blue_input->setLabelPlaceholerScale(0.5f);
-    //blue_input->setPositionX(b_xpos);
-    //blue_input->setDelegate(this);
+    blue_input = gd::CCTextInputNode::create("B", this, "bigFont.fnt", 30.f, 20.f);
+    blue_input->setAllowedChars("0123456789");
+    blue_input->setMaxLabelLength(3);
+    blue_input->setMaxLabelScale(0.6f);
+    blue_input->setLabelPlaceholderColor(placeholder_color);
+    blue_input->setLabelPlaceholerScale(0.5f);
+    blue_input->setPositionX(b_xpos);
+    blue_input->setDelegate(this);
 
-    //hex_input = gd::CCTextInputNode::create("hex", this, "bigFont.fnt", 100.f, 20.f);
-    //hex_input->setAllowedChars("0123456789ABCDEFabcdef");
-    //hex_input->setMaxLabelLength(6);
-    //hex_input->setMaxLabelScale(0.7f);
-    //hex_input->setLabelPlaceholderColor(placeholder_color);
-    //hex_input->setLabelPlaceholerScale(0.5f);
-    //hex_input->setPositionY(hex_y);
-    //hex_input->setDelegate(this);
+    hex_input = gd::CCTextInputNode::create("hex", this, "bigFont.fnt", 100.f, 20.f);
+    hex_input->setAllowedChars("0123456789ABCDEFabcdef");
+    hex_input->setMaxLabelLength(6);
+    hex_input->setMaxLabelScale(0.7f);
+    hex_input->setLabelPlaceholderColor(placeholder_color);
+    hex_input->setLabelPlaceholerScale(0.5f);
+    hex_input->setPositionY(hex_y);
+    hex_input->setDelegate(this);
 
     addChild(red_input);
-    //addChild(green_input);
-    //addChild(blue_input);
-    //addChild(hex_input);
+    addChild(green_input);
+    addChild(blue_input);
+    addChild(hex_input);
 
-    //update_labels(true, true);
+    update_labels(true, true);
 
     auto bg = extension::CCScale9Sprite::create("square02_small.png");
     bg->setContentSize({ total_w * bg_scale, hex_height * bg_scale });
@@ -126,7 +126,7 @@ void RGBColorInputWidget::textChanged(gd::CCTextInputNode* input) {
         int num_value;
         try { num_value = std::stoi(value, 0, 16); }
         catch (...) {
-            return gd::FLAlertLayer::create(nullptr, "bruh", "OK", nullptr, "Stop trying to break my mods by using character bypass.")->show();
+            return gd::FLAlertLayer::create(nullptr, "bruh", "OK", nullptr, "stop trying to break Fod's mods by using character bypass")->show();
         }
 
         switch (value.size()) {

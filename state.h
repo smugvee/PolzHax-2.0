@@ -15,8 +15,8 @@ struct SettingStruct {
 	bool show;
 	bool explorer;
 
-	float Overlaycolor[4] = { 0.235, 0.235, 0.235, 1 };
-	float BGcolor[4] = { 0, 0, 0, 0.902 };
+	float Overlaycolor[4] = { 0.235f, 0.235f, 0.235f, 1.f };
+	float BGcolor[4] = { 0.f, 0.f, 0.f, 0.902f };
 	float UISize = 1.0f;
 
 	int cheatsCount = 0;

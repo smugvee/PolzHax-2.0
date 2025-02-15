@@ -235,6 +235,23 @@ bool __fastcall LevelBrowserLayer_initH(gd::LevelBrowserLayer* self, void*, gd::
 	return true;
 }
 
+void(__thiscall* CCTextInputNode_updateLabel)(gd::CCTextInputNode*, std::string);
+void __fastcall CCTextInputNode_updateLabelH(gd::CCTextInputNode* self, void*, std::string string) {
+	if (setting().onTextLength)
+		self->m_maxLabelLength = 99999;
+
+	CCTextInputNode_updateLabel(self, string);
+
+	if (setting().onCharFilter) {
+		self->m_filter = "abcdefghijklmnopqrstuvwxyz"
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+			"0123456789!@#$%^&*()-=_+"
+			"`~[]{}/?.>,<\\|;:'\""
+			" ";
+		CCTextInputNode_updateLabel(self, std::move(string));
+	}
+}
+
 void(__thiscall* AppDelegate_trySaveGame)(gd::AppDelegate*);
 void __fastcall AppDelegate_trySaveGameH(gd::AppDelegate* self) {
 	if (setting().onAutoSave)
@@ -284,6 +301,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x19d270), RingObject_spawnCircleH, reinterpret_cast<void**>(&RingObject_spawnCircle));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x56fa0), EditLevelLayer_initH, reinterpret_cast<void**>(&EditLevelLayer_init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xea4c0), LevelBrowserLayer_initH, reinterpret_cast<void**>(&LevelBrowserLayer_init));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x1dac0), CCTextInputNode_updateLabelH, reinterpret_cast<void**>(&CCTextInputNode_updateLabel));
 
 	MH_CreateHook(
 		reinterpret_cast<void*>(gd::base + 0x392a0),

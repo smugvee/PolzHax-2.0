@@ -129,7 +129,7 @@ namespace gd {
 		}
 
 		auto getLayer() {
-			return m_pLayer;
+			return from<cocos2d::CCLayer*>(this, 0x1a8);
 		}
 	};
 	#pragma runtime_checks("s", restore)
