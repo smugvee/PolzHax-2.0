@@ -134,6 +134,10 @@ void __fastcall CCEGLView_pollEvents_H(CCEGLView* self) {
     CCEGLView_pollEvents(self);
 }
 
+void ImGuiHook::poll(CCEGLView* self) {
+    CCEGLView_pollEvents_H(self);
+}
+
 void (__thiscall* CCEGLView_toggleFullScreen)(cocos2d::CCEGLView*, bool);
 void __fastcall CCEGLView_toggleFullScreen_H(cocos2d::CCEGLView* self, void*, bool toggle) {
     ImGui_ImplOpenGL3_Shutdown();

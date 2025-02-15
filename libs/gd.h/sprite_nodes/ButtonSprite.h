@@ -21,12 +21,29 @@ namespace gd {
 			//scale is passed in lower 4 bytes of xmm3
 			__asm movss xmm3, scale
 			//arg 3 is always 0. dunno why it's not optimized out as a param
-			auto pRet = reinterpret_cast<ButtonSprite* (__fastcall*)(const char*,
+			auto pRet = reinterpret_cast<ButtonSprite * (__fastcall*)(const char*,
 				int, int, bool, const char*, const char*, float)>(
 					base + 0xffa0
 					)(caption, width, 0, absolute, font, texture, height);
 			//clean stack before returning
 			__asm add esp, 0x14
+			return pRet;
+		}
+
+		static ButtonSprite* create(
+			CCNode* subSpr, int width, bool absolute, float scale,
+			int idk0, const char* texBG, bool idk1, float height
+		) {
+			__asm movss xmm3, height
+
+			auto pRet = reinterpret_cast<ButtonSprite * (__fastcall*)(
+				CCNode*, int, bool, float, int, const char*, bool
+				)>(
+					base + 0xfc80
+					)(subSpr, width, absolute, scale, idk0, texBG, idk1);
+
+			__asm add esp, 0x14
+
 			return pRet;
 		}
 	};

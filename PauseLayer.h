@@ -11,6 +11,9 @@ namespace PauseLayer {
 	inline void(__thiscall* onRestart)(CCObject*);
 	void __fastcall onRestartH(CCObject*);
 
+	inline void(__thiscall* onQuit)(gd::PauseLayer*, CCObject*);
+	void __fastcall onQuitH(gd::PauseLayer*, void*, CCObject*);
+
 	class Callback {
 	public:
 		void onShowPercentage(CCObject*);

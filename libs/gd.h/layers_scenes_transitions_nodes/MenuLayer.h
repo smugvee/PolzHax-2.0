@@ -9,15 +9,8 @@ namespace gd {
 
 	class MenuLayer : public cocos2d::CCLayer, public gd::FLAlertLayerProtocol {
 	public:
-		static MenuLayer* node() {
-			return reinterpret_cast<MenuLayer* (__stdcall*)()>(
-				base + 0x190550
-				)();
-		}
-		static cocos2d::CCScene* scene(bool options) {
-			return reinterpret_cast<cocos2d::CCScene* (__fastcall*)(bool)>(
-				base + 0x190720
-				)(options);
+		void onOptions(CCObject* sender) {
+			return reinterpret_cast<void(__thiscall*)(MenuLayer*, CCObject*)>(base + 0x11e4a0)(this, sender);
 		}
 	};
 }

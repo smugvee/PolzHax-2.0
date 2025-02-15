@@ -1,0 +1,33 @@
+#ifndef __GAMELEVELMANAGER_H__
+#define __GAMELEVELMANAGER_H__
+
+#include <gd.h>
+
+namespace gd {
+    class GJGameLevel;
+
+    class GameLevelManager : public cocos2d::CCNode {
+    public:
+        cocos2d::CCDictionary *m_mainLevels;
+        cocos2d::CCDictionary *m_valueDict;
+        cocos2d::CCDictionary *m_savedLevelsDict;
+        cocos2d::CCDictionary *m_timerDict;
+        cocos2d::CCDictionary *m_userValues;
+        cocos2d::CCDictionary *m_storedLevels;
+        cocos2d::CCDictionary *m_pageInfo;
+        cocos2d::CCDictionary *m_unknownDict;
+        cocos2d::CCDictionary *m_savedPacks;
+        cocos2d::CCDictionary *m_activeDownloads;
+        cocos2d::CCDictionary *m_activeUploads;
+
+        inline static GameLevelManager* sharedState() {
+            return reinterpret_cast<GameLevelManager * (__stdcall*)()>(gd::base + 0x7e830)();
+        }
+
+        inline static gd::GJGameLevel* createNewLevel() {
+            return reinterpret_cast<gd::GJGameLevel * (__stdcall*)()>(gd::base + 0x7fa40)();
+        }
+    };
+}
+
+#endif

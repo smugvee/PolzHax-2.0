@@ -278,8 +278,9 @@ public:
     /** Replaces the running scene with a new one. The running scene is terminated.
      * ONLY call it if there is a running scene.
      */
-    RT_REMOVE(  void replaceScene(CCScene *pScene); )
-    RT_ADD(     bool replaceScene(CCScene *pScene); )
+    bool replaceScene(CCScene* pScene) {
+        return reinterpret_cast<bool(__thiscall*)(CCDirector*, CCScene*)>(GetProcAddress(GetModuleHandleA("libcocos2d.dll"), "?replaceScene@CCDirector@cocos2d@@QAE_NPAVCCScene@2@@Z"))(this, pScene);
+    }
 
     /** Ends the execution, releases the running scene.
      It doesn't remove the OpenGL view from its parent. You have to do it manually.

@@ -1257,7 +1257,10 @@ public:
      */
     
      //Robtop Modification
-    virtual CCAffineTransform nodeToParentTransform(void);
+    virtual CCAffineTransform nodeToParentTransform(void) {
+        auto cocosbase = GetModuleHandleA("libcocos2d.dll");
+        return reinterpret_cast<CCAffineTransform(__thiscall*)()>(GetProcAddress(cocosbase, "?nodeToParentTransform@CCNode@cocos2d@@UAE?BUCCAffineTransform@2@XZ"))();
+    }
 
     /** 
      * Returns the matrix that transform parent's space coordinates to the node's (local) space coordinates.

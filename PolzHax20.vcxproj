@@ -96,7 +96,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libs\cocos-headers\extensions;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32\OGLES;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\kazmath\include;$(SolutionDir)libs\cocos-headers\cocos2dx\include;$(SolutionDir)libs\cocos-headers\cocos2dx;$(SolutionDir)libs\MinHook;$(SolutionDir)libs\gd.h\include;$(SolutionDir)libs\gd.h;$(SolutionDir)libs\imgui-hook;$(SolutionDir)libs\imgui-hook\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libs\cocos-headers\extensions;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32\OGLES;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\kazmath\include;$(SolutionDir)libs\cocos-headers\cocos2dx\include;$(SolutionDir)libs\cocos-headers\cocos2dx;$(SolutionDir)libs\MinHook;$(SolutionDir)libs\gd.h\include;$(SolutionDir)libs\gd.h;$(SolutionDir)libs\imgui-hook;$(SolutionDir)libs\imgui-hook\imgui;$(SolutionDir)libs\detours;$(SolutionDir)libs\nfd;$(SolutionDir)libs\nfd\src;$(SolutionDir)libs\nfd\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -104,7 +104,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(SolutionDir)libs\MinHook\libMinHook-x86-v141-mtd.lib;$(SolutionDir)libs\cocos-headers\cocos2dx\libcocos2d.lib;$(SolutionDir)libs\cocos-headers\extensions\libExtensions.lib;$(SolutionDir)libs\glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)libs\MinHook\libMinHook-x86-v141-mtd.lib;$(SolutionDir)libs\cocos-headers\cocos2dx\libcocos2d.lib;$(SolutionDir)libs\cocos-headers\extensions\libExtensions.lib;$(SolutionDir)libs\glew32.lib;$(SolutionDir)libs\detours\libdetours.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -142,10 +142,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\common.h" />
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\ftg_core.h" />
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\include\nfd.h" />
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_common.h" />
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\SpeedHack.h" />
+    <ClInclude Include="Checkpoint.h" />
+    <ClInclude Include="ColorSelectPopup.h" />
+    <ClInclude Include="CrashLogger.h" />
     <ClInclude Include="EditorUI.h" />
     <ClInclude Include="explorer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="LevelEditorLayer.h" />
+    <ClInclude Include="LevelShare.h" />
     <ClInclude Include="libs\cocos-headers\cocos2dx\actions\CCAction.h" />
     <ClInclude Include="libs\cocos-headers\cocos2dx\actions\CCActionCamera.h" />
     <ClInclude Include="libs\cocos-headers\cocos2dx\actions\CCActionCatmullRom.h" />
@@ -553,11 +562,13 @@
     <ClInclude Include="libs\gd.h\level_nodes\LevelSettingsObject.h" />
     <ClInclude Include="libs\gd.h\level_nodes\StartPosObject.h" />
     <ClInclude Include="libs\gd.h\manager_nodes\AchievementManager.h" />
+    <ClInclude Include="libs\gd.h\manager_nodes\GameLevelManager.h" />
     <ClInclude Include="libs\gd.h\manager_nodes\GameManager.h" />
     <ClInclude Include="libs\gd.h\manager_nodes\GameSoundManager.h" />
     <ClInclude Include="libs\gd.h\manager_nodes\GManager.h" />
     <ClInclude Include="libs\gd.h\menu_nodes\CCMenuItemSpriteExtra.h" />
     <ClInclude Include="libs\gd.h\menu_nodes\CCMenuItemToggler.h" />
+    <ClInclude Include="libs\gd.h\other_nodes\OBB2D.h" />
     <ClInclude Include="libs\gd.h\scroll_nodes\BoomListView.h" />
     <ClInclude Include="libs\gd.h\scroll_nodes\CCContentLayer.h" />
     <ClInclude Include="libs\gd.h\scroll_nodes\CCIndexPath.h" />
@@ -584,19 +595,29 @@
     <ClInclude Include="libs\imgui-hook\imgui\imstb_truetype.h" />
     <ClInclude Include="libs\imgui-hook\imgui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="libs\MinHook\MinHook.h" />
+    <ClInclude Include="matplist.hpp" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="moveForCommand.h" />
     <ClInclude Include="patching.h" />
     <ClInclude Include="PauseLayer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayLayer.h" />
+    <ClInclude Include="RGBColorInputWidget.hpp" />
     <ClInclude Include="schema.hpp" />
     <ClInclude Include="state.h" />
     <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_common.c" />
+    <ClCompile Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_win.cpp" />
+    <ClCompile Include="ColorSelectPopup.cpp" />
+    <ClCompile Include="CrashLogger.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="CustomMoveButtons.cpp" />
     <ClCompile Include="EditorUI.cpp" />
     <ClCompile Include="explorer.cpp" />
+    <ClCompile Include="GlobalClipboard.cpp" />
+    <ClCompile Include="GlobalClipboard.h" />
     <ClCompile Include="LevelEditorLayer.cpp" />
     <ClCompile Include="libs\imgui-hook\imgui-hook.cpp" />
     <ClCompile Include="libs\imgui-hook\imgui\backends\imgui_impl_opengl3.cpp" />
@@ -617,6 +638,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="PlayLayer.cpp" />
+    <ClCompile Include="RGBColorInputWidget.cpp" />
+    <ClCompile Include="SpeedHack.cpp" />
     <ClCompile Include="state.cpp" />
   </ItemGroup>
   <ItemGroup>

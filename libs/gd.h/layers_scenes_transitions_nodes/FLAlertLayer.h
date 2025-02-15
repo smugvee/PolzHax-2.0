@@ -108,8 +108,28 @@ namespace gd {
 			* and more that i'm too lazy to find.
 			* MAKE SURE YOU FOLLOW THIS FORMAT. ROB'S PARSING CAN AND WILL MESS UP OTHERWISE.
 			*/
-		static FLAlertLayer* create(FLAlertLayerProtocol* protocol, const char* title, float idk, const char* btn1, const char* btn2, const char* caption) {
-			return reinterpret_cast<FLAlertLayer * (__fastcall*)(FLAlertLayerProtocol*, const char*, float, const char*, const char*, const char*)>(base + 0x1f120)(protocol, title, idk, btn1, btn2, caption);
+		static FLAlertLayer* create(FLAlertLayerProtocol* target, const char* title,
+			const char* btn1, const char* btn2, std::string caption) {
+			auto pRet = reinterpret_cast<FLAlertLayer * (__fastcall*)(FLAlertLayerProtocol*, const char*,
+				const char*, const char*, std::string)>(
+					base + 0x1f070
+					)(target, title, btn1, btn2, caption);
+			//clean stack.
+			__asm add esp, 0x20
+			return pRet;
+		}
+		static FLAlertLayer* create(FLAlertLayerProtocol* target, const char* title,
+			const char* btn1, const char* btn2, float width, std::string caption) {
+			auto pRet = reinterpret_cast<FLAlertLayer * (__fastcall*)(FLAlertLayerProtocol*, const char*,
+				const char*, const char*, float, std::string)>(
+					base + 0x1f120
+					)(target, title, btn1, btn2, width, caption);
+			__asm add esp, 0x24
+			return pRet;
+		}
+
+		auto getLayer() {
+			return m_pLayer;
 		}
 	};
 	#pragma runtime_checks("s", restore)

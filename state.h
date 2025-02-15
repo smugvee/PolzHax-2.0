@@ -19,10 +19,15 @@ struct SettingStruct {
 	float BGcolor[4] = { 0, 0, 0, 0.902 };
 	float UISize = 1.0f;
 
+	int cheatsCount = 0;
+	int beforeRestartCheatsCount = 0;
+	bool isSafeMode;
+
 	bool onAutoSave;
 
 	bool onCharFilter;
 	bool onIcons;
+	bool onLoadFailed;
 	bool onMainLevels;
 	bool onSliderLimit;
 	bool onTextLength;
@@ -35,6 +40,7 @@ struct SettingStruct {
 	bool onHidePracticeButtons;
 	bool onNoDeathEffect;
 	bool onNoMiniIcon;
+	bool onNoOrbRing;
 	bool onNoParticles;
 	bool onNoRespawnFlash;
 	bool onPracticePulse;
@@ -64,6 +70,22 @@ struct SettingStruct {
 	bool onPracticeMusic;
 	bool onSmartStartPos;
 	bool onStartPosSwitcher;
+
+	float fps = 60.f;
+	bool onFPSBypass;
+	bool onAntiCheatBypass;
+	bool onAutoSafeMode;
+	bool onForceVisibility;
+	bool onNoTransition;
+	bool onRetryKeybind;
+	bool onSafeMode;
+	bool onShowRestartButton;
+	bool onZeroDelay;
+
+	float speedhack = 1.f;
+	bool onSpeedhack;
+	bool onSpeedhackMusic;
+	bool onClassicMode;
 };
 
 LayersStruct& layers();
@@ -71,9 +93,15 @@ SettingStruct& setting();
 
 DEF_SCHEMA(
 	SettingStruct,
+	cheatsCount,
+	beforeRestartCheatsCount,
+	isSafeMode,
+
 	onAutoSave,
 	onCharFilter,
+	onTheVault,
 	onIcons,
+	onLoadFailed,
 	onMainLevels,
 	onSliderLimit,
 	onTextLength,
@@ -85,6 +113,7 @@ DEF_SCHEMA(
 	onHidePracticeButtons,
 	onNoDeathEffect,
 	onNoMiniIcon,
+	onNoOrbRing,
 	onNoParticles,
 	onNoRespawnFlash,
 	onPracticePulse,
@@ -101,6 +130,28 @@ DEF_SCHEMA(
 	onNoCMark,
 	onObjectBypass,
 	onScaleSnapBypass,
+	onSmoothTrail,
 	onToolboxBypass,
-	onVerifyHack
+	onVerifyHack,
+
+	onBallRotatingBugFix,
+	onConfirmExit,
+	onCorrectiveMusicSync,
+	onNoclip,
+	onPauseDuringComplete,
+	onPracticeBugFix,
+	onPracticeMusic,
+	onSmartStartPos,
+	onStartPosSwitcher,
+
+	fps,
+	onFPSBypass,
+	onAntiCheatBypass,
+	onAutoSafeMode,
+	onForceVisibility,
+	onNoTransition,
+	onRetryKeybind,
+	onSafeMode,
+	onShowRestartButton,
+	onZeroDelay
 )

@@ -37,33 +37,49 @@ namespace gd {
 			}
 			auto pRet = reinterpret_cast<CCTextInputNode* (__thiscall*)
 				(const char*, cocos2d::CCObject*, const char*)>(
-				base + 0x20D90
+				base + 0x1d6c0
 			)(caption, target, fntFile);
 			__asm add esp, 0x8
 			return pRet;
 		}
 		void setLabelPlaceholderColor(cocos2d::ccColor3B color) {
-			m_cPlaceholderColor = color;
+			from<cocos2d::ccColor3B>(this, 0x168) = color;
 			this->refreshLabel();
 		}
 		void setLabelPlaceholerScale(float scale) {
-			m_fPlaceholderScale = scale;
+			from<float>(this, 0x164) = scale;
 			this->refreshLabel();
 		}
 		void setMaxLabelScale(float scale) {
-			m_fMaxLabelScale = scale;
+			from<float>(this, 0x160) = scale;
 			this->refreshLabel();
 		}
-		void setMaxLabelLength(int length) { m_nMaxLabelLength = length; }
-		void setAllowedChars(std::string filter) { m_sFilter = filter; }
+		void setMaxLabelWidth(float width) {
+			from<float>(this, 0x15c) = width;
+		}
+		void setMaxLabelLength(int length) {
+			from<int>(this, 0x17c) = length;
+		}
+		void setAllowedChars(std::string filter) {
+			from<std::string>(this, 0x144) = filter;
+		}
 		void refreshLabel() {
 			return reinterpret_cast<void(__thiscall*)(CCTextInputNode*)>(
-				base + 0x21330
+				base + 0x14030
 				)(this);
 		}
-		cocos2d::CCTextFieldTTF* getTextField() { return m_pTextField; }
-		void setString(const char* text) { m_pTextField->setString(text); }
-		const char* getString() { return m_pTextField->getString(); }
+		void setString(std::string text) {
+			return reinterpret_cast<void(__thiscall*)(CCTextInputNode*, std::string)>(base + 0x1d9a0)(this, text);
+		}
+		cocos2d::CCTextFieldTTF* getTextField() {
+			return from<cocos2d::CCTextFieldTTF*>(this, 0x174);
+		}
+		const char* getString() {
+			return getTextField()->getString();
+		}
+		void setDelegate(TextInputDelegate* delegate) {
+			from<TextInputDelegate*>(this, 0x178) = delegate;
+		}
 	};
 	#pragma runtime_checks("s", restore)
 }

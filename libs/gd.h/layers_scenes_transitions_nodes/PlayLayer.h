@@ -12,7 +12,12 @@ namespace gd {
 	class CCMenuItemSpriteExtra;
 	using EndPortalObject = GameObject;
 	class AudioEffectsLayer : public cocos2d::CCNode {};
-	class GJGroundLayer {};
+	class GJGroundLayer {
+	public:
+		void updateGroundWidth() {
+			return reinterpret_cast<void(__thiscall*)(GJGroundLayer*)>(base + 0xd2610)(this);
+		}
+	};
 
 	class UILayer : public cocos2d::CCLayerColor {
 	public:
@@ -25,7 +30,7 @@ namespace gd {
 		PAD(24)
 		cocos2d::CCDrawNode* m_unkDrawNode; // 0x18c
 		PAD(36)
-		StartPosObject* m_startPos; // 0x1b4
+		StartPosObject* m_startPosObject; // 0x1b4
 		EndPortalObject* m_endPortal; // 0x1b8
 		cocos2d::CCArray* m_checkpoints; // 0x1bc
 		cocos2d::CCArray* m_speedObjects; // 0x1c0
@@ -77,6 +82,30 @@ namespace gd {
 		bool m_hasCompletedLevel; // 0x342
 		bool m_delayedResetLevel; // 0x343
 		int m_lastDeathPercent; // 0x344
+
+		void resetLevel() {
+			return reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17c930)(this);
+		}
+
+		void onQuit() {
+			return reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17de80)(this);
+		}
+
+		void resume() {
+			return reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17dcb0)(this);
+		}
+
+		void setStartPosObject(StartPosObject* startPos) {
+			if (startPos != m_startPosObject) {
+				if (startPos) {
+					reinterpret_cast<CCObject*>(startPos)->retain();
+				}
+				if (m_startPosObject) {
+					reinterpret_cast<CCObject*>(m_startPosObject)->release();
+				}
+				m_startPosObject = startPos;
+			}
+		}
 	};
 }
 

@@ -11,5 +11,29 @@ namespace PlayLayer {
 	inline void(__thiscall* destroyPlayer)(gd::PlayLayer*, gd::PlayerObject*);
 	void __fastcall destroyPlayerH(gd::PlayLayer*, void*, gd::PlayerObject*);
 
+	inline void(__thiscall* resetLevel)(gd::PlayLayer*);
+	void __fastcall resetLevelH(gd::PlayLayer*);
+
+	inline void(__thiscall* togglePracticeMode)(gd::PlayLayer*, bool);
+	void __fastcall togglePracticeModeH(gd::PlayLayer*, void*, bool);
+
+	inline void(__thiscall* createCheckpoint)(gd::PlayLayer*);
+	void __fastcall createCheckpointH(gd::PlayLayer*);
+
+	inline void(__thiscall* removeLastCheckpoint)(gd::PlayLayer*);
+	void __fastcall removeLastCheckpointH(gd::PlayLayer*);
+
+	inline void(__thiscall* onQuit)(gd::PlayLayer*);
+	void __fastcall onQuitH(gd::PlayLayer*);
+
+	inline void(__thiscall* levelComplete)(gd::PlayLayer*);
+	void __fastcall levelCompleteH(gd::PlayLayer*);
+
+	inline void(__thiscall* addObject)(gd::PlayLayer*, gd::GameObject*);
+	void __fastcall addObjectH(gd::PlayLayer*, void*, gd::GameObject*);
+
+	void onPrevStartPos();
+	void onNextStartPos();
+
 	void mem_init();
 }

@@ -146,6 +146,9 @@ namespace gd {
 		PlayLayer* getPlayLayer() {
 			return from<PlayLayer*>(this, 0x14c);
 		}
+		LevelEditorLayer* getLevelEditorLayer() {
+			return from<LevelEditorLayer*>(this, 0x150);
+		}
 	};
 }
 

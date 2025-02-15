@@ -3,6 +3,5 @@
 
 namespace LevelEditorLayer {
 	
-	
 	void mem_init();
 }

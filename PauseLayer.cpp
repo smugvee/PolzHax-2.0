@@ -69,8 +69,30 @@ void __fastcall PauseLayer::togglerMenuH() {
     PauseLayer::togglerMenu();
 }
 
+class ExitAlertProtocol : public gd::FLAlertLayerProtocol {
+protected:
+    void FLAlert_Clicked(gd::FLAlertLayer* layer, bool btn2) override
+    {
+        if (btn2)
+        {
+            gd::GameManager::sharedState()->getPlayLayer()->onQuit();
+            gd::GameSoundManager::sharedState()->playSound("quitSound_01.ogg");
+        }
+    }
+};
+
+ExitAlertProtocol exitAlertProtocol;
+
+void __fastcall PauseLayer::onQuitH(gd::PauseLayer* self, void*, CCObject* obj) {
+    if (setting().onConfirmExit) {
+        gd::FLAlertLayer::create(&exitAlertProtocol, "Confirm", "Cancel", "Exit", 320.f, "Are you sure you want to <cr>exit</c> the level?")->show();
+    }
+    PauseLayer::onQuit(self, obj);
+}
+
 void PauseLayer::mem_init() {
     MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x15b710), PauseLayer::customSetupH, reinterpret_cast<void**>(&PauseLayer::customSetup));
     MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x15be9f), PauseLayer::togglerMenuH, reinterpret_cast<void**>(&PauseLayer::togglerMenu));
     MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x15d210), PauseLayer::onRestartH, reinterpret_cast<void**>(&PauseLayer::onRestart));
+    MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x15d5f0), PauseLayer::onQuitH, reinterpret_cast<void**>(&PauseLayer::onQuit));
 }

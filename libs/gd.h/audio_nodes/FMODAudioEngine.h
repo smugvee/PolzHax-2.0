@@ -3,6 +3,20 @@
 
 #include <gd.h>
 
+namespace FMOD {
+	static auto base = GetModuleHandleA("fmod.dll");
+	struct Channel {
+		void setPitch(float pitch) {
+			static const auto addr = GetProcAddress(base, "?setPitch@ChannelControl@FMOD@@QAG?AW4FMOD_RESULT@@M@Z");
+			reinterpret_cast<void* (__stdcall*)(void*, float)>(addr)(this, pitch);
+		}
+		void setReverbProperties(int idk, float idk2) {
+			static const auto addr = GetProcAddress(base, "?setReverbProperties@ChannelControl@FMOD@@QAG?AW4FMOD_RESULT@@HM@Z");
+			reinterpret_cast<void* (__stdcall*)(void*, int, float)>(addr)(this, idk, idk2);
+		}
+	};
+}
+
 namespace gd {
 	class FMODAudioEngine : public cocos2d::CCNode {
 	protected:
@@ -30,7 +44,7 @@ namespace gd {
 	public:
 		static FMODAudioEngine* sharedEngine() {
 			return reinterpret_cast<FMODAudioEngine * (__stdcall*)()>(
-				base + 0x239F0
+				base + 0x20430
 				)();
 		}
 		void preloadEffect(std::string filename) {
@@ -52,6 +66,9 @@ namespace gd {
 				m_pDictionary->removeObjectForKey(ogg);
 				this->preloadEffect(ogg);
 			}
+		}
+		auto currentSound() {
+			return from<FMOD::Channel*>(this, 0x130);
 		}
 	};
 }

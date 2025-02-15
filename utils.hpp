@@ -12,6 +12,7 @@
 #include <gd.h>
 #include <../support/base64.h>
 #include <tuple>
+#include "patching.h"
 
 #define CCARRAY_FOREACH_B_BASE(__array__, __obj__, __type__, __index__)                                                                    \
     if (__array__ && __array__->count())                                                                                                   \
@@ -377,3 +378,15 @@ struct cocos {
 		return nullptr;
 	}
 };
+
+inline void safeModeON() {
+	sequence_patch((uint32_t)gd::base + 0x17b6f1, { 0xeb, 0x6b });
+	sequence_patch((uint32_t)gd::base + 0x16c87b, { 0xe9, 0x45, 0x03, 0x00, 0x00, 0x90 });
+	sequence_patch((uint32_t)gd::base + 0x16c8fd, { 0xe9, 0xc3, 0x02, 0x00, 0x00, 0x90 });
+}
+
+inline void safeModeOFF() {
+	sequence_patch((uint32_t)gd::base + 0x17b6f1, { 0x75, 0x6b });
+	sequence_patch((uint32_t)gd::base + 0x16c87b, { 0x0f, 0x85, 0x44, 0x03, 0x00, 0x00 });
+	sequence_patch((uint32_t)gd::base + 0x16c8fd, { 0x0f, 0x85, 0xc2, 0x02, 0x00, 0x00 });
+}

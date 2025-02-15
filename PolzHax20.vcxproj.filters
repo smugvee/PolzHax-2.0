@@ -34,6 +34,9 @@
     <Filter Include="Файлы заголовков\Layers">
       <UniqueIdentifier>{f6ad9ab0-01da-4de5-b58c-7f0247510b4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Файлы заголовков\libs\nfd">
+      <UniqueIdentifier>{d37f0225-b210-4115-a15d-27886fba508c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1383,7 +1386,49 @@
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\LevelEditorLayer.h">
       <Filter>Файлы заголовков\libs\gd.h</Filter>
     </ClInclude>
+    <ClInclude Include="moveForCommand.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
     <ClInclude Include="EditorUI.h">
+      <Filter>Файлы заголовков\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\SpeedHack.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\other_nodes\OBB2D.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorSelectPopup.h">
+      <Filter>Файлы заголовков\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="RGBColorInputWidget.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelShare.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="matplist.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\common.h">
+      <Filter>Файлы заголовков\libs\nfd</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\ftg_core.h">
+      <Filter>Файлы заголовков\libs\nfd</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\include\nfd.h">
+      <Filter>Файлы заголовков\libs\nfd</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_common.h">
+      <Filter>Файлы заголовков\libs\nfd</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\manager_nodes\GameLevelManager.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
+    <ClInclude Include="CrashLogger.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1444,6 +1489,33 @@
     </ClCompile>
     <ClCompile Include="EditorUI.cpp">
       <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomMoveButtons.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalClipboard.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalClipboard.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="SpeedHack.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorSelectPopup.cpp">
+      <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="RGBColorInputWidget.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_common.c">
+      <Filter>Файлы заголовков\libs\nfd</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_win.cpp">
+      <Filter>Файлы заголовков\libs\nfd</Filter>
+    </ClCompile>
+    <ClCompile Include="CrashLogger.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

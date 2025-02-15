@@ -6,6 +6,7 @@
 namespace gd {
 
 	class CCSpritePlus;
+	class OBB2D;
 
 	#pragma runtime_checks("s", off)
 	class GameObject : public CCSpritePlus {
@@ -73,6 +74,10 @@ namespace gd {
 				)(str, unknown);
 			__asm add esp, 0x18
 			return pRet;
+		}
+
+		OBB2D* getOrientedBox() {
+			return reinterpret_cast<OBB2D*(__thiscall*)(GameObject*)>(base + 0xb7af0)(this);
 		}
 	};
 	#pragma runtime_checks("s", restore)
