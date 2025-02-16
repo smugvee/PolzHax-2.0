@@ -281,6 +281,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	EditorPauseLayer::mem_init();
 	EditorUI::mem_init();
 	ColorSelectPopup::mem_init();
+	SetupPulsePopup::mem_init();
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9afc0), GameManager_isIconUnlockedH, reinterpret_cast<void**>(&GameManager_isIconUnlocked));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9b2a0), GameManager_isColorUnlockedH, reinterpret_cast<void**>(&GameManager_isColorUnlocked));

@@ -403,27 +403,27 @@ void imgui_render() {
 		color1.x = setting().Overlaycolor[0];
 		color1.y = setting().Overlaycolor[1];
 		color1.z = setting().Overlaycolor[2];
-		color1.w = setting().Overlaycolor[3] - 0.4;
+		color1.w = setting().Overlaycolor[3] - 0.4f;
 
 		color2.x = setting().Overlaycolor[0];
 		color2.y = setting().Overlaycolor[1];
 		color2.z = setting().Overlaycolor[2];
 		color2.w = 1;
 
-		color3.x = setting().Overlaycolor[0] + 0.3;
-		color3.y = setting().Overlaycolor[1] + 0.3;
-		color3.z = setting().Overlaycolor[2] + 0.3;
-		color3.w = setting().Overlaycolor[3] + 0.3;
+		color3.x = setting().Overlaycolor[0] + 0.3f;
+		color3.y = setting().Overlaycolor[1] + 0.3f;
+		color3.z = setting().Overlaycolor[2] + 0.3f;
+		color3.w = setting().Overlaycolor[3] + 0.3f;
 
-		color4.x = setting().Overlaycolor[0] - 0.1;
-		color4.y = setting().Overlaycolor[1] - 0.1;
-		color4.z = setting().Overlaycolor[2] - 0.1;
-		color4.w = setting().Overlaycolor[3] - 0.1;
+		color4.x = setting().Overlaycolor[0] - 0.1f;
+		color4.y = setting().Overlaycolor[1] - 0.1f;
+		color4.z = setting().Overlaycolor[2] - 0.1f;
+		color4.w = setting().Overlaycolor[3] - 0.1f;
 
-		color5.x = setting().Overlaycolor[0] + 0.1;
-		color5.y = setting().Overlaycolor[1] + 0.1;
-		color5.z = setting().Overlaycolor[2] + 0.1;
-		color5.w = setting().Overlaycolor[3] + 0.1;
+		color5.x = setting().Overlaycolor[0] + 0.1f;
+		color5.y = setting().Overlaycolor[1] + 0.1f;
+		color5.z = setting().Overlaycolor[2] + 0.1f;
+		color5.w = setting().Overlaycolor[3] + 0.1f;
 
 		color6.x = setting().BGcolor[0];
 		color6.y = setting().BGcolor[1];
@@ -441,7 +441,7 @@ void imgui_render() {
 		colors[ImGuiCol_FrameBg] = color1;
 		colors[ImGuiCol_FrameBgHovered] = color3;
 		colors[ImGuiCol_FrameBgActive] = color3;
-		colors[ImGuiCol_Tab] = ImVec4(color5.x, color5.y, color5.z, color5.w - 0.2);
+		colors[ImGuiCol_Tab] = ImVec4(color5.x, color5.y, color5.z, color5.w - 0.2f);
 		colors[ImGuiCol_TabHovered] = color3;
 		colors[ImGuiCol_TabActive] = color3;
 		colors[ImGuiCol_TitleBg] = color3;
@@ -555,6 +555,8 @@ void imgui_render() {
 					sequence_patch((uint32_t)gd::base + 0x117908, { 0x0f, 0x87, 0x12, 0x01, 0x00, 0x00 });
 				}
 			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Bypasses load failed for modified main levels.");
 
 			if (ImGui::Checkbox("Main Levels", &setting().onMainLevels)) {
 				if (setting().onMainLevels) {
@@ -592,7 +594,7 @@ void imgui_render() {
 
 			ImGui::Checkbox("Hide Attempts", &setting().onHideAttempts);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
-				ImGui::SetTooltip("Hides the attemps counter in-game.");
+				ImGui::SetTooltip("Hides the attempts counter in-game.");
 
 			ImGui::Checkbox("Hide Pause Button", &setting().onHidePauseButton);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
@@ -653,12 +655,10 @@ void imgui_render() {
 			if (ImGui::Checkbox("Practice Pulse", &setting().onPracticePulse)) {
 				if (setting().onPracticePulse) {
 					sequence_patch((uint32_t)gd::base + 0x39805, { 0x90, 0x90 });
-					sequence_patch((uint32_t)gd::base + 0x176530, { 0x90, 0x90 });
 					sequence_patch((uint32_t)gd::base + 0x17655a, { 0xeb, 0x16 });
 				}
 				else {
 					sequence_patch((uint32_t)gd::base + 0x39805, { 0x75, 0x0c });
-					sequence_patch((uint32_t)gd::base + 0x176530, { 0xeb, 0x1a });
 					sequence_patch((uint32_t)gd::base + 0x17655a, { 0x74, 0x16 });
 				}
 			}
@@ -706,6 +706,8 @@ void imgui_render() {
 					sequence_patch((uint32_t)libcocosbase + 0xad1ad, { 0xf3, 0x0f, 0x2c, 0xc1, 0x2b, 0xd8 });
 				}
 			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Fixes trail cutting on high refresh rates.");
 		}
 
 		if (ImGui::Begin("Creator", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
@@ -984,6 +986,8 @@ void imgui_render() {
 					sequence_patch((uint32_t)gd::base + 0x170fc2, { 0xe8, 0xb9, 0xce, 0x00, 0x00 });
 				}
 			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Bypasses anticheat.");
 
 			ImGui::Checkbox("Auto Safe Mode", &setting().onAutoSafeMode);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)

@@ -220,7 +220,7 @@ namespace gd {
 		bool m_isBlending; // 0x214
 		float m_opacity; // 0x218
 
-		auto getPickerColor() { return *reinterpret_cast<cocos2d::ccColor3B*>(reinterpret_cast<uintptr_t>(m_colorPicker) + 0x144); }
+		auto getPickerColor() { return *reinterpret_cast<cocos2d::ccColor3B*>(reinterpret_cast<uintptr_t>(m_colorPicker) + 0x140); }
 		void setPickerColor(cocos2d::ccColor3B color) {
 			// fod spent like 5 hours trying to get this working on cocos-headers, so fuck it
 			const static auto address = GetProcAddress(
@@ -229,6 +229,12 @@ namespace gd {
 			);
 			reinterpret_cast<void(__thiscall*)(cocos2d::extension::CCControlColourPicker*, const cocos2d::ccColor3B&)>(address)(m_colorPicker, color);
 		}
+	};
+
+	class SetupPulsePopup : public FLAlertLayer {
+	public:
+		PAD(12)
+		cocos2d::extension::CCControlColourPicker* m_colorPicker; // 0x1d4
 	};
 }
 

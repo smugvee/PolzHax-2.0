@@ -241,6 +241,26 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 	if (setting().onAutoSafeMode && setting().cheatsCount > 0) safeModeON(), setting().isSafeMode = true;
 	else if (!setting().onSafeMode) safeModeOFF(), setting().isSafeMode = false;
 
+	const auto bar = gd::GameManager::sharedState()->getProgressBar();
+	auto size = CCDirector::sharedDirector()->getWinSize();
+	auto percentLabel = from<CCLabelBMFont*>(self, 0x25c);
+	if (percentLabel) {
+		if (bar) {
+			percentLabel->setPosition({ size.width / 2.f + 110.2f, size.height - 8.f });
+			percentLabel->setAnchorPoint({ 0.f, 0.5f });
+		}
+		else {
+			percentLabel->setPosition({ size.width / 2.f, size.height - 8.f });
+			percentLabel->setAnchorPoint({ 0.5f, 0.5f });
+		}
+		if (gd::GameManager::sharedState()->getGameVariable("0040")) {
+			percentLabel->setVisible(1);
+		}
+		else {
+			percentLabel->setVisible(0);
+		}
+	}
+
 	return true;
 }
 

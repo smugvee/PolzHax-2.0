@@ -149,6 +149,9 @@ namespace gd {
 		LevelEditorLayer* getLevelEditorLayer() {
 			return from<LevelEditorLayer*>(this, 0x150);
 		}
+		bool getProgressBar() {
+			return from<bool>(this, 0x238);
+		}
 	};
 }
 

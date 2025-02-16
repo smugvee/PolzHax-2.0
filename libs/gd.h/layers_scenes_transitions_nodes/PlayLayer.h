@@ -77,10 +77,9 @@ namespace gd {
 		int m_jumpsCount; // 0x334
 		PAD(4)
 		float m_totalTime; // 0x33c
-		PAD(1)
-		bool m_hasLevelCompletedMenu; // 0x341
-		bool m_hasCompletedLevel; // 0x342
-		bool m_delayedResetLevel; // 0x343
+		bool m_hasLevelCompletedMenu; // 0x340
+		bool m_hasCompletedLevel; // 0x341
+		bool m_delayedResetLevel; // 0x342
 		int m_lastDeathPercent; // 0x344
 
 		void resetLevel() {
