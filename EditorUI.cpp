@@ -3,11 +3,20 @@
 #include "moveForCommand.h"
 #include "utils.hpp"
 #include "GlobalClipboard.h"
+#include "state.h"
 
 gd::EditorPauseLayer* m_editorPauseLayer{ nullptr };
 
 bool __fastcall EditorUI::initH(gd::EditorUI* self, void*, gd::LevelEditorLayer* editorLayer) {
 	if (!EditorUI::init(self, editorLayer)) return false;
+
+	if (setting().onHideUI) self->setVisible(!setting().onHideUI);
+
+	//for (int i = 0; i < self->m_hideableUIElement->count(); i++) {
+	//	if (reinterpret_cast<CCNode*>(self->m_hideableUIElement->objectAtIndex(i))) {
+	//		reinterpret_cast<CCNode*>(self->m_hideableUIElement->objectAtIndex(i))->setVisible(0);
+	//	}
+	//}
 
 	loadClipboard(self);
 	std::cout << self->m_editorLayer << std::endl;

@@ -236,6 +236,22 @@ namespace gd {
 		PAD(12)
 		cocos2d::extension::CCControlColourPicker* m_colorPicker; // 0x1d4
 	};
+
+	class CustomizeObjectLayer : public FLAlertLayer {
+	public:
+		void onSelectColor(cocos2d::CCObject* obj) {
+			reinterpret_cast<void(__thiscall*)(CustomizeObjectLayer*, cocos2d::CCObject*)>(base + 0x45920)(this, obj);
+		}
+	};
+
+	class ColorChannelSprite : public cocos2d::CCSprite {
+	public:
+		static ColorChannelSprite* create() {
+			return reinterpret_cast<ColorChannelSprite*(__stdcall*)()>(
+				base + 0xc33b0
+			)();
+		}
+	};
 }
 
 #endif

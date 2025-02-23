@@ -37,6 +37,9 @@
     <Filter Include="Файлы заголовков\libs\nfd">
       <UniqueIdentifier>{d37f0225-b210-4115-a15d-27886fba508c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Файлы заголовков\libs\fmod">
+      <UniqueIdentifier>{69491e34-3efc-43a9-bb89-aa363e043826}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -1431,6 +1434,33 @@
     <ClInclude Include="CrashLogger.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="CustomizeObjectLayer.h">
+      <Filter>Файлы заголовков\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\fmod-headers\fmod.h">
+      <Filter>Файлы заголовков\libs\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\fmod-headers\fmod.hpp">
+      <Filter>Файлы заголовков\libs\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\fmod-headers\fmod_codec.h">
+      <Filter>Файлы заголовков\libs\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\fmod-headers\fmod_common.h">
+      <Filter>Файлы заголовков\libs\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\fmod-headers\fmod_dsp.h">
+      <Filter>Файлы заголовков\libs\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\fmod-headers\fmod_dsp_effects.h">
+      <Filter>Файлы заголовков\libs\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\fmod-headers\fmod_errors.h">
+      <Filter>Файлы заголовков\libs\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\fmod-headers\fmod_output.h">
+      <Filter>Файлы заголовков\libs\fmod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1516,6 +1546,9 @@
     </ClCompile>
     <ClCompile Include="CrashLogger.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomizeObjectLayer.cpp">
+      <Filter>Исходные файлы\Layers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

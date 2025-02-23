@@ -37,7 +37,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -96,7 +96,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)libs\cocos-headers\extensions;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32\OGLES;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\kazmath\include;$(SolutionDir)libs\cocos-headers\cocos2dx\include;$(SolutionDir)libs\cocos-headers\cocos2dx;$(SolutionDir)libs\MinHook;$(SolutionDir)libs\gd.h\include;$(SolutionDir)libs\gd.h;$(SolutionDir)libs\imgui-hook;$(SolutionDir)libs\imgui-hook\imgui;$(SolutionDir)libs\detours;$(SolutionDir)libs\nfd;$(SolutionDir)libs\nfd\src;$(SolutionDir)libs\nfd\src\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libs\cocos-headers\extensions;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32\OGLES;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\kazmath\include;$(SolutionDir)libs\cocos-headers\cocos2dx\include;$(SolutionDir)libs\cocos-headers\cocos2dx;$(SolutionDir)libs\MinHook;$(SolutionDir)libs\gd.h\include;$(SolutionDir)libs\gd.h;$(SolutionDir)libs\imgui-hook;$(SolutionDir)libs\imgui-hook\imgui;$(SolutionDir)libs\detours;$(SolutionDir)libs\nfd;$(SolutionDir)libs\nfd\src;$(SolutionDir)libs\nfd\src\include;$(SolutionDir)libs\fmod-headers\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -104,7 +104,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>$(SolutionDir)libs\MinHook\libMinHook-x86-v141-mtd.lib;$(SolutionDir)libs\cocos-headers\cocos2dx\libcocos2d.lib;$(SolutionDir)libs\cocos-headers\extensions\libExtensions.lib;$(SolutionDir)libs\glew32.lib;$(SolutionDir)libs\detours\libdetours.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)libs\MinHook\libMinHook-x86-v141-mtd.lib;$(SolutionDir)libs\cocos-headers\cocos2dx\libcocos2d.lib;$(SolutionDir)libs\cocos-headers\extensions\libExtensions.lib;$(SolutionDir)libs\glew32.lib;$(SolutionDir)libs\detours\libdetours.lib;$(SolutionDir)libs\fmod-headers\fmod.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -150,6 +150,7 @@
     <ClInclude Include="Checkpoint.h" />
     <ClInclude Include="ColorSelectPopup.h" />
     <ClInclude Include="CrashLogger.h" />
+    <ClInclude Include="CustomizeObjectLayer.h" />
     <ClInclude Include="EditorUI.h" />
     <ClInclude Include="explorer.h" />
     <ClInclude Include="framework.h" />
@@ -537,6 +538,14 @@
     <ClInclude Include="libs\cocos-headers\extensions\spine\SlotData.h" />
     <ClInclude Include="libs\cocos-headers\extensions\spine\spine-cocos2dx.h" />
     <ClInclude Include="libs\cocos-headers\extensions\spine\spine.h" />
+    <ClInclude Include="libs\fmod-headers\fmod.h" />
+    <ClInclude Include="libs\fmod-headers\fmod.hpp" />
+    <ClInclude Include="libs\fmod-headers\fmod_codec.h" />
+    <ClInclude Include="libs\fmod-headers\fmod_common.h" />
+    <ClInclude Include="libs\fmod-headers\fmod_dsp.h" />
+    <ClInclude Include="libs\fmod-headers\fmod_dsp_effects.h" />
+    <ClInclude Include="libs\fmod-headers\fmod_errors.h" />
+    <ClInclude Include="libs\fmod-headers\fmod_output.h" />
     <ClInclude Include="libs\gd.h\achievement_nodes\AchievementBar.h" />
     <ClInclude Include="libs\gd.h\achievement_nodes\AchievementNotifier.h" />
     <ClInclude Include="libs\gd.h\actions\CCCircleWave.h" />
@@ -612,6 +621,7 @@
     <ClCompile Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_win.cpp" />
     <ClCompile Include="ColorSelectPopup.cpp" />
     <ClCompile Include="CrashLogger.cpp" />
+    <ClCompile Include="CustomizeObjectLayer.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="CustomMoveButtons.cpp" />
     <ClCompile Include="EditorUI.cpp" />

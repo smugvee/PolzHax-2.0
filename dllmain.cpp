@@ -13,6 +13,7 @@
 #include "PauseLayer.h"
 #include "EditorUI.h"
 #include "ColorSelectPopup.h"
+#include "CustomizeObjectLayer.h"
 
 #include "LevelShare.h"
 #include "nfd.h"
@@ -263,8 +264,9 @@ void __fastcall AppDelegate_trySaveGameH(gd::AppDelegate* self) {
 }
 
 DWORD WINAPI my_thread(void* hModule) {
-	sequence_patch((uint32_t)gd::base + 0x558db, { 0xb8, 0x01, 0x00, 0x00, 0x00, 0x90, 0x90 });
-	sequence_patch((uint32_t)gd::base + 0x38a85, { 0x6a, 0x00 });
+	sequence_patch((uint32_t)gd::base + 0x558db, { 0xb8, 0x01, 0x00, 0x00, 0x00, 0x90, 0x90 }); // Play music button in level page
+	sequence_patch((uint32_t)gd::base + 0x38a85, { 0x6a, 0x00 }); // 2.2 color format (better texture quality)
+	sequence_patch((uint32_t)gd::base + 0xfefdc, { 0x90, 0x90 }); // Lines editor fix
 
 	AllocConsole();
 	freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
@@ -282,6 +284,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	EditorUI::mem_init();
 	ColorSelectPopup::mem_init();
 	SetupPulsePopup::mem_init();
+	CustomizeObjectLayer::mem_init();
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9afc0), GameManager_isIconUnlockedH, reinterpret_cast<void**>(&GameManager_isIconUnlocked));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9b2a0), GameManager_isColorUnlockedH, reinterpret_cast<void**>(&GameManager_isColorUnlocked));

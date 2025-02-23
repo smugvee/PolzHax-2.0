@@ -131,6 +131,10 @@ namespace gd {
 		auto getLayer() {
 			return from<cocos2d::CCLayer*>(this, 0x1a8);
 		}
+
+		auto getMenu() {
+			return from<cocos2d::CCMenu*>(this, 0x194);
+		}
 	};
 	#pragma runtime_checks("s", restore)
 }

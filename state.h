@@ -18,6 +18,10 @@ struct SettingStruct {
 	float Overlaycolor[4] = { 0.235f, 0.235f, 0.235f, 1.f };
 	float BGcolor[4] = { 0.f, 0.f, 0.f, 0.902f };
 	float UISize = 1.0f;
+	float overlayCol = 0.235f;
+	float overlayCol2 = 0.235f;
+	float overlayCol3 = 0.235f;
+	float overlayCol4 = 1.f;
 
 	int cheatsCount = 0;
 	int beforeRestartCheatsCount = 0;
@@ -33,6 +37,8 @@ struct SettingStruct {
 	bool onTextLength;
 	bool onTheVault;
 
+	bool onForceDontEnter;
+	bool onForceDontFade;
 	bool onHideAttempts;
 	bool onHidePauseButton;
 	bool onHidePauseMenu;
@@ -52,16 +58,25 @@ struct SettingStruct {
 	bool onAbsolutePosition;
 	bool onCopyHack;
 	bool onCustomObjectBypass;
+	bool onDefaultSongBypass;
+	bool onEditorExtension;
 	bool onFreeScroll;
+	bool onHidePreviewLine;
+	bool onHideUI;
 	bool onLevelEdit;
 	bool onNoCMark;
+	bool onNoDeathX;
 	bool onObjectBypass;
+	bool onPlaceOver;
 	bool onScaleSnapBypass;
 	bool onSmoothTrail;
 	bool onToolboxBypass;
 	bool onVerifyHack;
+	bool onZOrderBypass;
+	bool onZoomBypass;
 
 	bool onBallRotatingBugFix;
+	bool onCheckpointLagFix;
 	bool onConfirmExit;
 	bool onCorrectiveMusicSync;
 	bool onNoclip;
@@ -73,6 +88,8 @@ struct SettingStruct {
 
 	float fps = 60.f;
 	bool onFPSBypass;
+	float pitch = 0.8f;
+	bool onAllowLowVolume;
 	bool onAntiCheatBypass;
 	bool onAutoSafeMode;
 	bool onForceVisibility;
@@ -106,6 +123,7 @@ DEF_SCHEMA(
 	onSliderLimit,
 	onTextLength,
 
+	onForceDontFade,
 	onHideAttempts,
 	onHidePauseButton,
 	onHidePauseMenu,
@@ -125,14 +143,22 @@ DEF_SCHEMA(
 	onAbsolutePosition,
 	onCopyHack,
 	onCustomObjectBypass,
+	onDefaultSongBypass,
+	onEditorExtension,
 	onFreeScroll,
+	onHidePreviewLine,
+	onHideUI,
 	onLevelEdit,
 	onNoCMark,
+	onNoDeathX,
 	onObjectBypass,
+	onPlaceOver,
 	onScaleSnapBypass,
 	onSmoothTrail,
 	onToolboxBypass,
 	onVerifyHack,
+	onZOrderBypass,
+	onZoomBypass,
 
 	onBallRotatingBugFix,
 	onConfirmExit,
@@ -146,6 +172,7 @@ DEF_SCHEMA(
 
 	fps,
 	onFPSBypass,
+	onAllowLowVolume,
 	onAntiCheatBypass,
 	onAutoSafeMode,
 	onForceVisibility,
@@ -153,5 +180,10 @@ DEF_SCHEMA(
 	onRetryKeybind,
 	onSafeMode,
 	onShowRestartButton,
-	onZeroDelay
+	onZeroDelay,
+
+	speedhack,
+	onSpeedhack,
+	onSpeedhackMusic,
+	onClassicMode
 )

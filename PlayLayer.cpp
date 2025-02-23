@@ -16,6 +16,10 @@ bool fadeOutFlag = false;
 CCLabelBMFont* startPosSwitcherLabel = nullptr;
 std::vector<gd::StartPosObject*> startPosObjects;
 
+bool inPractice;
+bool inTestmode;
+int smoothOut;
+
 static gd::GameObject* getClosestObject(std::vector<gd::GameObject*>& vec, gd::StartPosObject* startPos) {
 	gd::GameObject* closest = nullptr;
 
@@ -164,8 +168,12 @@ void PlayLayer::onPrevStartPos() {
 bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* level) {
 	startPosObjects.clear();
 	if (!PlayLayer::init(self, level)) return false;
+	inPractice = false;
+	inTestmode = self->m_isTestMode;
+	smoothOut = 0;
 	
-	std::cout << gd::GameManager::sharedState() << std::endl;
+	std::cout << "GameManager: " << gd::GameManager::sharedState() << std::endl;
+	std::cout << "FMODAudioEngine: " << gd::FMODAudioEngine::sharedEngine() << std::endl;
 
 	if (setting().onHideAttempts)
 		self->m_attemptLabel->setVisible(0);
@@ -266,6 +274,16 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 
 void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 	layers().PauseLayerObject = nullptr;
+	//if (setting().onCheckpointLagFix) {
+	//	if (!smoothOut)
+	//		PlayLayer::update(self, dt);
+
+	//	float time = CCDirector::sharedDirector()->getAnimationInterval();
+	//	if (smoothOut != 0 && dt - time < 1) {
+	//		smoothOut--;
+	//	}
+	//	PlayLayer::update(self, time);
+	//}
 	PlayLayer::update(self, dt);
 
 	if (setting().onHideAttempts)
@@ -313,6 +331,12 @@ void __fastcall PlayLayer::resetLevelH(gd::PlayLayer* self) {
 		for (gd::StartPosObject* obj : m_startPositions)
 			setupStartPos(obj);
 
+	//if (setting().onCheckpointLagFix) {
+	//	if (inTestmode || inPractice) {
+	//		smoothOut = 2;
+	//	}
+	//}
+
 	PlayLayer::resetLevel(self);
 
 	if (setting().onPracticeBugFix) {
@@ -326,6 +350,7 @@ void __fastcall PlayLayer::togglePracticeModeH(gd::PlayLayer* self, void* edx, b
 		checkpoints.clear();
 	}
 	PlayLayer::togglePracticeMode(self, practice);
+	//inPractice = practice;
 }
 
 void __fastcall PlayLayer::createCheckpointH(gd::PlayLayer* self) {
@@ -396,6 +421,11 @@ void __fastcall PlayLayer::addObjectH(gd::PlayLayer* self, void*, gd::GameObject
 	}
 }
 
+void __fastcall PlayLayer::lightningFlashH(gd::PlayLayer* self, void*, CCPoint p0, ccColor3B p1) {
+	PlayLayer::lightningFlash(self, p0, p1);
+	//self->stopActionByTag(1);
+}
+
 void PlayLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16ab80), PlayLayer::initH, reinterpret_cast<void**>(&PlayLayer::init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x170f30), PlayLayer::updateH, reinterpret_cast<void**>(&PlayLayer::update));
@@ -407,4 +437,5 @@ void PlayLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x17de80), PlayLayer::onQuitH, reinterpret_cast<void**>(&PlayLayer::onQuit));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16c830), PlayLayer::levelCompleteH, reinterpret_cast<void**>(&PlayLayer::levelComplete));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16fc00), PlayLayer::addObjectH, reinterpret_cast<void**>(&PlayLayer::addObject));
+	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16e1f0), PlayLayer::lightningFlashH, reinterpret_cast<void**>(&PlayLayer::lightningFlash));
 }

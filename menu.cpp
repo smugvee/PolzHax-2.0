@@ -16,6 +16,9 @@
 #include "patching.h"
 
 #include "SpeedHack.h"
+#include "fmod.hpp"
+#include "fmod_dsp_effects.h"
+#include "shellapi.h"
 
 DWORD libcocosbase = (DWORD)GetModuleHandleA("libcocos2d.dll");
 
@@ -62,6 +65,18 @@ void update_speed_hack() {
 		CCDirector::sharedDirector()->m_pScheduler->setTimeScale(1.f);
 		SpeedHack::SetSpeed(value);
 	}
+}
+
+FMOD::DSP* pitchShifterDSP = nullptr;
+
+void update_pitch_shifter() {
+	auto fme = gd::FMODAudioEngine::sharedEngine();
+	if (!fme || !fme->m_system || !fme->m_globalChannel) return;
+	
+	fme->m_globalChannel->removeDSP(pitchShifterDSP);
+	fme->m_system->createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &pitchShifterDSP);
+	fme->m_globalChannel->addDSP(0, pitchShifterDSP);
+	pitchShifterDSP->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH, setting().pitch);
 }
 
 void imgui_render() {
@@ -113,13 +128,6 @@ void imgui_render() {
 
 		// Bypass
 
-		//if (setting().onCharFilter) {
-		//	sequence_patch((uint32_t)gd::base + 0x1e3d7, { 0x90, 0x75 });
-		//}
-		//else {
-		//	sequence_patch((uint32_t)gd::base + 0x1e3d7, { 0x75, 0x04 });
-		//}
-
 		if (setting().onTheVault) {
 			sequence_patch((uint32_t)gd::base + 0x1567fb, { 0xe9, 0x72, 0x01, 0x00, 0x00, 0x90 });
 		}
@@ -152,14 +160,14 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x2a57b, { 0x76, 0x07 });
 		}
 
-		//if (setting().onTextLength) {
-		//	sequence_patch((uint32_t)gd::base + 0x1e40e, { 0xeb, 0x04 });
-		//}
-		//else {
-		//	sequence_patch((uint32_t)gd::base + 0x1e40e, { 0x7c, 0x04 });
-		//}
-
 		// Cosmetic
+
+		if (setting().onForceDontFade) {
+			sequence_patch((uint32_t)gd::base + 0x1770de, { 0xe9, 0x83, 0x00, 0x00, 0x00, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x1770de, { 0x0f, 0x85, 0x82, 0x00, 0x00, 0x00 });
+		}
 
 		if (setting().onNoDeathEffect) {
 			sequence_patch((uint32_t)gd::base + 0x164c2d, { 0xe9, 0xe7, 0x01, 0x00, 0x00, 0x90 });
@@ -240,6 +248,28 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x609cf, { 0x74, 0x4f });
 		}
 
+		if (setting().onDefaultSongBypass) {
+			sequence_patch((uint32_t)gd::base + 0x10560f, { 0x90, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0x105621, { 0x90, 0x90, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0x10568e, { 0x90, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0x1056a0, { 0x90, 0x90, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x10560f, { 0x74, 0x4e });
+			sequence_patch((uint32_t)gd::base + 0x105621, { 0x0f, 0x4f, 0xf0 });
+			sequence_patch((uint32_t)gd::base + 0x10568e, { 0x74, 0x4e });
+			sequence_patch((uint32_t)gd::base + 0x1056a0, { 0x0f, 0x4f, 0xf0 });
+		}
+
+		if (setting().onEditorExtension) {
+			sequence_patch((uint32_t)gd::base + 0x20cf68, { 0x00, 0xc8, 0x2f, 0x4b });
+			sequence_patch((uint32_t)gd::base + 0x6fdb9, { 0x00, 0xd7, 0x2f, 0x4b });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x20cf68, { 0x00, 0xc8, 0xaf, 0x47 });
+			sequence_patch((uint32_t)gd::base + 0x6fdb9, { 0x00, 0xd7, 0xaf, 0x47 });
+		}
+
 		if (setting().onFreeScroll) {
 			sequence_patch((uint32_t)gd::base + 0x6fe05, { 0xeb, 0x08 });
 			sequence_patch((uint32_t)gd::base + 0x6fe1c, { 0xeb, 0x05 });
@@ -251,6 +281,13 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x6fe1c, { 0x77, 0x05 });
 			sequence_patch((uint32_t)gd::base + 0x6fe35, { 0x77, 0x08 });
 			sequence_patch((uint32_t)gd::base + 0x6fe4c, { 0x77, 0x05 });
+		}
+
+		if (setting().onHidePreviewLine) {
+			sequence_patch((uint32_t)gd::base + 0xff890, { 0xe9, 0x04, 0x01, 0x00, 0x00, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0xff890, { 0x0f, 0x84, 0x03, 0x01, 0x00, 0x00 });
 		}
 
 		if (setting().onLevelEdit) {
@@ -269,6 +306,13 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x7d0e0, { 0x8b, 0x81, 0x18, 0x02, 0x00, 0x00 });
 		}
 
+		if (setting().onNoDeathX) {
+			sequence_patch((uint32_t)gd::base + 0xee33a, { 0x00, 0x00, 0x00, 0x00 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0xee33a, { 0x33, 0x33, 0x33, 0x3f });
+		}
+
 		if (setting().onObjectBypass) {
 			sequence_patch((uint32_t)gd::base + 0x5a727, { 0x68, 0xff, 0xff, 0xff, 0x7f });
 			sequence_patch((uint32_t)gd::base + 0x69902, { 0x3d, 0xff, 0xff, 0xff, 0x7f });
@@ -282,6 +326,15 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x6b895, { 0x3d, 0x30, 0x75, 0x00, 0x00 });
 			sequence_patch((uint32_t)gd::base + 0x6bbf9, { 0x3d, 0x30, 0x75, 0x00, 0x00 });
 			sequence_patch((uint32_t)gd::base + 0xef1af, { 0x30, 0x75, 0x00, 0x00 });
+		}
+
+		if (setting().onPlaceOver) {
+			sequence_patch((uint32_t)gd::base + 0xef5e1, { 0x8b, 0xc1, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0xef5f0, { 0xe9, 0x45, 0x02, 0x00, 0x00, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0xef5e1, { 0x0f, 0x48, 0xc1 });
+			sequence_patch((uint32_t)gd::base + 0xef5f0, { 0x0f, 0x8f, 0x44, 0x02, 0x00, 0x00 });
 		}
 
 		if (setting().onScaleSnapBypass) {
@@ -324,6 +377,28 @@ void imgui_render() {
 		}
 		else {
 			sequence_patch((uint32_t)gd::base + 0x594e5, { 0x75, 0x49 });
+		}
+
+		if (setting().onZOrderBypass) {
+			sequence_patch((uint32_t)gd::base + 0x18d9c1, { 0x90, 0x90, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0x18d9cb, { 0x90, 0x90, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x18d9c1, { 0x0f, 0x4c, 0xc1 });
+			sequence_patch((uint32_t)gd::base + 0x18d9cb, { 0x0f, 0x4c, 0xc1 });
+		}
+
+		if (setting().onZoomBypass) {
+			sequence_patch((uint32_t)gd::base + 0x6b428, { 0x90, 0x90, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0x6b42d, { 0x90, 0x90, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0x6b4a8, { 0x90, 0x90, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0x6b4ad, { 0x90, 0x90, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x6b428, { 0x0f, 0x2f, 0xc8 });
+			sequence_patch((uint32_t)gd::base + 0x6b42d, { 0x0f, 0x28, 0xc8 });
+			sequence_patch((uint32_t)gd::base + 0x6b4a8, { 0x0f, 0x2f, 0xc8 });
+			sequence_patch((uint32_t)gd::base + 0x6b4ad, { 0x0f, 0x28, 0xc8 });
 		}
 
 		// Level
@@ -370,6 +445,21 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x17d0f5, { 0x0f, 0x85, 0x53, 0x02, 0x00, 0x00 });
 			sequence_patch((uint32_t)gd::base + 0x17d953, { 0x75, 0x41 });
 			sequence_patch((uint32_t)gd::base + 0x17d981, { 0xe8, 0x2a, 0x3f, 0xea, 0xff });
+		}
+
+		// Universal
+
+		if (setting().onAllowLowVolume) {
+			sequence_patch((uint32_t)gd::base + 0x15665e, { 0xeb, 0x08 });
+			sequence_patch((uint32_t)gd::base + 0x15cebe, { 0xeb, 0x08 });
+			sequence_patch((uint32_t)gd::base + 0x156500, { 0xeb, 0x08 });
+			sequence_patch((uint32_t)gd::base + 0x15665e, { 0xeb, 0x08 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x15665e, { 0x76, 0x08 });
+			sequence_patch((uint32_t)gd::base + 0x15cebe, { 0x76, 0x08 });
+			sequence_patch((uint32_t)gd::base + 0x156500, { 0x76, 0x08 });
+			sequence_patch((uint32_t)gd::base + 0x15665e, { 0x76, 0x08 });
 		}
 
 		if (setting().onAntiCheatBypass) {
@@ -459,6 +549,8 @@ void imgui_render() {
 	}
 
 	if (setting().show) {
+		auto playLayer = gd::GameManager::sharedState()->getPlayLayer();
+
 		if (setting().explorer) {
 			render_explorer_window(setting().explorer);
 		}
@@ -466,7 +558,7 @@ void imgui_render() {
 		if (ImGui::Begin("PolzHax", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
 			ImGui::SetWindowFontScale(setting().UISize);
 
-			ImGui::Text("2.011 - v1.0.0 (Beta.2)");
+			ImGui::Text("2.011 - v1.0.0 (Beta.3)");
 
 			ImGui::Checkbox("Auto Save", &setting().onAutoSave);
 			ImGui::SameLine();
@@ -477,6 +569,10 @@ void imgui_render() {
 
 			if (ImGui::Button("Cocos Explorer")) {
 				setting().explorer = !setting().explorer;
+			}
+
+			if (ImGui::Button("AppData")) {
+				ShellExecute(0, NULL, CCFileUtils::sharedFileUtils()->getWritablePath().c_str(), NULL, NULL, SW_SHOW);
 			}
 
 			if (ImGui::Button("Sort Tabs")) {
@@ -592,11 +688,29 @@ void imgui_render() {
 		if (ImGui::Begin("Cosmetic", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
 			ImGui::SetWindowFontScale(setting().UISize);
 
-			ImGui::Checkbox("Hide Attempts", &setting().onHideAttempts);
+			if (ImGui::Checkbox("Force Don't Fade", &setting().onForceDontFade)) {
+				if (setting().onForceDontFade) {
+					sequence_patch((uint32_t)gd::base + 0x1770de, { 0xe9, 0x83, 0x00, 0x00, 0x00, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x1770de, { 0x0f, 0x85, 0x82, 0x00, 0x00, 0x00 });
+				}
+			}
+
+			if (ImGui::Checkbox("Hide Attempts", &setting().onHideAttempts)) {
+				if (playLayer)
+					playLayer->m_attemptLabel->setVisible(!setting().onHideAttempts);
+			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Hides the attempts counter in-game.");
 
-			ImGui::Checkbox("Hide Pause Button", &setting().onHidePauseButton);
+			if (ImGui::Checkbox("Hide Pause Button", &setting().onHidePauseButton)) {
+				if (playLayer) {
+					if (gd::GameManager::sharedState()->getGameVariable("0024")) {
+						from<gd::CCMenuItemSpriteExtra*>(playLayer->m_uiLayer, 0x1a0)->setVisible(!setting().onHidePauseButton);
+					}
+				}
+			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Hides the pause button when the in-game cursor is enabled.");
 
@@ -610,11 +724,20 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Hides the pause menu.");
 
-			ImGui::Checkbox("Hide Player", &setting().onHidePlayer);
+			if (ImGui::Checkbox("Hide Player", &setting().onHidePlayer)) {
+				if (playLayer) {
+					playLayer->m_player->setVisible(!setting().onHidePlayer);
+					playLayer->m_player2->setVisible(!setting().onHidePlayer);
+				}
+			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Hides the player.");
 
-			ImGui::Checkbox("Hide Practice Buttons", &setting().onHidePracticeButtons);
+			if (ImGui::Checkbox("Hide Practice Buttons", &setting().onHidePracticeButtons)) {
+				if (playLayer && playLayer->m_isPracticeMode && (from<CCMenu*>(playLayer->m_uiLayer, 0x19c) != nullptr)) {
+					from<CCMenu*>(playLayer->m_uiLayer, 0x19c)->setVisible(!setting().onHidePracticeButtons);
+				}
+			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Hides practice buttons.");
 
@@ -756,6 +879,36 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Removes the object limit for custom objects & lets you save over 100.");
 
+			if (ImGui::Checkbox("Default Song Bypass", &setting().onDefaultSongBypass)) {
+				if (setting().onDefaultSongBypass) {
+					sequence_patch((uint32_t)gd::base + 0x10560f, { 0x90, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0x105621, { 0x90, 0x90, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0x10568e, { 0x90, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0x1056a0, { 0x90, 0x90, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x10560f, { 0x74, 0x4e });
+					sequence_patch((uint32_t)gd::base + 0x105621, { 0x0f, 0x4f, 0xf0 });
+					sequence_patch((uint32_t)gd::base + 0x10568e, { 0x74, 0x4e });
+					sequence_patch((uint32_t)gd::base + 0x1056a0, { 0x0f, 0x4f, 0xf0 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Lets you use hidden default songs in the editor.");
+
+			if (ImGui::Checkbox("Editor Extension", &setting().onEditorExtension)) {
+				if (setting().onEditorExtension) {
+					sequence_patch((uint32_t)gd::base + 0x20cf68, { 0x00, 0xc8, 0x2f, 0x4b });
+					sequence_patch((uint32_t)gd::base + 0x6fdb9, { 0x00, 0xd7, 0x2f, 0x4b });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x20cf68, { 0x00, 0xc8, 0xaf, 0x47 });
+					sequence_patch((uint32_t)gd::base + 0x6fdb9, { 0x00, 0xd7, 0xaf, 0x47 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Increases the editor length by a factor of 128.");
+
 			if (ImGui::Checkbox("Free Scroll", &setting().onFreeScroll)) {
 				if (setting().onFreeScroll) {
 					sequence_patch((uint32_t)gd::base + 0x6fe05, { 0xeb, 0x08 });
@@ -772,6 +925,22 @@ void imgui_render() {
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Allows you to scroll out the editor.");
+
+			if (ImGui::Checkbox("Hide Preview Line", &setting().onHidePreviewLine)) {
+				if (setting().onHidePreviewLine) {
+					sequence_patch((uint32_t)gd::base + 0xff890, { 0xe9, 0x04, 0x01, 0x00, 0x00, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0xff890, { 0x0f, 0x84, 0x03, 0x01, 0x00, 0x00 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Removes center line in editor while in preview mode.");
+
+			if (ImGui::Checkbox("Hide UI", &setting().onHideUI)) {
+				if (gd::GameManager::sharedState()->getLevelEditorLayer() && gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI)
+					gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->setVisible(!setting().onHideUI);
+			}
 
 			if (ImGui::Checkbox("Level Edit", &setting().onLevelEdit)) {
 				if (setting().onLevelEdit) {
@@ -797,6 +966,17 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Removes the (C) mark when uploading copied levels.");
 
+			if (ImGui::Checkbox("No Death X", &setting().onNoDeathX)) {
+				if (setting().onNoDeathX) {
+					sequence_patch((uint32_t)gd::base + 0xee33a, { 0x00, 0x00, 0x00, 0x00 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0xee33a, { 0x33, 0x33, 0x33, 0x3f });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Removes big annoying red X when dying whilst playtesting.");
+
 			if (ImGui::Checkbox("Object Bypass", &setting().onObjectBypass)) {
 				if (setting().onObjectBypass) {
 					sequence_patch((uint32_t)gd::base + 0x5a727, { 0x68, 0xff, 0xff, 0xff, 0x7f });
@@ -815,6 +995,19 @@ void imgui_render() {
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Uncaps the object limit.");
+
+			if (ImGui::Checkbox("Place Over", &setting().onPlaceOver)) {
+				if (setting().onPlaceOver) {
+					sequence_patch((uint32_t)gd::base + 0xef5e1, { 0x8b, 0xc1, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0xef5f0, { 0xe9, 0x45, 0x02, 0x00, 0x00, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0xef5e1, { 0x0f, 0x48, 0xc1 });
+					sequence_patch((uint32_t)gd::base + 0xef5f0, { 0x0f, 0x8f, 0x44, 0x02, 0x00, 0x00 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Lets you place the same object over itself in the editor.");
 
 			if (ImGui::Checkbox("Scale Snap Bypass", &setting().onScaleSnapBypass)) {
 				if (setting().onScaleSnapBypass) {
@@ -874,6 +1067,36 @@ void imgui_render() {
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Lets you upload unverified levels.");
+
+			if (ImGui::Checkbox("Z Order Bypass", &setting().onZOrderBypass)) {
+				if (setting().onZOrderBypass) {
+					sequence_patch((uint32_t)gd::base + 0x18d9c1, { 0x90, 0x90, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0x18d9cb, { 0x90, 0x90, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x18d9c1, { 0x0f, 0x4c, 0xc1 });
+					sequence_patch((uint32_t)gd::base + 0x18d9cb, { 0x0f, 0x4c, 0xc1 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Removes the -100 to 100 Z order range limit.");
+
+			if (ImGui::Checkbox("Zoom Bypass", &setting().onZoomBypass)) {
+				if (setting().onZoomBypass) {
+					sequence_patch((uint32_t)gd::base + 0x6b428, { 0x90, 0x90, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0x6b42d, { 0x90, 0x90, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0x6b4a8, { 0x90, 0x90, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0x6b4ad, { 0x90, 0x90, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x6b428, { 0x0f, 0x2f, 0xc8 });
+					sequence_patch((uint32_t)gd::base + 0x6b42d, { 0x0f, 0x28, 0xc8 });
+					sequence_patch((uint32_t)gd::base + 0x6b4a8, { 0x0f, 0x2f, 0xc8 });
+					sequence_patch((uint32_t)gd::base + 0x6b4ad, { 0x0f, 0x28, 0xc8 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Lets you zoom fully in & out. (NOTE: Can crash with an edited grid size)");
 		}
 
 		if (ImGui::Begin("Level", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
@@ -882,6 +1105,8 @@ void imgui_render() {
 			ImGui::Checkbox("Ball Rotation Bug Fix", &setting().onBallRotatingBugFix);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Fixes that ball rotation bug when entering a portal mid ball animation.");
+
+			ImGui::Checkbox("Checkpoint Lag Fix", &setting().onCheckpointLagFix);
 
 			if (ImGui::Checkbox("Confirm Exit", &setting().onConfirmExit)) {
 				if (setting().onConfirmExit) {
@@ -977,6 +1202,23 @@ void imgui_render() {
 			if (ImGui::Checkbox("FPS bypass", &setting().onFPSBypass))
 				update_fps_bypass();
 			ImGui::EndTabItem();
+
+			if (ImGui::Checkbox("Allow Low Volume", &setting().onAllowLowVolume)) {
+				if (setting().onAllowLowVolume) {
+					sequence_patch((uint32_t)gd::base + 0x15665e, { 0xeb, 0x08 });
+					sequence_patch((uint32_t)gd::base + 0x15cebe, { 0xeb, 0x08 });
+					sequence_patch((uint32_t)gd::base + 0x156500, { 0xeb, 0x08 });
+					sequence_patch((uint32_t)gd::base + 0x15665e, { 0xeb, 0x08 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x15665e, { 0x76, 0x08 });
+					sequence_patch((uint32_t)gd::base + 0x15cebe, { 0x76, 0x08 });
+					sequence_patch((uint32_t)gd::base + 0x156500, { 0x76, 0x08 });
+					sequence_patch((uint32_t)gd::base + 0x15665e, { 0x76, 0x08 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Removes snapping to 0% when setting volume to 3% or below.");
 
 			if (ImGui::Checkbox("AntiCheat Bypass", &setting().onAntiCheatBypass)) {
 				if (setting().onAntiCheatBypass) {
@@ -1076,6 +1318,7 @@ void imgui_render() {
 	if (setting().onSpeedhack) {
 		update_speed_hack();
 	}
+	//update_pitch_shifter();
 }
 
 void imgui_init() {

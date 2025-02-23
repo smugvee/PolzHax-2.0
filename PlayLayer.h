@@ -32,6 +32,9 @@ namespace PlayLayer {
 	inline void(__thiscall* addObject)(gd::PlayLayer*, gd::GameObject*);
 	void __fastcall addObjectH(gd::PlayLayer*, void*, gd::GameObject*);
 
+	inline void(__thiscall* lightningFlash)(gd::PlayLayer*, CCPoint, ccColor3B);
+	void __fastcall lightningFlashH(gd::PlayLayer*, void*, CCPoint, ccColor3B);
+
 	void onPrevStartPos();
 	void onNextStartPos();
 
