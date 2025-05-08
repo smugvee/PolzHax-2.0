@@ -98,6 +98,7 @@ namespace gd {
 #include "manager_nodes/GameSoundManager.h"
 #include "manager_nodes/AchievementManager.h"
 #include "manager_nodes/GameLevelManager.h"
+#include "manager_nodes/GJEffectManager.h"
 
 #include "menu_nodes/CCMenuItemSpriteExtra.h"
 #include "menu_nodes/CCMenuItemToggler.h"
@@ -111,13 +112,16 @@ namespace gd {
 #include "sprite_nodes/AnimatedShopKeeper.h"
 #include "sprite_nodes/PlayerObject.h"
 #include "sprite_nodes/TextArea.h"
+#include "sprite_nodes/ColorActionSprite.h"
 
 #include "text_input_nodes/CCTextInputNode.h"
 
 #include "level_nodes/GJGameLevel.h"
 #include "level_nodes/LevelSettingsObject.h"
 #include "level_nodes/StartPosObject.h"
+#include "level_nodes/ColorAction.h"
 
 #include "other_nodes/OBB2D.h"
+#include "other_nodes/UndoObject.h"
 
 #endif

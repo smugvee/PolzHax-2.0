@@ -1,6 +1,5 @@
 #include "GlobalClipboard.h"
 #include "EditorUI.h"
-#include "utils.hpp"
 
 char* g_clipboard;
 

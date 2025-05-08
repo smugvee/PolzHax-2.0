@@ -85,21 +85,21 @@ void __fastcall CCKeyboardDispatcher_dispatchKeyboardMSGH(CCKeyboardDispatcher* 
 				}
 			}
 		}
-		//if (pl) {
-		//	if (setting().onStartPosSwitcher) {
-		//		switch (key)
-		//		{
-		//		case KEY_Q:
-		//		case KEY_Left:
-		//			PlayLayer::onPrevStartPos();
-		//			break;
-		//		case KEY_E:
-		//		case KEY_Right:
-		//			PlayLayer::onNextStartPos();
-		//			break;
-		//		}
-		//	}
-		//}
+		if (pl) {
+			//if (setting().onStartPosSwitcher) {
+				switch (key)
+				{
+				case KEY_Q:
+				case KEY_Left:
+					PlayLayer::onPrevStartPos();
+					break;
+				case KEY_E:
+				case KEY_Right:
+					PlayLayer::onNextStartPos();
+					break;
+				}
+			//}
+		}
 	}
 	CCKeyboardDispatcher_dispatchKeyboardMSG(self, key, down);
 }
@@ -285,6 +285,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	ColorSelectPopup::mem_init();
 	SetupPulsePopup::mem_init();
 	CustomizeObjectLayer::mem_init();
+	EditButtonBar::mem_init();
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9afc0), GameManager_isIconUnlockedH, reinterpret_cast<void**>(&GameManager_isIconUnlocked));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9b2a0), GameManager_isColorUnlockedH, reinterpret_cast<void**>(&GameManager_isColorUnlocked));

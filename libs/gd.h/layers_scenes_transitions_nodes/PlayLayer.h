@@ -80,6 +80,7 @@ namespace gd {
 		bool m_hasLevelCompletedMenu; // 0x340
 		bool m_hasCompletedLevel; // 0x341
 		bool m_delayedResetLevel; // 0x342
+		PAD(0x1)
 		int m_lastDeathPercent; // 0x344
 
 		void resetLevel() {
@@ -104,6 +105,10 @@ namespace gd {
 				}
 				m_startPosObject = startPos;
 			}
+		}
+
+		void startMusic() {
+			return reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17d0c0)(this);
 		}
 	};
 }

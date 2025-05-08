@@ -11,7 +11,7 @@ namespace gd {
 		float m_fUnknown2;
 
 	public:
-		static auto* create(cocos2d::CCSprite* activatedSpr, cocos2d::CCSprite* deactivatedSpr, cocos2d::CCObject* target, cocos2d::SEL_MenuHandler callback) {
+		static auto* create(cocos2d::CCNode* activatedSpr, cocos2d::CCNode* deactivatedSpr, cocos2d::CCObject* target, cocos2d::SEL_MenuHandler callback) {
 			auto ret = reinterpret_cast<CCMenuItemSpriteExtra * (__fastcall*)(cocos2d::CCNode*, cocos2d::CCNode*, cocos2d::CCObject*, cocos2d::SEL_MenuHandler)>
 				(base + 0x15900)(activatedSpr, deactivatedSpr, target, callback);
 			__asm add esp, 0x8;
@@ -25,6 +25,12 @@ namespace gd {
 				)(this);
 		}
 	};
+
+	class CreateMenuItem : public CCMenuItemSpriteExtra {
+	public:
+
+	};
+
 	#pragma runtime_checks("s", restore)
 }
 

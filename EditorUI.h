@@ -29,10 +29,20 @@ namespace EditorUI {
 	inline void(__thiscall* scrollWheel)(gd::EditorUI*, float, float);
 	void __fastcall scrollWheelH(gd::EditorUI*, void*, float, float);
 
-	class Callback {
+	inline void(__thiscall* moveObject)(gd::EditorUI*, gd::GameObject*, CCPoint);
+	void __fastcall moveObjectH(gd::EditorUI*, void*, gd::GameObject*, CCPoint);
+
+	inline void(__thiscall* blocksArray)();
+	void __fastcall blocksArrayH();
+
+	class Callback : public gd::EditorUI {
 	public:
 		void onCustomMoveObject(CCObject*);
 		void onCustomTransformObject(CCObject*);
+		void onCircleTool(CCObject*);
+
+		void onNextFreeEditorLayer(CCObject*);
+		void onAllEditorLayer(CCObject*);
 	};
 
 	void mem_init();
@@ -50,6 +60,13 @@ namespace EditorPauseLayer {
 		void onSaveLevel(CCObject*);
 		void onPasteString(CCObject*);
 	};
+
+	void mem_init();
+}
+
+namespace EditButtonBar {
+	inline bool(__thiscall* init)(gd::EditButtonBar*, CCArray*, int, int, int, int, CCPoint);
+	bool __fastcall initH(gd::EditButtonBar*, void*, CCArray*, int, int, int, int, CCPoint);
 
 	void mem_init();
 }

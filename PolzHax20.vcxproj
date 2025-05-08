@@ -148,6 +148,7 @@
     <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_common.h" />
     <ClInclude Include="C:\Users\user\source\repos\PolzHaxRestored\SpeedHack.h" />
     <ClInclude Include="Checkpoint.h" />
+    <ClInclude Include="CircleToolPopup.h" />
     <ClInclude Include="ColorSelectPopup.h" />
     <ClInclude Include="CrashLogger.h" />
     <ClInclude Include="CustomizeObjectLayer.h" />
@@ -567,6 +568,7 @@
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\PauseLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\PlayLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\ScrollingLayer.h" />
+    <ClInclude Include="libs\gd.h\level_nodes\ColorAction.h" />
     <ClInclude Include="libs\gd.h\level_nodes\GJGameLevel.h" />
     <ClInclude Include="libs\gd.h\level_nodes\LevelSettingsObject.h" />
     <ClInclude Include="libs\gd.h\level_nodes\StartPosObject.h" />
@@ -578,6 +580,7 @@
     <ClInclude Include="libs\gd.h\menu_nodes\CCMenuItemSpriteExtra.h" />
     <ClInclude Include="libs\gd.h\menu_nodes\CCMenuItemToggler.h" />
     <ClInclude Include="libs\gd.h\other_nodes\OBB2D.h" />
+    <ClInclude Include="libs\gd.h\other_nodes\UndoObject.h" />
     <ClInclude Include="libs\gd.h\scroll_nodes\BoomListView.h" />
     <ClInclude Include="libs\gd.h\scroll_nodes\CCContentLayer.h" />
     <ClInclude Include="libs\gd.h\scroll_nodes\CCIndexPath.h" />
@@ -607,6 +610,7 @@
     <ClInclude Include="matplist.hpp" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="moveForCommand.h" />
+    <ClInclude Include="nodes.hpp" />
     <ClInclude Include="patching.h" />
     <ClInclude Include="PauseLayer.h" />
     <ClInclude Include="pch.h" />
@@ -619,6 +623,7 @@
   <ItemGroup>
     <ClCompile Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_common.c" />
     <ClCompile Include="C:\Users\user\source\repos\PolzHaxRestored\libs\nfd\src\nfd_win.cpp" />
+    <ClCompile Include="CircleToolPopup.cpp" />
     <ClCompile Include="ColorSelectPopup.cpp" />
     <ClCompile Include="CrashLogger.cpp" />
     <ClCompile Include="CustomizeObjectLayer.cpp" />
@@ -639,6 +644,7 @@
     <ClCompile Include="libs\imgui-hook\imgui\imgui_widgets.cpp" />
     <ClCompile Include="libs\imgui-hook\imgui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="nodes.cpp" />
     <ClCompile Include="patching.cpp" />
     <ClCompile Include="PauseLayer.cpp" />
     <ClCompile Include="pch.cpp">

@@ -204,6 +204,9 @@ void imgui_render() {
 		if (setting().onTrailAlwaysOff) {
 			sequence_patch((uint32_t)libcocosbase + 0xad5b6, { 0xe9, 0x56, 0x02, 0x00, 0x00, 0x90 });
 		}
+		else if (setting().onTrailAlwaysOn) {
+			sequence_patch((uint32_t)libcocosbase + 0xad5b6, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+		}
 		else {
 			sequence_patch((uint32_t)libcocosbase + 0xad5b6, { 0x0f, 0x84, 0x55, 0x02, 0x00, 0x00 });
 		}
@@ -385,7 +388,7 @@ void imgui_render() {
 		}
 		else {
 			sequence_patch((uint32_t)gd::base + 0x18d9c1, { 0x0f, 0x4c, 0xc1 });
-			sequence_patch((uint32_t)gd::base + 0x18d9cb, { 0x0f, 0x4c, 0xc1 });
+			sequence_patch((uint32_t)gd::base + 0x18d9cb, { 0x0f, 0x4f, 0xc1 });
 		}
 
 		if (setting().onZoomBypass) {
@@ -558,7 +561,7 @@ void imgui_render() {
 		if (ImGui::Begin("PolzHax", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
 			ImGui::SetWindowFontScale(setting().UISize);
 
-			ImGui::Text("2.011 - v1.0.0 (Beta.3)");
+			ImGui::Text("2.011 - v1.0.0 (Beta.4)");
 
 			ImGui::Checkbox("Auto Save", &setting().onAutoSave);
 			ImGui::SameLine();
@@ -1075,7 +1078,7 @@ void imgui_render() {
 				}
 				else {
 					sequence_patch((uint32_t)gd::base + 0x18d9c1, { 0x0f, 0x4c, 0xc1 });
-					sequence_patch((uint32_t)gd::base + 0x18d9cb, { 0x0f, 0x4c, 0xc1 });
+					sequence_patch((uint32_t)gd::base + 0x18d9cb, { 0x0f, 0x4f, 0xc1 });
 				}
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
@@ -1106,7 +1109,7 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Fixes that ball rotation bug when entering a portal mid ball animation.");
 
-			ImGui::Checkbox("Checkpoint Lag Fix", &setting().onCheckpointLagFix);
+			//ImGui::Checkbox("Checkpoint Lag Fix", &setting().onCheckpointLagFix);
 
 			if (ImGui::Checkbox("Confirm Exit", &setting().onConfirmExit)) {
 				if (setting().onConfirmExit) {
@@ -1218,7 +1221,7 @@ void imgui_render() {
 				}
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
-				ImGui::SetTooltip("Removes snapping to 0% when setting volume to 3% or below.");
+				ImGui::SetTooltip("Removes snapping to 0.0 when setting volume to 0.3 or below.");
 
 			if (ImGui::Checkbox("AntiCheat Bypass", &setting().onAntiCheatBypass)) {
 				if (setting().onAntiCheatBypass) {
@@ -1302,10 +1305,10 @@ void imgui_render() {
 			if (ImGui::Checkbox("Speedhack", &setting().onSpeedhack)) {
 				update_speed_hack();
 			}
+			ImGui::Checkbox("Speedhack Music", &setting().onSpeedhackMusic);
 			if (ImGui::Checkbox("Classic Mode", &setting().onClassicMode)) {
 				update_speed_hack();
 			}
-			ImGui::Checkbox("Speedhack Music", &setting().onSpeedhackMusic);
 		}
 	}
 

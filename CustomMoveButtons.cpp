@@ -1,5 +1,13 @@
 #include "EditorUI.h"
 #include "moveForCommand.h"
+#include "CircleToolPopup.h"
+
+void EditorUI::Callback::onCircleTool(CCObject*) {
+	if (this->getSelectedObjects()->count())
+		CircleToolPopup::create()->show();
+	else
+		gd::FLAlertLayer::create(nullptr, "Circle Tool", "OK", nullptr, "You must first select the objects.")->show();
+}
 
 void __fastcall EditorUI::createMoveMenuH(gd::EditorUI* self) {
 	EditorUI::createMoveMenu(self);
@@ -113,6 +121,13 @@ void __fastcall EditorUI::createMoveMenuH(gd::EditorUI* self) {
 	static_cast<gd::ButtonSprite*>(rotate265CCW->getChildren()->objectAtIndex(0))->addChild(rotate265Label, 5);
 	rotate265CCW->setTag(static_cast<int>(rotationForCommand::kEditCommandRotate265CCW));
 	self->m_moveButtonBar->m_buttonArray->addObject(rotate265CCW);
+
+	auto circleToolLabel = CCLabelBMFont::create("Circle\nTool", "bigFont.fnt", 0.f, CCTextAlignment::kCCTextAlignmentCenter);
+	circleToolLabel->setScale(.35f);
+	circleToolLabel->setPosition({ 20.f, 22.f });
+	auto circleTool = self->getSpriteButton("edit_ccwBtn_001.png", menu_selector(EditorUI::Callback::onCircleTool), nullptr, 9.f);
+	static_cast<gd::ButtonSprite*>(circleTool->getChildren()->objectAtIndex(0))->addChild(circleToolLabel, 5);
+	self->m_moveButtonBar->m_buttonArray->addObject(circleTool);
 
 	auto rows = gd::GameManager::sharedState()->getIntGameVariable("0049");
 	auto cols = gd::GameManager::sharedState()->getIntGameVariable("0050");

@@ -11,6 +11,7 @@ namespace gd {
     class SongInfoObject;
     class GJSpecialColorSelect;
     class BoomScrollLayer;
+    class HSVWidgetPopup : public cocos2d::CCNode {};
 
     enum GJSongError {
         kGJSongErrorUnknown = 0,
@@ -132,6 +133,16 @@ namespace gd {
         virtual void scrollLayerScrollingStarted(BoomScrollLayer*);
         virtual void scrollLayerScrolledToPage(BoomScrollLayer*, int);
         virtual void scrollLayerMoved(cocos2d::CCPoint);
+    };
+
+    class HSVWidgetPopupDelegate {
+    public:
+        virtual void hsvPopupClosed(HSVWidgetPopup*, cocos2d::ccHSVValue) {}
+    };
+
+    class ColorSetupDelegate {
+    public:
+        virtual void colorSetupClosed(int) {}
     };
 }
 

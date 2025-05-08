@@ -91,112 +91,54 @@ void setupStartPos(gd::StartPosObject* startPos) {
 	}
 }
 
+void pickStartPos(gd::PlayLayer* playLayer, int32_t index) {
+	if (startPosObjects.empty()) return;
+
+	auto count = static_cast<int32_t>(startPosObjects.size());
+	if (index >= count) index = -1;
+	else if (index < -1) index = count - 1;
+
+	currentStartPos = index;
+	
+	auto* startPos = index >= 0 ? startPosObjects[index] : nullptr;
+	playLayer->setStartPosObject(startPos);
+	playLayer->m_isTestMode = index >= 0;
+
+	playLayer->resetLevel();
+
+	playLayer->startMusic();
+}
+
 void PlayLayer::onNextStartPos() {
-	auto playLayer = gd::GameManager::sharedState()->getPlayLayer();
-	if (playLayer && !playLayer->m_hasCompletedLevel) {
-		if (startPosSwitcherLabel) {
-			auto fadeout = CCSequence::create(CCDelayTime::create(2.f), CCFadeOut::create(0.5f), nullptr);
-			if (!fadeOutFlag)
-			{
-				startPosSwitcherLabel->runAction(fadeout);
-				fadeOutFlag = !fadeOutFlag;
-			}
-			if (startPosArray->count() > 1) {
-				if (currentStartPos == 0) currentStartPos = startPosArray->count() - 1;
-				else currentStartPos--;
-				if (currentStartPos != 0) {
-					playLayer->m_playerStartPosition = reinterpret_cast<gd::StartPosObject*>(startPosArray->objectAtIndex(currentStartPos))->getOrientedBox()->getCenterPoint();
-					playLayer->setStartPosObject(reinterpret_cast<gd::StartPosObject*>(startPosArray->objectAtIndex(currentStartPos)));
-				}
-				else {
-					playLayer->m_playerStartPosition = ccp( 0, 105 );
-					playLayer->setStartPosObject(nullptr);
-				}
-				if (currentStartPos == 0) {
-					from<bool>(playLayer, 0x2b8) = false;
-				}
-				else {
-					from<bool>(playLayer, 0x2b8) = true;
-				}
-				playLayer->resetLevel();
-				startPosSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos, startPosArray->count() - 1)->getCString());
-				startPosSwitcherLabel->stopAllActions();
-				startPosSwitcherLabel->setOpacity(255);
-				startPosSwitcherLabel->runAction(fadeout);
-			}
-		}
-	}
+	pickStartPos(gd::GameManager::sharedState()->getPlayLayer(), currentStartPos + 1);
 }
 
 void PlayLayer::onPrevStartPos() {
-	if (gd::GameManager::sharedState()->getPlayLayer() && !gd::GameManager::sharedState()->getPlayLayer()->m_hasCompletedLevel) {
-		if (startPosSwitcherLabel) {
-			auto fadeout = CCSequence::create(CCDelayTime::create(2.f), CCFadeOut::create(0.5f), nullptr);
-			if (!fadeOutFlag)
-			{
-				startPosSwitcherLabel->runAction(fadeout);
-				fadeOutFlag = !fadeOutFlag;
-			}
-			if (startPosObjects.size() > 1) {
-				if (currentStartPos == 0) currentStartPos = startPosObjects.size() - 1;
-				else currentStartPos--;
-				if (currentStartPos != 0) {
-					//gd::GameManager::sharedState()->getPlayLayer()->m_playerStartPosition = reinterpret_cast<gd::StartPosObject*>(startPosObjects[currentStartPos])->getPosition();
-					gd::GameManager::sharedState()->getPlayLayer()->m_playerStartPosition = reinterpret_cast<gd::StartPosObject*>(startPosObjects[currentStartPos])->getOrientedBox()->getCenterPoint();
-					gd::GameManager::sharedState()->getPlayLayer()->setStartPosObject(reinterpret_cast<gd::StartPosObject*>(startPosObjects[currentStartPos]));
-				}
-				else {
-					gd::GameManager::sharedState()->getPlayLayer()->m_playerStartPosition = ccp( 0, 105 );
-					gd::GameManager::sharedState()->getPlayLayer()->setStartPosObject(nullptr);
-				}
-				if (currentStartPos == 0) {
-					gd::GameManager::sharedState()->getPlayLayer()->m_isTestMode = false;
-				}
-				else {
-					gd::GameManager::sharedState()->getPlayLayer()->m_isTestMode = true;
-				}
-				gd::GameManager::sharedState()->getPlayLayer()->resetLevel();
-				//startPosSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos, startPosObjects.size() - 1)->getCString());
-				//startPosSwitcherLabel->stopAllActions();
-				//startPosSwitcherLabel->setOpacity(255);
-				//startPosSwitcherLabel->runAction(fadeout);
-			}
-		}
-	}
+	pickStartPos(gd::GameManager::sharedState()->getPlayLayer(), currentStartPos - 1);
 }
 
 bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* level) {
-	startPosObjects.clear();
 	if (!PlayLayer::init(self, level)) return false;
 	inPractice = false;
 	inTestmode = self->m_isTestMode;
 	smoothOut = 0;
+	startPosObjects.clear();
 	
 	std::cout << "GameManager: " << gd::GameManager::sharedState() << std::endl;
 	std::cout << "FMODAudioEngine: " << gd::FMODAudioEngine::sharedEngine() << std::endl;
 
-	if (setting().onHideAttempts)
-		self->m_attemptLabel->setVisible(0);
-	else
-		self->m_attemptLabel->setVisible(1);
+	self->m_attemptLabel->setVisible(!setting().onHideAttempts);
 
 	if (gd::GameManager::sharedState()->getGameVariable("0024")) {
-		if (setting().onHidePauseButton) {
-			from<gd::CCMenuItemSpriteExtra*>(self->m_uiLayer, 0x1a0)->setVisible(0);
-		}
-		else {
-			from<gd::CCMenuItemSpriteExtra*>(self->m_uiLayer, 0x1a0)->setVisible(1);
-		}
+		from<gd::CCMenuItemSpriteExtra*>(self->m_uiLayer, 0x1a0)->setVisible(!setting().onHidePauseButton);
 	}
 
-	if (self->m_isPracticeMode) {
-		if (setting().onHidePracticeButtons && (self->m_uiLayer->m_checkpointMenu != nullptr)) {
-			self->m_uiLayer->m_checkpointMenu->setVisible(0);
-		}
-		else {
-			self->m_uiLayer->m_checkpointMenu->setVisible(1);
-		}
-	}
+	if (self->m_isPracticeMode)
+		if (self->m_uiLayer->m_checkpointMenu != nullptr)
+			self->m_uiLayer->m_checkpointMenu->setVisible(!setting().onHidePracticeButtons);
+
+	self->m_player->setVisible(!setting().onHidePlayer);
+	self->m_player2->setVisible(!setting().onHidePlayer);
 
 	if (setting().onPracticeBugFix) {
 		checkpoints.clear();
@@ -213,38 +155,29 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 	//auto firstStartPos = gd::StartPosObject::create();
 	//startPosObjects.push_back(firstStartPos);
 
-	currentStartPos = startPosObjects.size() - 1;
-	if (setting().onStartPosSwitcher)
-	{
-		startPosSwitcherLabel = CCLabelBMFont::create("", "bigFont.fnt");
-		startPosSwitcherLabel->setZOrder(5);
-		startPosSwitcherLabel->setScale(0.5f);
-		startPosSwitcherLabel->setAnchorPoint({ 0.5f, 0.5f });
-		startPosSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos, startPosObjects.size() - 1)->getCString());
-		startPosSwitcherLabel->setPosition({ CCDirector::sharedDirector()->getScreenRight() / 2, 20.f });
-		if (startPosObjects.size() == 1) startPosSwitcherLabel->setVisible(0);
-		self->addChild(startPosSwitcherLabel);
-		if (startPosSwitcherLabel) {
-			auto fadeout = CCSequence::create(CCDelayTime::create(2.f), CCFadeOut::create(0.5f), nullptr);
-			if (!fadeOutFlag)
-			{
-				startPosSwitcherLabel->runAction(fadeout);
-				fadeOutFlag = !fadeOutFlag;
-			}
-			startPosSwitcherLabel->stopAllActions();
-			startPosSwitcherLabel->setOpacity(255);
-			startPosSwitcherLabel->runAction(fadeout);
-		}
-	}
-
-	if (setting().onHidePlayer) {
-		self->m_player->setVisible(0);
-		self->m_player2->setVisible(0);
-	}
-	else {
-		self->m_player->setVisible(1);
-		self->m_player2->setVisible(1);
-	}
+	//currentStartPos = startPosObjects.size() - 1;
+	//if (setting().onStartPosSwitcher)
+	//{
+	//	startPosSwitcherLabel = CCLabelBMFont::create("", "bigFont.fnt");
+	//	startPosSwitcherLabel->setZOrder(5);
+	//	startPosSwitcherLabel->setScale(0.5f);
+	//	startPosSwitcherLabel->setAnchorPoint({ 0.5f, 0.5f });
+	//	startPosSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos, startPosObjects.size() - 1)->getCString());
+	//	startPosSwitcherLabel->setPosition({ CCDirector::sharedDirector()->getScreenRight() / 2, 20.f });
+	//	if (startPosObjects.size() == 1) startPosSwitcherLabel->setVisible(0);
+	//	self->addChild(startPosSwitcherLabel);
+	//	if (startPosSwitcherLabel) {
+	//		auto fadeout = CCSequence::create(CCDelayTime::create(2.f), CCFadeOut::create(0.5f), nullptr);
+	//		if (!fadeOutFlag)
+	//		{
+	//			startPosSwitcherLabel->runAction(fadeout);
+	//			fadeOutFlag = !fadeOutFlag;
+	//		}
+	//		startPosSwitcherLabel->stopAllActions();
+	//		startPosSwitcherLabel->setOpacity(255);
+	//		startPosSwitcherLabel->runAction(fadeout);
+	//	}
+	//}
 
 	if (setting().onAutoSafeMode && setting().cheatsCount > 0) safeModeON(), setting().isSafeMode = true;
 	else if (!setting().onSafeMode) safeModeOFF(), setting().isSafeMode = false;
@@ -274,49 +207,20 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 
 void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 	layers().PauseLayerObject = nullptr;
-	//if (setting().onCheckpointLagFix) {
-	//	if (!smoothOut)
-	//		PlayLayer::update(self, dt);
-
-	//	float time = CCDirector::sharedDirector()->getAnimationInterval();
-	//	if (smoothOut != 0 && dt - time < 1) {
-	//		smoothOut--;
-	//	}
-	//	PlayLayer::update(self, time);
-	//}
 	PlayLayer::update(self, dt);
 
-	if (setting().onHideAttempts)
-		self->m_attemptLabel->setVisible(0);
-	else
-		self->m_attemptLabel->setVisible(1);
+	self->m_attemptLabel->setVisible(!setting().onHideAttempts);
 
 	if (gd::GameManager::sharedState()->getGameVariable("0024")) {
-		if (setting().onHidePauseButton) {
-			from<gd::CCMenuItemSpriteExtra*>(self->m_uiLayer, 0x1a0)->setVisible(0);
-		}
-		else {
-			from<gd::CCMenuItemSpriteExtra*>(self->m_uiLayer, 0x1a0)->setVisible(1);
-		}
+		from<gd::CCMenuItemSpriteExtra*>(self->m_uiLayer, 0x1a0)->setVisible(!setting().onHidePauseButton);
 	}
 
-	if (self->m_isPracticeMode) {
-		if (setting().onHidePracticeButtons && (from<CCMenu*>(self->m_uiLayer, 0x19c) != nullptr)) {
-			from<CCMenu*>(self->m_uiLayer, 0x19c)->setVisible(0);
-		}
-		else {
-			from<CCMenu*>(self->m_uiLayer, 0x19c)->setVisible(1);
-		}
-	}
+	if (self->m_isPracticeMode)
+		if (self->m_uiLayer->m_checkpointMenu != nullptr)
+			self->m_uiLayer->m_checkpointMenu->setVisible(!setting().onHidePracticeButtons);
 
-	if (setting().onHidePlayer) {
-		self->m_player->setVisible(0);
-		self->m_player2->setVisible(0);
-	}
-	else {
-		self->m_player->setVisible(1);
-		self->m_player2->setVisible(1);
-	}
+	self->m_player->setVisible(!setting().onHidePlayer);
+	self->m_player2->setVisible(!setting().onHidePlayer);
 
 	if (setting().onAutoSafeMode && setting().cheatsCount > 0) safeModeON(), setting().isSafeMode = true;
 	else if (!setting().onSafeMode) safeModeOFF(), setting().isSafeMode = false;
@@ -390,10 +294,12 @@ void __fastcall PlayLayer::levelCompleteH(gd::PlayLayer* self) {
 void __fastcall PlayLayer::addObjectH(gd::PlayLayer* self, void*, gd::GameObject* obj) {
 	PlayLayer::addObject(self, obj);
 
+	if (from<int>(obj, 0x310) == 31)
+		startPosObjects.push_back(reinterpret_cast<gd::StartPosObject*>(obj));
+
 	switch (from<int>(obj, 0x310))
 	{
 	case 31:
-		startPosObjects.push_back(dynamic_cast<gd::StartPosObject*>(obj));
 		m_startPositions.push_back(static_cast<gd::StartPosObject*>(obj));
 		break;
 	case 12:
@@ -421,6 +327,22 @@ void __fastcall PlayLayer::addObjectH(gd::PlayLayer* self, void*, gd::GameObject
 	}
 }
 
+void __fastcall PlayLayer::createObjectsFromSetupH(gd::PlayLayer* self, void*, gd::string objects) {
+	PlayLayer::createObjectsFromSetup(self, objects);
+	if (startPosObjects.empty()) return;
+
+	std::ranges::sort(startPosObjects, [](gd::GameObject* a, gd::GameObject* b) {
+		return a->getPositionX() < b->getPositionX();
+		});
+
+	currentStartPos = -1;
+	if (self->m_startPosObject) {
+		auto it = std::ranges::find(startPosObjects, self->m_startPosObject);
+		if (it != startPosObjects.end())
+			currentStartPos = static_cast<int32_t>(std::distance(startPosObjects.begin(), it));
+	}
+}
+
 void __fastcall PlayLayer::lightningFlashH(gd::PlayLayer* self, void*, CCPoint p0, ccColor3B p1) {
 	PlayLayer::lightningFlash(self, p0, p1);
 	//self->stopActionByTag(1);
@@ -437,5 +359,6 @@ void PlayLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x17de80), PlayLayer::onQuitH, reinterpret_cast<void**>(&PlayLayer::onQuit));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16c830), PlayLayer::levelCompleteH, reinterpret_cast<void**>(&PlayLayer::levelComplete));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16fc00), PlayLayer::addObjectH, reinterpret_cast<void**>(&PlayLayer::addObject));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16f700), PlayLayer::createObjectsFromSetupH, reinterpret_cast<void**>(&PlayLayer::createObjectsFromSetup));
 	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16e1f0), PlayLayer::lightningFlashH, reinterpret_cast<void**>(&PlayLayer::lightningFlash));
 }

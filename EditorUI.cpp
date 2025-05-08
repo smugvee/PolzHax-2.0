@@ -5,27 +5,82 @@
 #include "GlobalClipboard.h"
 #include "state.h"
 
+gd::EditorUI* editorUI = nullptr;
+
 gd::EditorPauseLayer* m_editorPauseLayer{ nullptr };
 
+CCArray* m_blocksArray = nullptr;
+
+void EditorUI::Callback::onNextFreeEditorLayer(CCObject*) {
+	auto objs = this->m_editorLayer->m_objects;
+
+	std::set<int> layers;
+
+	CCARRAY_FOREACH_B_TYPE(objs, obj, gd::GameObject) {
+		layers.insert(from<int>(obj, 0x368));
+		layers.insert(from<int>(obj, 0x36c));
+	}
+
+	int last = -1;
+	for (auto const& layer : layers) {
+		if (last + 1 != layer) break;
+		last = layer;
+	}
+
+	from<int>(this->m_editorLayer, 0x1d8) = last + 1;
+	this->m_currentGroupLabel->setString(CCString::createWithFormat("%d", last + 1)->getCString());
+}
+
+void EditorUI::Callback::onAllEditorLayer(CCObject*) {
+	from<int>(this->m_editorLayer, 0x1d8) = -1;
+	this->m_currentGroupLabel->setString("All");
+}
+
 bool __fastcall EditorUI::initH(gd::EditorUI* self, void*, gd::LevelEditorLayer* editorLayer) {
+	editorUI = self;
 	if (!EditorUI::init(self, editorLayer)) return false;
 
 	if (setting().onHideUI) self->setVisible(!setting().onHideUI);
 
-	//for (int i = 0; i < self->m_hideableUIElement->count(); i++) {
-	//	if (reinterpret_cast<CCNode*>(self->m_hideableUIElement->objectAtIndex(i))) {
-	//		reinterpret_cast<CCNode*>(self->m_hideableUIElement->objectAtIndex(i))->setVisible(0);
-	//	}
-	//}
-
 	loadClipboard(self);
-	std::cout << self->m_editorLayer << std::endl;
+
+	auto rightMenu = static_cast<CCMenu*>(self->m_copyBtn->getParent());
+
+	self->m_groupPrevBtn->setPositionX(self->m_groupPrevBtn->getPositionX() - 10.f);
+	self->m_groupNextBtn->setPositionX(self->m_groupNextBtn->getPositionX() - 10.f);
+	self->m_guideToggle->setPositionX(self->m_guideToggle->getPositionX() - 20.f);
+	self->m_currentGroupLabel->setPositionX(self->m_currentGroupLabel->getPositionX() - 10.f);
+
+	auto onBaseLayerSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_02_001.png");
+	auto onBaseLayerBtn = gd::CCMenuItemSpriteExtra::create(onBaseLayerSpr, nullptr, self, menu_selector(EditorUI::Callback::onAllEditorLayer));
+	onBaseLayerBtn->setTag(45001);
+	onBaseLayerBtn->setPosition({ -90.f, -172.f });
+	onBaseLayerSpr->setScale(.5f);
+	onBaseLayerSpr->setOpacity(175);
+	rightMenu->addChild(onBaseLayerBtn);
+	if (from<int>(self->m_editorLayer, 0x1d8)) {
+		onBaseLayerBtn->setVisible(false);
+		onBaseLayerBtn->setEnabled(false);
+	}
+	self->m_hideableUIElement->addObject(onBaseLayerBtn);
+
+	auto onFreeLayerSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_02_001.png");
+	auto onFreeLayerBtn = gd::CCMenuItemSpriteExtra::create(onFreeLayerSpr, nullptr, self, menu_selector(EditorUI::Callback::onNextFreeEditorLayer));
+	onFreeLayerBtn->setTag(45002);
+	onFreeLayerBtn->setPosition({ 10.f, -172.f });
+	onFreeLayerSpr->setScale(.5f);
+	onFreeLayerSpr->setFlipX(true);
+	onFreeLayerSpr->setOpacity(175);
+	rightMenu->addChild(onFreeLayerBtn);
+	self->m_hideableUIElement->addObject(onFreeLayerBtn);
 
 	return true;
 }
 
 void __fastcall EditorUI::dtorH(gd::EditorUI* self) {
+	m_blocksArray = nullptr;
 	saveClipboard(self);
+	editorUI = nullptr;
 	EditorUI::dtor(self);
 }
 
@@ -55,6 +110,18 @@ void __fastcall EditorUI::scrollWheelH(gd::EditorUI* _self, void* edx, float dy,
 	else {
 		EditorUI::scrollWheel(_self, dy, dx);
 	}
+}
+
+void __fastcall EditorUI::moveObjectH(gd::EditorUI* self, void*, gd::GameObject* object, CCPoint to) {
+	if (object == nullptr) return;
+	EditorUI::moveObject(self, object, to);
+}
+
+void __fastcall EditorUI::blocksArrayH() {
+	__asm {
+		mov m_blocksArray, eax
+	}
+	EditorUI::blocksArray();
 }
 
 class SaveLevelProtocol : public gd::FLAlertLayerProtocol {
@@ -124,6 +191,63 @@ void __fastcall EditorPauseLayer::dtorH(gd::EditorPauseLayer* self) {
 	EditorPauseLayer::dtor(self);
 }
 
+CCArray* objArr;
+
+void addObject(int id) {
+	auto obj = editorUI->getCreateBtn(id, 4);
+	objArr->addObject(obj);
+}
+
+bool __fastcall EditButtonBar::initH(gd::EditButtonBar* self, void*, CCArray* objs, int page, int absolute, int rows, int columns, CCPoint pos) {
+	objArr = objs;
+
+	if (editorUI) {
+		switch (page)
+		{
+		case 1:
+			addObject(160);
+			addObject(161);
+			addObject(162);
+			addObject(163);
+			addObject(164);
+			addObject(165);
+			addObject(166);
+			addObject(167);
+			addObject(168);
+			addObject(169);
+			addObject(193);
+			addObject(737);
+			break;
+		case 3:
+			addObject(371);
+			addObject(372);
+			addObject(373);
+			addObject(374);
+			addObject(886);
+			addObject(887);
+			break;
+		case 8:
+			addObject(461);
+			addObject(462);
+			addObject(463);
+			addObject(464);
+			addObject(465);
+			addObject(466);
+			addObject(725);
+			break;
+		case 11:
+			addObject(55);
+			addObject(34);
+			break;
+		default:
+			break;
+		}
+	}
+
+	if (!EditButtonBar::init(self, objs, page, absolute, rows, columns, pos)) return false;
+	return true;
+}
+
 void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5d3e0), EditorUI::initH, reinterpret_cast<void**>(&EditorUI::init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6cf60), EditorUI::createMoveMenuH, reinterpret_cast<void**>(&EditorUI::createMoveMenu));
@@ -132,11 +256,17 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bad0), EditorUI::onCopyH, reinterpret_cast<void**>(&EditorUI::onCopy));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5d170), EditorUI::dtorH, reinterpret_cast<void**>(&EditorUI::dtor));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x72960), EditorUI::scrollWheelH, reinterpret_cast<void**>(&EditorUI::scrollWheel));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6e330), EditorUI::moveObjectH, reinterpret_cast<void**>(&EditorUI::moveObject));
 	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x71ad0), EditorUI::keyDownH, reinterpret_cast<void**>(&EditorUI::keyDown));
 	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x72910), EditorUI::keyUpH, reinterpret_cast<void**>(&EditorUI::keyUp));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6303e), EditorUI::blocksArrayH, reinterpret_cast<void**>(&EditorUI::blocksArray));
 }
 
 void EditorPauseLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5aa90), EditorPauseLayer::customSetupH, reinterpret_cast<void**>(&EditorPauseLayer::customSetup));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5a5f0), EditorPauseLayer::dtorH, reinterpret_cast<void**>(&EditorPauseLayer::dtor));
+}
+
+void EditButtonBar::mem_init() {
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x55fd0), EditButtonBar::initH, reinterpret_cast<void**>(&EditButtonBar::init));
 }

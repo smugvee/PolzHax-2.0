@@ -2,6 +2,7 @@
 #define __EDITORUI_H__
 
 #include <gd.h>
+#include "level_nodes/ColorAction.h"
 
 namespace gd {
 	class CCBlockLayer;
@@ -10,6 +11,9 @@ namespace gd {
 	class FLAlertLayer;
 	class GameObject;
 	using EffectGameObject = GameObject;
+	class CreateMenuItem;
+	class ButtonSprite;
+	class ColorChannelSprite;
 
 	class GJRotationControl {};
 	class GJScaleControl {};
@@ -197,6 +201,23 @@ namespace gd {
 		void updateZoom(float amt) {
 			reinterpret_cast<void(__vectorcall*)(float, float, EditorUI*)>(base + 0x6b4e0)(0.f, amt, this);
 		}
+		void onDuplicate(CCObject* sender) {
+			return reinterpret_cast<void(__thiscall*)(EditorUI*, CCObject*)>(base + 0x6b830)(this, sender);
+		}
+		void selectObjects(cocos2d::CCArray* arr) {
+			return reinterpret_cast<void(__thiscall*)(EditorUI*, cocos2d::CCArray*)>(base + 0x6a5a0)(this, arr);
+		}
+		CreateMenuItem* getCreateBtn(int id, int bg) {
+			auto ret = reinterpret_cast<CreateMenuItem * (__thiscall*)(
+				EditorUI*, int, int
+				)>(
+					base + 0x69380
+					)(
+						this, id, bg
+						);
+
+			return ret;
+		}
 	};
 
 	class ColorSelectPopup : public FLAlertLayer {
@@ -237,8 +258,35 @@ namespace gd {
 		cocos2d::extension::CCControlColourPicker* m_colorPicker; // 0x1d4
 	};
 
-	class CustomizeObjectLayer : public FLAlertLayer {
+	class CustomizeObjectLayer : public FLAlertLayer, public TextInputDelegate, public HSVWidgetPopupDelegate, public ColorSelectDelegate, public ColorSetupDelegate {
 	public:
+		GameObject* m_targetObject; // 0x1d8
+		cocos2d::CCArray* m_targetObjects; // 0x1dc
+		cocos2d::CCArray* m_colorButtons; // 0x1e0
+		cocos2d::CCArray* m_colorNodes; // 0x1e4
+		cocos2d::CCArray* m_textInputNodes; // 0x1e8
+		cocos2d::CCArray* m_unkArray; // 0x1ec
+		cocos2d::CCArray* m_unkArray2; // 0x1f0
+		int m_selectedMode; // 0x1f4
+		int m_customColorChannel; // 0x1f8
+		PAD(0x4)
+		CCMenuItemSpriteExtra* m_baseButton; // 0x200
+		CCMenuItemSpriteExtra* m_detailButton; // 0x204
+		CCMenuItemSpriteExtra* m_textButton; // 0x208
+		CCMenuItemSpriteExtra* m_baseColorHSV; // 0x20c
+		CCMenuItemSpriteExtra* m_detailColorHSV; // 0x210
+		cocos2d::CCLabelBMFont* m_titleLabel; // 0x214
+		cocos2d::CCLabelBMFont* m_selectedColorLabel; // 0x218
+		CCTextInputNode* m_customColorInput; // 0x21c
+		CCTextInputNode* m_textInput; // 0x220
+		ButtonSprite* m_customColorButtonSprite; // 0x224
+		CCMenuItemSpriteExtra* m_customColorButton; // 0x228
+		CCMenuItemSpriteExtra* m_arrowDown; // 0x22c
+		CCMenuItemSpriteExtra* m_arrowUp; // 0x230
+		cocos2d::extension::CCScale9Sprite* m_customColorInputBG; // 0x234
+		ColorChannelSprite* m_colorSprite; // 0x238
+		CCMenuItemSpriteExtra* m_colorSpriteButton; // 0x240
+
 		void onSelectColor(cocos2d::CCObject* obj) {
 			reinterpret_cast<void(__thiscall*)(CustomizeObjectLayer*, cocos2d::CCObject*)>(base + 0x45920)(this, obj);
 		}
@@ -250,6 +298,39 @@ namespace gd {
 			return reinterpret_cast<ColorChannelSprite*(__stdcall*)()>(
 				base + 0xc33b0
 			)();
+		}
+
+		void updateOpacity(float opacity) {
+			__asm movss xmm1, opacity
+
+			reinterpret_cast<void(__thiscall*)(ColorChannelSprite*)>(
+				base + 0xc3630
+				)(this);
+		}
+		void updateCopyLabel(int channel, bool unk) {
+			reinterpret_cast<void(__thiscall*)(ColorChannelSprite*, int, bool)>(
+				base + 0xc34b0
+				)(this, channel, unk);
+		}
+		void updateBlending(bool enabled) {
+			reinterpret_cast<void(__thiscall*)(ColorChannelSprite*, bool)>(
+				base + 0xc3780
+				)(this, enabled);
+		}
+
+		void updateValues(ColorAction* action) {
+			if (!action) {
+				this->setColor(cocos2d::ccWHITE);
+				this->updateCopyLabel(0, false);
+				this->updateOpacity(1.f);
+				this->updateBlending(false);
+				return;
+			}
+			this->updateCopyLabel(action->m_copyID, action->m_copyColorLoop);
+			this->updateOpacity(action->m_fromOpacity);
+			this->updateBlending(action->m_blending);
+			if (action->m_copyID != 0 && !action->m_copyOpacity) this->setColor(cocos2d::ccGRAY);
+			else this->setColor(action->m_fromColor);
 		}
 	};
 }

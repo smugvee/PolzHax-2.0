@@ -10,8 +10,8 @@ namespace gd {
 
 	#pragma runtime_checks("s", off)
 	class GameObject : public CCSpritePlus {
-	protected:
-		PAD(0x278);
+	public:
+		
 
 	public:
 		//CCNode vtable

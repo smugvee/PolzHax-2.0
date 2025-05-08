@@ -1461,6 +1461,18 @@
     <ClInclude Include="libs\fmod-headers\fmod_output.h">
       <Filter>Файлы заголовков\libs\fmod</Filter>
     </ClInclude>
+    <ClInclude Include="nodes.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleToolPopup.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\other_nodes\UndoObject.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\level_nodes\ColorAction.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1549,6 +1561,12 @@
     </ClCompile>
     <ClCompile Include="CustomizeObjectLayer.cpp">
       <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="nodes.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleToolPopup.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

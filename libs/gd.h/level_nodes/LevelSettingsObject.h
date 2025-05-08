@@ -5,10 +5,11 @@
 
 namespace gd {
 	class GameObject;
+	class GJEffectManager;
 
 	class LevelSettingsObject : public cocos2d::CCNode {
 	public:
-		PAD(4)
+		GJEffectManager* m_effectManager; // 0xe8
 		int m_startMode; // 0xec
 		int m_startSpeed; // 0xf0
 		bool m_startMini; // 0xf4
