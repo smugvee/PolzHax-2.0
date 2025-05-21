@@ -97,6 +97,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)libs\cocos-headers\extensions;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32\OGLES;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\third_party\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\platform\win32;$(SolutionDir)libs\cocos-headers\cocos2dx\kazmath\include;$(SolutionDir)libs\cocos-headers\cocos2dx\include;$(SolutionDir)libs\cocos-headers\cocos2dx;$(SolutionDir)libs\MinHook;$(SolutionDir)libs\gd.h\include;$(SolutionDir)libs\gd.h;$(SolutionDir)libs\imgui-hook;$(SolutionDir)libs\imgui-hook\imgui;$(SolutionDir)libs\detours;$(SolutionDir)libs\nfd;$(SolutionDir)libs\nfd\src;$(SolutionDir)libs\nfd\src\include;$(SolutionDir)libs\fmod-headers\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-D_CRT_SECURE_NO_WARNINGS %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -155,6 +156,7 @@
     <ClInclude Include="EditorUI.h" />
     <ClInclude Include="explorer.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="InfoLayer.h" />
     <ClInclude Include="LevelEditorLayer.h" />
     <ClInclude Include="LevelShare.h" />
     <ClInclude Include="libs\cocos-headers\cocos2dx\actions\CCAction.h" />
@@ -561,6 +563,7 @@
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\GJBaseGameLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\GJDropDownLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\GJListLayer.h" />
+    <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\InfoLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\LevelEditorLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\LoadingCircle.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\LoadingLayer.h" />
@@ -592,6 +595,7 @@
     <ClInclude Include="libs\gd.h\sprite_nodes\CCAnimatedSprite.h" />
     <ClInclude Include="libs\gd.h\sprite_nodes\CCSpritePlus.h" />
     <ClInclude Include="libs\gd.h\sprite_nodes\GameObject.h" />
+    <ClInclude Include="libs\gd.h\sprite_nodes\GJSpriteColor.h" />
     <ClInclude Include="libs\gd.h\sprite_nodes\PlayerObject.h" />
     <ClInclude Include="libs\gd.h\sprite_nodes\TextArea.h" />
     <ClInclude Include="libs\gd.h\text_input_nodes\CCTextInputNode.h" />
@@ -615,6 +619,7 @@
     <ClInclude Include="PauseLayer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PlayLayer.h" />
+    <ClInclude Include="portable-file-dialogs.h" />
     <ClInclude Include="RGBColorInputWidget.hpp" />
     <ClInclude Include="schema.hpp" />
     <ClInclude Include="state.h" />
@@ -633,6 +638,7 @@
     <ClCompile Include="explorer.cpp" />
     <ClCompile Include="GlobalClipboard.cpp" />
     <ClCompile Include="GlobalClipboard.h" />
+    <ClCompile Include="InfoLayer.cpp" />
     <ClCompile Include="LevelEditorLayer.cpp" />
     <ClCompile Include="libs\imgui-hook\imgui-hook.cpp" />
     <ClCompile Include="libs\imgui-hook\imgui\backends\imgui_impl_opengl3.cpp" />

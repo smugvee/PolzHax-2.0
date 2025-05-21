@@ -35,6 +35,12 @@ namespace EditorUI {
 	inline void(__thiscall* blocksArray)();
 	void __fastcall blocksArrayH();
 
+	inline void(__thiscall* selectObject)(gd::EditorUI*, gd::GameObject*);
+	void __fastcall selectObjectH(gd::EditorUI*, void*, gd::GameObject*);
+
+	inline void(__thiscall* updateObjectInfoLabel)(gd::EditorUI*);
+	void __fastcall updateObjectInfoLabelH(gd::EditorUI*);
+
 	class Callback : public gd::EditorUI {
 	public:
 		void onCustomMoveObject(CCObject*);
@@ -55,6 +61,9 @@ namespace EditorPauseLayer {
 	inline void(__thiscall* dtor)(gd::EditorPauseLayer*);
 	void __fastcall dtorH(gd::EditorPauseLayer*);
 
+	inline void(__thiscall* keyDown)(gd::EditorPauseLayer*, enumKeyCodes);
+	void __fastcall keyDownH(gd::EditorPauseLayer*, void*, enumKeyCodes);
+
 	class Callback {
 	public:
 		void onSaveLevel(CCObject*);
@@ -67,6 +76,13 @@ namespace EditorPauseLayer {
 namespace EditButtonBar {
 	inline bool(__thiscall* init)(gd::EditButtonBar*, CCArray*, int, int, int, int, CCPoint);
 	bool __fastcall initH(gd::EditButtonBar*, void*, CCArray*, int, int, int, int, CCPoint);
+
+	void mem_init();
+}
+
+namespace LevelSettingsLayer {
+	inline bool(__thiscall* init)(gd::FLAlertLayer*, gd::LevelEditorLayer*);
+	bool __fastcall initH(gd::FLAlertLayer*, void*, gd::LevelEditorLayer*);
 
 	void mem_init();
 }

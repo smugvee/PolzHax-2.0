@@ -9,8 +9,9 @@ namespace gd {
 
 	class StartPosObject : public GameObject {
 	public:
-		PAD(28)
-		LevelSettingsObject* m_levelSettings; // 0x458
+		LevelSettingsObject* getLevelSettings() {
+			return from<LevelSettingsObject*>(this, 0x458);
+		}
 	};
 }
 #endif

@@ -225,6 +225,7 @@ void __fastcall EditorUI::transformObjectH(gd::EditorUI* self, void* edx, gd::Ga
 
 void EditorUI::Callback::onCustomMoveObject(CCObject* obj) {
 	auto editorUI = gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI;
+	std::cout << editorUI << std::endl;
 	if (editorUI) {
 		auto buttonTag = static_cast<gd::CCMenuItemSpriteExtra*>(obj)->getTag();
 		std::cout << buttonTag << std::endl;

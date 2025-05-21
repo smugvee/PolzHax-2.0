@@ -38,7 +38,7 @@ static gd::GameObject* getClosestObject(std::vector<gd::GameObject*>& vec, gd::S
 }
 
 void setupStartPos(gd::StartPosObject* startPos) {
-	gd::LevelSettingsObject* startPosSettings = startPos->m_levelSettings;
+	gd::LevelSettingsObject* startPosSettings = startPos->getLevelSettings();
 	gd::LevelSettingsObject* levelSettings = gd::GameManager::sharedState()->getPlayLayer()->m_levelSettings;
 
 	startPosSettings->m_startDual = levelSettings->m_startDual;
@@ -209,6 +209,9 @@ void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 	layers().PauseLayerObject = nullptr;
 	PlayLayer::update(self, dt);
 
+	auto director = CCDirector::sharedDirector();
+	auto winSize = director->getWinSize();
+
 	self->m_attemptLabel->setVisible(!setting().onHideAttempts);
 
 	if (gd::GameManager::sharedState()->getGameVariable("0024")) {
@@ -224,6 +227,10 @@ void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 
 	if (setting().onAutoSafeMode && setting().cheatsCount > 0) safeModeON(), setting().isSafeMode = true;
 	else if (!setting().onSafeMode) safeModeOFF(), setting().isSafeMode = false;
+
+	if (setting().onLockCursor && !setting().show && !self->m_hasLevelCompletedMenu && !self->m_isDead) {
+		SetCursorPos(winSize.width / 2, winSize.height / 2);
+	}
 }
 
 void __fastcall PlayLayer::destroyPlayerH(gd::PlayLayer* self, void*, gd::PlayerObject* player) {
@@ -234,12 +241,6 @@ void __fastcall PlayLayer::resetLevelH(gd::PlayLayer* self) {
 	if (setting().onSmartStartPos)
 		for (gd::StartPosObject* obj : m_startPositions)
 			setupStartPos(obj);
-
-	//if (setting().onCheckpointLagFix) {
-	//	if (inTestmode || inPractice) {
-	//		smoothOut = 2;
-	//	}
-	//}
 
 	PlayLayer::resetLevel(self);
 

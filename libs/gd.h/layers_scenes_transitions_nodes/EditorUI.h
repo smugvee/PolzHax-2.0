@@ -53,6 +53,10 @@ namespace gd {
 		void saveLevel() {
 			reinterpret_cast<void(__fastcall*)(EditorPauseLayer*)>(base + 0x5c290)(this);
 		}
+
+		void onResume(cocos2d::CCObject* obj) {
+			reinterpret_cast<void(__thiscall*)(EditorPauseLayer*, cocos2d::CCObject*)>(base + 0x5c270)(this, obj);
+		}
 	};
 
 	class EditorUI : public cocos2d::CCLayer {
@@ -217,6 +221,17 @@ namespace gd {
 						);
 
 			return ret;
+		}
+
+		void constrainGameLayerPosition(float x = -3.0f, float y = -6.0f) {
+			__asm {
+				movss xmm1, x
+				movss xmm2, y
+			}
+
+			reinterpret_cast<void(__fastcall*)(EditorUI*)>(
+				base + 0x6fc80
+				)(this);
 		}
 	};
 

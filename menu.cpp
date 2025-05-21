@@ -20,6 +20,8 @@
 #include "fmod_dsp_effects.h"
 #include "shellapi.h"
 
+#include "portable-file-dialogs.h"
+
 DWORD libcocosbase = (DWORD)GetModuleHandleA("libcocos2d.dll");
 
 ImVec4 color1;
@@ -78,6 +80,8 @@ void update_pitch_shifter() {
 	fme->m_globalChannel->addDSP(0, pitchShifterDSP);
 	pitchShifterDSP->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH, setting().pitch);
 }
+
+std::vector<std::string> dllNames;
 
 void imgui_render() {
 	if (oneX) {
@@ -169,11 +173,27 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x1770de, { 0x0f, 0x85, 0x82, 0x00, 0x00, 0x00 });
 		}
 
+		if (setting().onNoBackgroundFlash) {
+			sequence_patch((uint32_t)gd::base + 0x16e331, { 0x6a, 0x00 });
+			sequence_patch((uint32_t)gd::base + 0x16e34b, { 0xc7, 0x04, 0x24, 0x00, 0x00, 0x00, 0x00 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x16e331, { 0x6a, 0x01 });
+			sequence_patch((uint32_t)gd::base + 0x16e34b, { 0xc7, 0x04, 0x24, 0x8f, 0xc2, 0xf5, 0x3d });
+		}
+
 		if (setting().onNoDeathEffect) {
 			sequence_patch((uint32_t)gd::base + 0x164c2d, { 0xe9, 0xe7, 0x01, 0x00, 0x00, 0x90 });
 		}
 		else {
 			sequence_patch((uint32_t)gd::base + 0x164c2d, { 0x0f, 0x84, 0xd5, 0x01, 0x00, 0x00 });
+		}
+
+		if (setting().onNoLightning) {
+			sequence_patch((uint32_t)gd::base + 0x16e28f, { 0xe9, 0x97, 0x00, 0x00, 0x00, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x16e28f, { 0x0f, 0x85, 0x96, 0x00, 0x00, 0x00 });
 		}
 
 		if (setting().onNoRespawnFlash) {
@@ -247,7 +267,7 @@ void imgui_render() {
 		}
 		else {
 			sequence_patch((uint32_t)gd::base + 0x607c1, { 0x76, 0x7f });
-			sequence_patch((uint32_t)gd::base + 0x608a3, { 0x0f, 0x82, 0xae, 0x00, 0x00, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0x608a3, { 0x0f, 0x82, 0xae, 0x00, 0x00, 0x00 });
 			sequence_patch((uint32_t)gd::base + 0x609cf, { 0x74, 0x4f });
 		}
 
@@ -578,6 +598,27 @@ void imgui_render() {
 				ShellExecute(0, NULL, CCFileUtils::sharedFileUtils()->getWritablePath().c_str(), NULL, NULL, SW_SHOW);
 			}
 
+			char buffer[256];
+			sprintf(buffer, "Extensions: %d", dllNames.size());
+			if (ImGui::TreeNode(buffer)) {
+				for (const auto& name : dllNames) {
+					ImGui::Text(name.c_str());
+				}
+				if (ImGui::Button("Extensions Folder")) {
+					ShellExecute(NULL, "open", "PolzHax\\extensions", NULL, NULL, SW_SHOWNORMAL);
+				}
+				ImGui::TreePop();
+			}
+
+			if (ImGui::Button("Inject DLL")) {
+				auto selection = pfd::open_file("Select a file", CCFileUtils::sharedFileUtils()->getWritablePath2(), { "DLL File", "*.dll" }, pfd::opt::multiselect).result();
+				for (auto const& filename : selection) {
+					LoadLibrary(filename.c_str());
+					std::filesystem::path path = filename;
+					dllNames.push_back(path.filename().string());
+				}
+			}
+
 			if (ImGui::Button("Sort Tabs")) {
 				float polzhax_xPos;
 				float bypass_xPos;
@@ -744,6 +785,17 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Hides practice buttons.");
 
+			if (ImGui::Checkbox("No Background Flash", &setting().onNoBackgroundFlash)) {
+				if (setting().onNoBackgroundFlash) {
+					sequence_patch((uint32_t)gd::base + 0x16e331, { 0x6a, 0x00 });
+					sequence_patch((uint32_t)gd::base + 0x16e34b, { 0xc7, 0x04, 0x24, 0x00, 0x00, 0x00, 0x00 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x16e331, { 0x6a, 0x01 });
+					sequence_patch((uint32_t)gd::base + 0x16e34b, { 0xc7, 0x04, 0x24, 0x8f, 0xc2, 0xf5, 0x3d });
+				}
+			}
+
 			if (ImGui::Checkbox("No Death Effect", &setting().onNoDeathEffect)) {
 				if (setting().onNoDeathEffect) {
 					sequence_patch((uint32_t)gd::base + 0x164c2d, { 0xe9, 0xe7, 0x01, 0x00, 0x00, 0x90 });
@@ -755,13 +807,24 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("No visual effects on death.");
 
-			ImGui::Checkbox("No Orb Ring", &setting().onNoOrbRing);
+			if (ImGui::Checkbox("No Portal Lightning", &setting().onNoLightning)) {
+				if (setting().onNoLightning) {
+					sequence_patch((uint32_t)gd::base + 0x16e28f, { 0xe9, 0x97, 0x00, 0x00, 0x00, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x16e28f, { 0x0f, 0x85, 0x96, 0x00, 0x00, 0x00 });
+				}
+			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
-				ImGui::SetTooltip("Disables orb ring effect when touching it.");
+				ImGui::SetTooltip("Disables portal lightning from size-changing portals.");
 
 			ImGui::Checkbox("No Mini Icon", &setting().onNoMiniIcon);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Replaces default mini icon with normal one.");
+
+			ImGui::Checkbox("No Orb Ring", &setting().onNoOrbRing);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Disables orb ring effect when touching it.");
 
 			ImGui::Checkbox("No Particles", &setting().onNoParticles);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
@@ -875,7 +938,7 @@ void imgui_render() {
 				}
 				else {
 					sequence_patch((uint32_t)gd::base + 0x607c1, { 0x76, 0x7f });
-					sequence_patch((uint32_t)gd::base + 0x608a3, { 0x0f, 0x82, 0xae, 0x00, 0x00, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0x608a3, { 0x0f, 0x82, 0xae, 0x00, 0x00, 0x00 });
 					sequence_patch((uint32_t)gd::base + 0x609cf, { 0x74, 0x4f });
 				}
 			}
@@ -1251,6 +1314,10 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Sets all nodes to be visible.");
 
+			ImGui::Checkbox("Lock Cursor", &setting().onLockCursor);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Locks cursor position while playing.");
+
 			ImGui::Checkbox("No Transition", &setting().onNoTransition);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Shorterns scene transition time to 0s.");
@@ -1390,6 +1457,33 @@ void imgui_init() {
 
 void setup_imgui_menu() {
 	SpeedHack::Setup();
+
+	if (!std::filesystem::is_directory("PolzHax") || !std::filesystem::exists("PolzHax"))
+	{
+		std::filesystem::create_directory("PolzHax");
+	}
+	if (!std::filesystem::is_directory("PolzHax/extensions") || !std::filesystem::exists("PolzHax/extensions"))
+	{
+		std::filesystem::create_directory("PolzHax/extensions");
+	}
+
+	auto path = CCFileUtils::sharedFileUtils()->getWritablePath2() + "PolzHax/extensions";
+
+	for (const auto& file : std::filesystem::directory_iterator(path))
+	{
+		if (file.path().extension() == ".dll")
+		{
+			auto dllname = file.path().filename().string();
+			dllNames.push_back(dllname);
+			LoadLibrary(file.path().string().c_str());
+		}
+	}
+
+	std::cout << "Extensions Loaded: " << dllNames.size() << std::endl;
+	for (const auto& name : dllNames) {
+		std::cout << name << std::endl;
+	}
+
 	ImGuiHook::setToggleCallback([]() {setting().show = !setting().show; });
 	ImGuiHook::setRenderFunction(imgui_render);
 	ImGuiHook::setInitFunction(imgui_init);

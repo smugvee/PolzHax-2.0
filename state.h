@@ -44,7 +44,9 @@ struct SettingStruct {
 	bool onHidePauseMenu;
 	bool onHidePlayer;
 	bool onHidePracticeButtons;
+	bool onNoBackgroundFlash;
 	bool onNoDeathEffect;
+	bool onNoLightning;
 	bool onNoMiniIcon;
 	bool onNoOrbRing;
 	bool onNoParticles;
@@ -93,6 +95,7 @@ struct SettingStruct {
 	bool onAntiCheatBypass;
 	bool onAutoSafeMode;
 	bool onForceVisibility;
+	bool onLockCursor;
 	bool onNoTransition;
 	bool onRetryKeybind;
 	bool onSafeMode;
@@ -129,7 +132,9 @@ DEF_SCHEMA(
 	onHidePauseMenu,
 	onHidePlayer,
 	onHidePracticeButtons,
+	onNoBackgroundFlash,
 	onNoDeathEffect,
+	onNoLightning,
 	onNoMiniIcon,
 	onNoOrbRing,
 	onNoParticles,
@@ -176,6 +181,7 @@ DEF_SCHEMA(
 	onAntiCheatBypass,
 	onAutoSafeMode,
 	onForceVisibility,
+	onLockCursor,
 	onNoTransition,
 	onRetryKeybind,
 	onSafeMode,

@@ -27,6 +27,15 @@ namespace gd {
         inline static gd::GJGameLevel* createNewLevel() {
             return reinterpret_cast<gd::GJGameLevel * (__stdcall*)()>(gd::base + 0x7fa40)();
         }
+
+        void makeTimeStamp(char const* key) {
+            return reinterpret_cast<void(__thiscall*)(GameLevelManager*, char const*)>(base + 0x81c90)(this, key);
+        }
+
+        void resetTimerForKey(char const* key) {
+            return reinterpret_cast<void(__thiscall*)(GameLevelManager*, char const*)>(gd::base + 0x82070)(this, key);
+        }
+
     };
 }
 

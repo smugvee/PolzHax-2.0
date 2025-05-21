@@ -33,6 +33,10 @@ namespace gd {
 		PlayerObject* m_player2; // 0x168
 		LevelSettingsObject* m_levelSettings; // 0x16c
 		cocos2d::CCDictionary* m_disabledGroupsDict; // 0x170
+
+		cocos2d::CCArray* getAllObjects() {
+			return from<cocos2d::CCArray*>(this, 0x1f8);
+		}
 	};
 }
 

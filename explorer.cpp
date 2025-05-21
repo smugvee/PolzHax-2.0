@@ -218,6 +218,11 @@ void render_node_properties(CCNode* node) {
 		auto value = CCSize({ node->getScaleX() * node->getContentSize().width, node->getScaleY() * node->getContentSize().height });
 		ImGui::TextWrapped("Scaled Content Size: %.2fx%.2f", value.width, value.height);
 	}
+
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::NewLine();
+
 	if (ImGui::TreeNode("Advanced Position PRO")) {
 		if (node->getParent()) {
 			const auto pos = node->getParent()->convertToWorldSpace(node->getPosition());
@@ -227,6 +232,11 @@ void render_node_properties(CCNode* node) {
 		}
 		ImGui::TreePop();
 	}
+
+	ImGui::NewLine();
+	ImGui::Separator();
+	ImGui::NewLine();
+
 	{
 		auto value = node->getScale();
 		ImGui::DragFloat("Scale", &value, 0.05f);
@@ -255,14 +265,34 @@ void render_node_properties(CCNode* node) {
 		if (value[0] != node->getSkewX()) node->setSkewX(value[0]);
 		if (value[1] != node->getSkewY()) node->setSkewY(value[1]);
 	}
+
 	if (auto item = dynamic_cast<CCMenuItemSprite*>(node)) {
+		ImGui::NewLine();
+		ImGui::Separator();
+		ImGui::NewLine();
+
 		auto thing = format_addr(union_cast<void*>(item->getSelector())).c_str();
 		ImGui::Text("CCMenuItem selector: %s", thing);
 		ImGui::SameLine();
 		if (ImGui::Button("Copy##ccMenuItem")) {
 			clipboard::write(CCString::createWithFormat("%s", thing)->getCString());
 		}
+
+		if (ImGui::Button("Activate")) {
+			item->activate();
+		}
+
+		{
+			auto value = item->isEnabled();
+			ImGui::Checkbox("Enabled", &value);
+			if (value != item->isEnabled()) item->setEnabled(value);
+		}
+
+		ImGui::NewLine();
+		ImGui::Separator();
+		ImGui::NewLine();
 	}
+
 	{
 		auto value = node->isVisible();
 		ImGui::Checkbox("Visible", &value);

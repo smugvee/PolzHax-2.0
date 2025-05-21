@@ -144,6 +144,18 @@ namespace gd {
     public:
         virtual void colorSetupClosed(int) {}
     };
+
+    class LevelCommentDelegate {
+        virtual void loadCommentsFinished(cocos2d::CCArray*, char const*);
+	    virtual void loadCommentsFailed(char const*);
+	    virtual void updateUserScoreFinished();
+	    virtual void setupPageInfo(std::string, char const*);  
+    };
+
+    class CommentUploadDelegate {
+	    virtual void commentUploadFinished(int) {}
+	    virtual void commentUploadFailed(int) {}
+    };
 }
 
 #endif

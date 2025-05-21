@@ -9,8 +9,6 @@ gd::EditorUI* editorUI = nullptr;
 
 gd::EditorPauseLayer* m_editorPauseLayer{ nullptr };
 
-CCArray* m_blocksArray = nullptr;
-
 void EditorUI::Callback::onNextFreeEditorLayer(CCObject*) {
 	auto objs = this->m_editorLayer->m_objects;
 
@@ -39,6 +37,9 @@ void EditorUI::Callback::onAllEditorLayer(CCObject*) {
 bool __fastcall EditorUI::initH(gd::EditorUI* self, void*, gd::LevelEditorLayer* editorLayer) {
 	editorUI = self;
 	if (!EditorUI::init(self, editorLayer)) return false;
+
+	auto director = CCDirector::sharedDirector();
+	auto winSize = director->getWinSize();
 
 	if (setting().onHideUI) self->setVisible(!setting().onHideUI);
 
@@ -74,11 +75,23 @@ bool __fastcall EditorUI::initH(gd::EditorUI* self, void*, gd::LevelEditorLayer*
 	rightMenu->addChild(onFreeLayerBtn);
 	self->m_hideableUIElement->addObject(onFreeLayerBtn);
 
+	auto previewModePopup = extension::CCScale9Sprite::create("square02_small.png");
+	previewModePopup->setScale(.5f);
+	previewModePopup->setPosition({ director->getScreenLeft() + 10.f, director->getScreenTop() - 5.f });
+	previewModePopup->setAnchorPoint({ 0.f, 1.f });
+	previewModePopup->setContentSize({ 130.f, 40.f });
+	previewModePopup->setOpacity(0);
+	self->addChild(previewModePopup, 100, 1125);
+	auto previewModeLabel = CCLabelBMFont::create("", "chatFont.fnt");
+	previewModeLabel->setPosition({ previewModePopup->getContentSize() / 2.f });
+	previewModeLabel->setColor({ 0, 255, 0 });
+	previewModePopup->addChild(previewModeLabel);
+	previewModeLabel->setOpacity(0);
+
 	return true;
 }
 
 void __fastcall EditorUI::dtorH(gd::EditorUI* self) {
-	m_blocksArray = nullptr;
 	saveClipboard(self);
 	editorUI = nullptr;
 	EditorUI::dtor(self);
@@ -91,25 +104,67 @@ void __fastcall EditorUI::onCopyH(gd::EditorUI* self, void*, CCObject* obj) {
 
 void __fastcall EditorUI::scrollWheelH(gd::EditorUI* _self, void* edx, float dy, float dx) { // From MatsHacks
 	auto self = reinterpret_cast<gd::EditorUI*>(reinterpret_cast<uintptr_t>(_self) - 0xf8);
-	auto layer = reinterpret_cast<gd::LevelEditorLayer*>(self->getParent())->m_objectLayer;
-	auto zoom = layer->getScale();
+	
+	float prevScale = self->m_editorLayer->m_objectLayer->getScale();
+	auto swipeStart = self->m_editorLayer->m_objectLayer->convertToNodeSpace(self->m_swipeStartPos) * prevScale;
 
-	//static_assert(offsetof(CCDirector, m_pKeyboardDispatcher) == 0x4c, "it wrong!");
 	auto kb = CCDirector::sharedDirector()->m_pKeyboardDispatcher;
+
 	if (kb->getControlKeyPressed()) {
+		auto zoom = self->m_editorLayer->m_objectLayer->getScale();
 		zoom = static_cast<float>(std::pow(2.71828182845904523536, std::log(std::max(zoom, 0.001f)) - dy * 0.01f));
-		// zoom limit
-		zoom = std::max(zoom, 0.01f);
+		zoom = std::max(zoom, 0.1f);
 		zoom = std::min(zoom, 1000000.f);
 		self->updateZoom(zoom);
-		reinterpret_cast<gd::LevelEditorLayer*>(self->getParent())->updateGroundWidth();
+
+		auto winSize = CCDirector::sharedDirector()->getWinSize();
+		auto winSizePx = CCDirector::sharedDirector()->getOpenGLView()->getViewPortRect();
+		auto ratio_w = winSize.width / winSizePx.size.width;
+		auto ratio_h = winSize.height / winSizePx.size.height;
+
+		auto mpos = CCDirector::sharedDirector()->getOpenGLView()->getMousePosition();
+		mpos.y = winSizePx.size.height - mpos.y;
+
+		mpos.x *= ratio_w;
+		mpos.y *= ratio_h;
+
+		mpos = mpos - winSize / 2.f;
+
+		if (dy > 0.f) mpos = -mpos * .5f;
+
+		self->m_editorLayer->m_objectLayer->setPosition(
+			self->m_editorLayer->m_objectLayer->getPosition() - mpos / std::max(zoom, 5.f)
+		);
+
+		self->constrainGameLayerPosition();
+		self->m_editorLayer->updateGroundWidth();
 	}
 	else if (kb->getShiftKeyPressed()) {
-		layer->setPositionX(layer->getPositionX() - dy * 1.f);
+		self->m_editorLayer->m_objectLayer->setPositionX(self->m_editorLayer->m_objectLayer->getPositionX() - dy * 1.f);
 	}
 	else {
 		EditorUI::scrollWheel(_self, dy, dx);
 	}
+
+	//auto layer = reinterpret_cast<gd::LevelEditorLayer*>(self->getParent())->m_objectLayer;
+	//auto zoom = layer->getScale();
+
+	////static_assert(offsetof(CCDirector, m_pKeyboardDispatcher) == 0x4c, "it wrong!");
+	//auto kb = CCDirector::sharedDirector()->m_pKeyboardDispatcher;
+	//if (kb->getControlKeyPressed()) {
+	//	zoom = static_cast<float>(std::pow(2.71828182845904523536, std::log(std::max(zoom, 0.001f)) - dy * 0.01f));
+	//	// zoom limit
+		//zoom = std::max(zoom, 0.01f);
+		//zoom = std::min(zoom, 1000000.f);
+	//	self->updateZoom(zoom);
+	//	reinterpret_cast<gd::LevelEditorLayer*>(self->getParent())->updateGroundWidth();
+	//}
+	//else if (kb->getShiftKeyPressed()) {
+	//	layer->setPositionX(layer->getPositionX() - dy * 1.f);
+	//}
+	//else {
+	//	EditorUI::scrollWheel(_self, dy, dx);
+	//}
 }
 
 void __fastcall EditorUI::moveObjectH(gd::EditorUI* self, void*, gd::GameObject* object, CCPoint to) {
@@ -117,11 +172,124 @@ void __fastcall EditorUI::moveObjectH(gd::EditorUI* self, void*, gd::GameObject*
 	EditorUI::moveObject(self, object, to);
 }
 
-void __fastcall EditorUI::blocksArrayH() {
-	__asm {
-		mov m_blocksArray, eax
+void showEditorColorNotification() {
+	auto gm = gd::GameManager::sharedState();
+	auto popup = static_cast<extension::CCScale9Sprite*>(editorUI->getChildByTag(1125));
+
+	if (!popup) return;
+
+	auto label = static_cast<CCLabelBMFont*>(popup->getChildren()->objectAtIndex(1));
+
+	if (!label) return;
+
+	popup->setOpacity(100);
+	popup->stopAllActions();
+	popup->runAction(CCSequence::create(CCDelayTime::create(.5f), CCFadeTo::create(.5f, 0), nullptr));
+	label->setOpacity(255);
+	label->stopAllActions();
+	label->runAction(CCSequence::create(CCDelayTime::create(.5f), CCFadeTo::create(.5f, 0), nullptr));
+
+	if (gm->getGameVariable("0036")) {
+		label->setString("Preview Mode: On");
 	}
-	EditorUI::blocksArray();
+	else {
+		label->setString("Preview Mode: Off");
+	}
+}
+
+void toggleEditorColorMode() {
+	gd::GameManager::sharedState()->toggleGameVariable("0036");
+	gd::GameManager::sharedState()->getLevelEditorLayer()->updateEditorMode();
+	showEditorColorNotification();
+}
+
+void __fastcall EditorUI::keyDownH(gd::EditorUI* _self, void*, enumKeyCodes key) {
+	gd::EditorUI* self = reinterpret_cast<gd::EditorUI*>(reinterpret_cast<uintptr_t>(_self) - 0xf4);
+	if (key == KEY_F3) toggleEditorColorMode();
+	else if (key == KEY_Up) {
+		std::cout << "Up" << std::endl;
+		if (self->m_editorLayer->m_playerState == 1) {
+			self->m_editorLayer->pushButton(1, true);
+		}
+	}
+	else EditorUI::keyDown(_self, key);
+}
+
+void __fastcall EditorUI::keyUpH(gd::EditorUI* _self, void*, enumKeyCodes key) {
+	gd::EditorUI* self = reinterpret_cast<gd::EditorUI*>(reinterpret_cast<uintptr_t>(_self) - 0xf4);
+	if (key == KEY_Up) {
+		if (self->m_editorLayer->m_playerState == 1) {
+			self->m_editorLayer->releaseButton(1, true);
+		}
+	}
+	else EditorUI::keyUp(_self, key);
+}
+
+void __fastcall EditorUI::selectObjectH(gd::EditorUI* self, void*, gd::GameObject* obj) {
+	EditorUI::selectObject(self, obj);
+	std::cout << obj->m_detailSprite << std::endl;
+	std::cout << obj->m_objectID << std::endl;
+	std::cout << obj->m_textObjectString.c_str() << std::endl;
+	std::cout << obj->m_groupParent << std::endl;
+	std::cout << obj->m_editorLayer << std::endl;
+	std::cout << obj->m_editorLayer2 << std::endl;
+	std::cout << obj->m_effectManager << std::endl;
+}
+
+std::string typeToString(gd::GameObjectType type) {
+	switch (type) {
+	case gd::GameObjectType::kGameObjectTypeSolid: return "Solid"; break;
+	case gd::GameObjectType::kGameObjectTypeHazard: return "Hazard"; break;
+	case gd::GameObjectType::kGameObjectTypeInverseGravityPortal: return "Inverse Gravity Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeNormalGravityPortal: return "Normal Gravity Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeShipPortal: return "Ship Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeCubePortal: return "Cube Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeDecoration: return "Decoration"; break;
+	case gd::GameObjectType::kGameObjectTypeYellowJumpPad: return "Yellow Jump Pad"; break;
+	case gd::GameObjectType::kGameObjectTypePinkJumpPad: return "Pink Jump Pad"; break;
+	case gd::GameObjectType::kGameObjectTypeGravityPad: return "Gravity Pad"; break;
+	case gd::GameObjectType::kGameObjectTypeYellowJumpRing: return "Yellow Jump Ring"; break;
+	case gd::GameObjectType::kGameObjectTypePinkJumpRing: return "Pink Jump Ring"; break;
+	case gd::GameObjectType::kGameObjectTypeGravityRing: return "Gravity Ring"; break;
+	case gd::GameObjectType::kGameObjectTypeInverseMirrorPortal: return "Inverse Mirror Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeNormalMirrorPortal: return "Normal Mirror Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeBallPortal: return "Ball Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeRegularSizePortal: return "Regular Size Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeMiniSizePortal: return "Mini Size Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeUfoPortal: return "UFO Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeModifier: return "Modifier"; break;
+	case gd::GameObjectType::kGameObjectTypeBreakable: return "Breakable"; break;
+	case gd::GameObjectType::kGameObjectTypeSecretCoin: return "Secret Coin"; break;
+	case gd::GameObjectType::kGameObjectTypeDualPortal: return "Dual Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeSoloPortal: return "Solo Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeSlope: return "Slope"; break;
+	case gd::GameObjectType::kGameObjectTypeWavePortal: return "Wave Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeRobotPortal: return "Robot Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeTeleportPortal: return "Teleport Portal"; break;
+	case gd::GameObjectType::kGameObjectTypeGreenRing: return "Green Ring"; break;
+	case gd::GameObjectType::kGameObjectTypeCollectible: return "Collectible"; break;
+	case gd::GameObjectType::kGameObjectTypeUserCoin: return "User Coin"; break;
+	default: return "Unknown"; break;
+	}
+}
+
+void __fastcall EditorUI::updateObjectInfoLabelH(gd::EditorUI* self) {
+	EditorUI::updateObjectInfoLabel(self);
+
+	if (self->m_selectedObject) { // taken from HJFod's BEv4
+		std::stringstream ss;
+		ss << self->m_objectInfo->getString();
+
+		ss << "Rot: " << self->m_selectedObject->getRotation() << "\n";
+		ss << "Scale: " << self->m_selectedObject->getScale() << "\n";
+		ss << "X: " << self->m_selectedObject->getPositionX() << "\n";
+		ss << "Y: " << self->m_selectedObject->getPositionY() << "\n";
+		ss << "ID: " << self->m_selectedObject->m_objectID << "\n";
+		ss << "Type: " << typeToString(static_cast<gd::GameObjectType>(self->m_selectedObject->m_objectType)) << "\n";
+		ss << "Addr: 0x" << std::hex << reinterpret_cast<uintptr_t>(self->m_selectedObject) << std::dec << "\n";
+
+		self->m_objectInfo->setString(ss.str().c_str());
+	}
 }
 
 class SaveLevelProtocol : public gd::FLAlertLayerProtocol {
@@ -191,6 +359,11 @@ void __fastcall EditorPauseLayer::dtorH(gd::EditorPauseLayer* self) {
 	EditorPauseLayer::dtor(self);
 }
 
+void __fastcall EditorPauseLayer::keyDownH(gd::EditorPauseLayer* self, void*, enumKeyCodes key) {
+	if (key == KEY_Escape) reinterpret_cast<gd::EditorPauseLayer*>(reinterpret_cast<uintptr_t>(self) - 0xf4)->onResume(nullptr);
+	else EditorPauseLayer::keyDown(self, key);
+}
+
 CCArray* objArr;
 
 void addObject(int id) {
@@ -257,14 +430,17 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5d170), EditorUI::dtorH, reinterpret_cast<void**>(&EditorUI::dtor));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x72960), EditorUI::scrollWheelH, reinterpret_cast<void**>(&EditorUI::scrollWheel));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6e330), EditorUI::moveObjectH, reinterpret_cast<void**>(&EditorUI::moveObject));
-	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x71ad0), EditorUI::keyDownH, reinterpret_cast<void**>(&EditorUI::keyDown));
-	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x72910), EditorUI::keyUpH, reinterpret_cast<void**>(&EditorUI::keyUp));
-	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6303e), EditorUI::blocksArrayH, reinterpret_cast<void**>(&EditorUI::blocksArray));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x71ad0), EditorUI::keyDownH, reinterpret_cast<void**>(&EditorUI::keyDown));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x72910), EditorUI::keyUpH, reinterpret_cast<void**>(&EditorUI::keyUp));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6a540), EditorUI::selectObjectH, reinterpret_cast<void**>(&EditorUI::selectObject));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5fb70), EditorUI::updateObjectInfoLabelH, reinterpret_cast<void**>(&EditorUI::updateObjectInfoLabel));
+	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6303e), EditorUI::blocksArrayH, reinterpret_cast<void**>(&EditorUI::blocksArray));
 }
 
 void EditorPauseLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5aa90), EditorPauseLayer::customSetupH, reinterpret_cast<void**>(&EditorPauseLayer::customSetup));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5a5f0), EditorPauseLayer::dtorH, reinterpret_cast<void**>(&EditorPauseLayer::dtor));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5ca20), EditorPauseLayer::keyDownH, reinterpret_cast<void**>(&EditorPauseLayer::keyDown));
 }
 
 void EditButtonBar::mem_init() {

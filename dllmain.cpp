@@ -14,6 +14,7 @@
 #include "EditorUI.h"
 #include "ColorSelectPopup.h"
 #include "CustomizeObjectLayer.h"
+#include "InfoLayer.h"
 
 #include "LevelShare.h"
 #include "nfd.h"
@@ -307,6 +308,8 @@ DWORD WINAPI my_thread(void* hModule) {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x56fa0), EditLevelLayer_initH, reinterpret_cast<void**>(&EditLevelLayer_init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xea4c0), LevelBrowserLayer_initH, reinterpret_cast<void**>(&LevelBrowserLayer_init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x1dac0), CCTextInputNode_updateLabelH, reinterpret_cast<void**>(&CCTextInputNode_updateLabel));
+
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xe5680), InfoLayer::initH, reinterpret_cast<void**>(&InfoLayer::init));
 
 	MH_CreateHook(
 		reinterpret_cast<void*>(gd::base + 0x392a0),
