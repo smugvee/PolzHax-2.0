@@ -10,7 +10,7 @@ namespace gd {
 	class CCMenuItemToggler;
 	class FLAlertLayer;
 	class GameObject;
-	using EffectGameObject = GameObject;
+	class EffectGameObject;
 	class CreateMenuItem;
 	class ButtonSprite;
 	class ColorChannelSprite;

@@ -219,10 +219,6 @@ void render_node_properties(CCNode* node) {
 		ImGui::TextWrapped("Scaled Content Size: %.2fx%.2f", value.width, value.height);
 	}
 
-	ImGui::NewLine();
-	ImGui::Separator();
-	ImGui::NewLine();
-
 	if (ImGui::TreeNode("Advanced Position PRO")) {
 		if (node->getParent()) {
 			const auto pos = node->getParent()->convertToWorldSpace(node->getPosition());
@@ -232,10 +228,6 @@ void render_node_properties(CCNode* node) {
 		}
 		ImGui::TreePop();
 	}
-
-	ImGui::NewLine();
-	ImGui::Separator();
-	ImGui::NewLine();
 
 	{
 		auto value = node->getScale();

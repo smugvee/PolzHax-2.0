@@ -93,10 +93,12 @@ void __fastcall CCKeyboardDispatcher_dispatchKeyboardMSGH(CCKeyboardDispatcher* 
 				case KEY_Q:
 				case KEY_Left:
 					PlayLayer::onPrevStartPos();
+					std::cout << "PrevStartPos" << std::endl;
 					break;
 				case KEY_E:
 				case KEY_Right:
 					PlayLayer::onNextStartPos();
+					std::cout << "NextStartPos" << std::endl;
 					break;
 				}
 			//}

@@ -1485,6 +1485,9 @@
     <ClInclude Include="libs\gd.h\sprite_nodes\GJSpriteColor.h">
       <Filter>Файлы заголовков\libs\gd.h</Filter>
     </ClInclude>
+    <ClInclude Include="libs\gd.h\sprite_nodes\EffectGameObject.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

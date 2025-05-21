@@ -594,6 +594,7 @@
     <ClInclude Include="libs\gd.h\sprite_nodes\ButtonSprite.h" />
     <ClInclude Include="libs\gd.h\sprite_nodes\CCAnimatedSprite.h" />
     <ClInclude Include="libs\gd.h\sprite_nodes\CCSpritePlus.h" />
+    <ClInclude Include="libs\gd.h\sprite_nodes\EffectGameObject.h" />
     <ClInclude Include="libs\gd.h\sprite_nodes\GameObject.h" />
     <ClInclude Include="libs\gd.h\sprite_nodes\GJSpriteColor.h" />
     <ClInclude Include="libs\gd.h\sprite_nodes\PlayerObject.h" />

@@ -156,6 +156,10 @@ namespace gd {
 	    virtual void commentUploadFinished(int) {}
 	    virtual void commentUploadFailed(int) {}
     };
+
+    class AnimatedSpriteDelegate {
+        virtual void animationFinished(const char*) {}
+    };
 }
 
 #endif

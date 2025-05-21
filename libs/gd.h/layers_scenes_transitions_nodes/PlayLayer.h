@@ -12,6 +12,7 @@ namespace gd {
 	class CCMenuItemSpriteExtra;
 	using EndPortalObject = GameObject;
 	class AudioEffectsLayer : public cocos2d::CCNode {};
+
 	class GJGroundLayer {
 	public:
 		void updateGroundWidth() {
@@ -84,7 +85,7 @@ namespace gd {
 		int m_lastDeathPercent; // 0x344
 
 		void resetLevel() {
-			return reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17c930)(this);
+			reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17c930)(this);
 		}
 
 		void onQuit() {
@@ -95,20 +96,8 @@ namespace gd {
 			return reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17dcb0)(this);
 		}
 
-		void setStartPosObject(StartPosObject* startPos) {
-			if (startPos != m_startPosObject) {
-				if (startPos) {
-					reinterpret_cast<CCObject*>(startPos)->retain();
-				}
-				if (m_startPosObject) {
-					reinterpret_cast<CCObject*>(m_startPosObject)->release();
-				}
-				m_startPosObject = startPos;
-			}
-		}
-
 		void startMusic() {
-			return reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17d0c0)(this);
+			reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17d0c0)(this);
 		}
 	};
 }

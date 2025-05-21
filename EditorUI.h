@@ -41,6 +41,12 @@ namespace EditorUI {
 	inline void(__thiscall* updateObjectInfoLabel)(gd::EditorUI*);
 	void __fastcall updateObjectInfoLabelH(gd::EditorUI*);
 
+	inline void(__thiscall* onGroupUp)(gd::EditorUI*, CCObject*);
+	void __fastcall onGroupUpH(gd::EditorUI*, void*, CCObject*);
+
+	inline void(__thiscall* onGroupDown)(gd::EditorUI*, CCObject*);
+	void __fastcall onGroupDownH(gd::EditorUI*, void*, CCObject*);
+
 	class Callback : public gd::EditorUI {
 	public:
 		void onCustomMoveObject(CCObject*);

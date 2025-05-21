@@ -9,14 +9,14 @@ gd::EditorUI* editorUI = nullptr;
 
 gd::EditorPauseLayer* m_editorPauseLayer{ nullptr };
 
-void EditorUI::Callback::onNextFreeEditorLayer(CCObject*) {
+void EditorUI::Callback::onNextFreeEditorLayer(CCObject*) { // BEv4
 	auto objs = this->m_editorLayer->m_objects;
 
 	std::set<int> layers;
 
 	CCARRAY_FOREACH_B_TYPE(objs, obj, gd::GameObject) {
-		layers.insert(from<int>(obj, 0x368));
-		layers.insert(from<int>(obj, 0x36c));
+		layers.insert(obj->m_editorLayer);
+		layers.insert(obj->m_editorLayer2);
 	}
 
 	int last = -1;
@@ -25,13 +25,24 @@ void EditorUI::Callback::onNextFreeEditorLayer(CCObject*) {
 		last = layer;
 	}
 
-	from<int>(this->m_editorLayer, 0x1d8) = last + 1;
+	this->m_editorLayer->m_groupIDFilter = last + 1;
 	this->m_currentGroupLabel->setString(CCString::createWithFormat("%d", last + 1)->getCString());
+
+	auto btn = static_cast<gd::CCMenuItemSpriteExtra*>(static_cast<CCMenu*>(this->m_copyBtn->getParent())->getChildByTag(45001));
+	if (btn) {
+		btn->setVisible(true);
+		btn->setEnabled(true);
+	}
 }
 
 void EditorUI::Callback::onAllEditorLayer(CCObject*) {
 	from<int>(this->m_editorLayer, 0x1d8) = -1;
 	this->m_currentGroupLabel->setString("All");
+	auto btn = static_cast<gd::CCMenuItemSpriteExtra*>(static_cast<CCMenu*>(this->m_copyBtn->getParent())->getChildByTag(45001));
+	if (btn) {
+		btn->setVisible(false);
+		btn->setEnabled(false);
+	}
 }
 
 bool __fastcall EditorUI::initH(gd::EditorUI* self, void*, gd::LevelEditorLayer* editorLayer) {
@@ -59,15 +70,14 @@ bool __fastcall EditorUI::initH(gd::EditorUI* self, void*, gd::LevelEditorLayer*
 	onBaseLayerSpr->setScale(.5f);
 	onBaseLayerSpr->setOpacity(175);
 	rightMenu->addChild(onBaseLayerBtn);
-	if (from<int>(self->m_editorLayer, 0x1d8)) {
+	self->m_hideableUIElement->addObject(onBaseLayerBtn);
+	if (self->m_editorLayer->m_groupIDFilter == -1) {
 		onBaseLayerBtn->setVisible(false);
 		onBaseLayerBtn->setEnabled(false);
 	}
-	self->m_hideableUIElement->addObject(onBaseLayerBtn);
 
 	auto onFreeLayerSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_02_001.png");
 	auto onFreeLayerBtn = gd::CCMenuItemSpriteExtra::create(onFreeLayerSpr, nullptr, self, menu_selector(EditorUI::Callback::onNextFreeEditorLayer));
-	onFreeLayerBtn->setTag(45002);
 	onFreeLayerBtn->setPosition({ 10.f, -172.f });
 	onFreeLayerSpr->setScale(.5f);
 	onFreeLayerSpr->setFlipX(true);
@@ -145,26 +155,6 @@ void __fastcall EditorUI::scrollWheelH(gd::EditorUI* _self, void* edx, float dy,
 	else {
 		EditorUI::scrollWheel(_self, dy, dx);
 	}
-
-	//auto layer = reinterpret_cast<gd::LevelEditorLayer*>(self->getParent())->m_objectLayer;
-	//auto zoom = layer->getScale();
-
-	////static_assert(offsetof(CCDirector, m_pKeyboardDispatcher) == 0x4c, "it wrong!");
-	//auto kb = CCDirector::sharedDirector()->m_pKeyboardDispatcher;
-	//if (kb->getControlKeyPressed()) {
-	//	zoom = static_cast<float>(std::pow(2.71828182845904523536, std::log(std::max(zoom, 0.001f)) - dy * 0.01f));
-	//	// zoom limit
-		//zoom = std::max(zoom, 0.01f);
-		//zoom = std::min(zoom, 1000000.f);
-	//	self->updateZoom(zoom);
-	//	reinterpret_cast<gd::LevelEditorLayer*>(self->getParent())->updateGroundWidth();
-	//}
-	//else if (kb->getShiftKeyPressed()) {
-	//	layer->setPositionX(layer->getPositionX() - dy * 1.f);
-	//}
-	//else {
-	//	EditorUI::scrollWheel(_self, dy, dx);
-	//}
 }
 
 void __fastcall EditorUI::moveObjectH(gd::EditorUI* self, void*, gd::GameObject* object, CCPoint to) {
@@ -227,13 +217,6 @@ void __fastcall EditorUI::keyUpH(gd::EditorUI* _self, void*, enumKeyCodes key) {
 
 void __fastcall EditorUI::selectObjectH(gd::EditorUI* self, void*, gd::GameObject* obj) {
 	EditorUI::selectObject(self, obj);
-	std::cout << obj->m_detailSprite << std::endl;
-	std::cout << obj->m_objectID << std::endl;
-	std::cout << obj->m_textObjectString.c_str() << std::endl;
-	std::cout << obj->m_groupParent << std::endl;
-	std::cout << obj->m_editorLayer << std::endl;
-	std::cout << obj->m_editorLayer2 << std::endl;
-	std::cout << obj->m_effectManager << std::endl;
 }
 
 std::string typeToString(gd::GameObjectType type) {
@@ -277,8 +260,23 @@ void __fastcall EditorUI::updateObjectInfoLabelH(gd::EditorUI* self) {
 	EditorUI::updateObjectInfoLabel(self);
 
 	if (self->m_selectedObject) { // taken from HJFod's BEv4
+		auto baseColor = self->m_selectedObject->m_baseColor;
+		auto detailColor = self->m_selectedObject->m_detailColor;
+
 		std::stringstream ss;
 		ss << self->m_objectInfo->getString();
+
+		if (baseColor)
+			ss << "HSV: "
+			<< baseColor->hue << ","
+			<< baseColor->saturation << (baseColor->saturationChecked ? " (a)" : "") << ","
+			<< baseColor->brightness << (baseColor->brightnessChecked ? " (a)" : "") << "\n";
+
+		if (detailColor)
+			ss << "HSV 2: "
+			<< detailColor->hue << ","
+			<< detailColor->saturation << (detailColor->saturationChecked ? " (a)" : "") << ","
+			<< detailColor->brightness << (detailColor->brightnessChecked ? " (a)" : "") << "\n";
 
 		ss << "Rot: " << self->m_selectedObject->getRotation() << "\n";
 		ss << "Scale: " << self->m_selectedObject->getScale() << "\n";
@@ -289,6 +287,26 @@ void __fastcall EditorUI::updateObjectInfoLabelH(gd::EditorUI* self) {
 		ss << "Addr: 0x" << std::hex << reinterpret_cast<uintptr_t>(self->m_selectedObject) << std::dec << "\n";
 
 		self->m_objectInfo->setString(ss.str().c_str());
+	}
+}
+
+void __fastcall EditorUI::onGroupUpH(gd::EditorUI* self, void*, CCObject* obj) {
+	EditorUI::onGroupUp(self, obj);
+	auto btn = static_cast<gd::CCMenuItemSpriteExtra*>(static_cast<CCMenu*>(self->m_copyBtn->getParent())->getChildByTag(45001));
+	if (btn) {
+		btn->setVisible(true);
+		btn->setEnabled(true);
+	}
+}
+
+void __fastcall EditorUI::onGroupDownH(gd::EditorUI* self, void*, CCObject* obj) {
+	EditorUI::onGroupDown(self, obj);
+	auto btn = static_cast<gd::CCMenuItemSpriteExtra*>(static_cast<CCMenu*>(self->m_copyBtn->getParent())->getChildByTag(45001));
+	if (btn) {
+		if (self->m_editorLayer->m_groupIDFilter == -1) {
+			btn->setVisible(false);
+			btn->setEnabled(false);
+		}
 	}
 }
 
@@ -434,6 +452,8 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x72910), EditorUI::keyUpH, reinterpret_cast<void**>(&EditorUI::keyUp));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6a540), EditorUI::selectObjectH, reinterpret_cast<void**>(&EditorUI::selectObject));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5fb70), EditorUI::updateObjectInfoLabelH, reinterpret_cast<void**>(&EditorUI::updateObjectInfoLabel));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6de70), EditorUI::onGroupDownH, reinterpret_cast<void**>(&EditorUI::onGroupDown));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6de00), EditorUI::onGroupUpH, reinterpret_cast<void**>(&EditorUI::onGroupUp));
 	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6303e), EditorUI::blocksArrayH, reinterpret_cast<void**>(&EditorUI::blocksArray));
 }
 

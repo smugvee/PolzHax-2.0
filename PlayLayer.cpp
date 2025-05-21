@@ -37,8 +37,8 @@ static gd::GameObject* getClosestObject(std::vector<gd::GameObject*>& vec, gd::S
 	return closest;
 }
 
-void setupStartPos(gd::StartPosObject* startPos) {
-	gd::LevelSettingsObject* startPosSettings = startPos->getLevelSettings();
+void setupStartPos(gd::StartPosObject* startPos) { // Eclipse Menu
+	gd::LevelSettingsObject* startPosSettings = startPos->m_levelSettings;
 	gd::LevelSettingsObject* levelSettings = gd::GameManager::sharedState()->getPlayLayer()->m_levelSettings;
 
 	startPosSettings->m_startDual = levelSettings->m_startDual;
@@ -91,7 +91,7 @@ void setupStartPos(gd::StartPosObject* startPos) {
 	}
 }
 
-void pickStartPos(gd::PlayLayer* playLayer, int32_t index) {
+void pickStartPos(gd::PlayLayer* playLayer, int32_t index) { // Eclipse Menu
 	if (startPosObjects.empty()) return;
 
 	auto count = static_cast<int32_t>(startPosObjects.size());
@@ -101,12 +101,31 @@ void pickStartPos(gd::PlayLayer* playLayer, int32_t index) {
 	currentStartPos = index;
 	
 	auto* startPos = index >= 0 ? startPosObjects[index] : nullptr;
-	playLayer->setStartPosObject(startPos);
+	if (startPos != playLayer->m_startPosObject) {
+		if (startPos) {
+			startPos->retain();
+		}
+		if (playLayer->m_startPosObject) {
+			playLayer->m_startPosObject->release();
+		}
+		playLayer->m_startPosObject = startPos;
+	}
+	if (currentStartPos != -1) { // Taswert's shit
+		playLayer->m_playerStartPosition = playLayer->m_startPosObject->getPosition();
+	}
+	else {
+		playLayer->m_playerStartPosition = ccp(0, 105);
+	}
 	playLayer->m_isTestMode = index >= 0;
 
 	playLayer->resetLevel();
-
 	playLayer->startMusic();
+
+	std::cout << "da hell" << std::endl;
+	std::cout << currentStartPos << std::endl;
+	std::cout << index << std::endl;
+	std::cout << startPosObjects.size() << std::endl;
+	std::cout << playLayer->m_startPosObject << std::endl;
 }
 
 void PlayLayer::onNextStartPos() {
@@ -118,11 +137,11 @@ void PlayLayer::onPrevStartPos() {
 }
 
 bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* level) {
+	startPosObjects.clear();
 	if (!PlayLayer::init(self, level)) return false;
 	inPractice = false;
 	inTestmode = self->m_isTestMode;
 	smoothOut = 0;
-	startPosObjects.clear();
 	
 	std::cout << "GameManager: " << gd::GameManager::sharedState() << std::endl;
 	std::cout << "FMODAudioEngine: " << gd::FMODAudioEngine::sharedEngine() << std::endl;
@@ -132,10 +151,6 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 	if (gd::GameManager::sharedState()->getGameVariable("0024")) {
 		from<gd::CCMenuItemSpriteExtra*>(self->m_uiLayer, 0x1a0)->setVisible(!setting().onHidePauseButton);
 	}
-
-	if (self->m_isPracticeMode)
-		if (self->m_uiLayer->m_checkpointMenu != nullptr)
-			self->m_uiLayer->m_checkpointMenu->setVisible(!setting().onHidePracticeButtons);
 
 	self->m_player->setVisible(!setting().onHidePlayer);
 	self->m_player2->setVisible(!setting().onHidePlayer);
@@ -218,10 +233,6 @@ void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 		from<gd::CCMenuItemSpriteExtra*>(self->m_uiLayer, 0x1a0)->setVisible(!setting().onHidePauseButton);
 	}
 
-	if (self->m_isPracticeMode)
-		if (self->m_uiLayer->m_checkpointMenu != nullptr)
-			self->m_uiLayer->m_checkpointMenu->setVisible(!setting().onHidePracticeButtons);
-
 	self->m_player->setVisible(!setting().onHidePlayer);
 	self->m_player2->setVisible(!setting().onHidePlayer);
 
@@ -295,10 +306,12 @@ void __fastcall PlayLayer::levelCompleteH(gd::PlayLayer* self) {
 void __fastcall PlayLayer::addObjectH(gd::PlayLayer* self, void*, gd::GameObject* obj) {
 	PlayLayer::addObject(self, obj);
 
-	if (from<int>(obj, 0x310) == 31)
+	if (obj->m_objectID == 31) {
 		startPosObjects.push_back(reinterpret_cast<gd::StartPosObject*>(obj));
+		std::cout << startPosObjects.size() << std::endl;
+	}
 
-	switch (from<int>(obj, 0x310))
+	switch (obj->m_objectID)
 	{
 	case 31:
 		m_startPositions.push_back(static_cast<gd::StartPosObject*>(obj));
