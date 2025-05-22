@@ -215,8 +215,36 @@ void __fastcall EditorUI::keyUpH(gd::EditorUI* _self, void*, enumKeyCodes key) {
 	else EditorUI::keyUp(_self, key);
 }
 
-void __fastcall EditorUI::selectObjectH(gd::EditorUI* self, void*, gd::GameObject* obj) {
-	EditorUI::selectObject(self, obj);
+void __fastcall EditorUI::selectObjectH(gd::EditorUI* self, void*, gd::GameObject* object) {
+	auto selectedCustomMode = gd::GameManager::sharedState()->getIntGameVariable("0005");
+	if (selectedCustomMode != 3) gd::GameManager::sharedState()->setIntGameVariable("0006", 0);
+	int selectFilterObject = gd::GameManager::sharedState()->getIntGameVariable("0006");
+
+	if ((selectFilterObject != 0) && setting().onSelectFilter) {
+		if (object->m_objectID == selectFilterObject) return EditorUI::selectObject(self, object);
+	}
+	else {
+		EditorUI::selectObject(self, object);
+	}
+}
+
+void __fastcall EditorUI::selectObjectsH(gd::EditorUI* self, void*, CCArray* objects) {
+	auto selectedCustomMode = gd::GameManager::sharedState()->getIntGameVariable("0005");
+	if (selectedCustomMode != 3) gd::GameManager::sharedState()->setIntGameVariable("0006", 0);
+	int selectFilterObject = gd::GameManager::sharedState()->getIntGameVariable("0006");
+
+	if ((selectFilterObject != 0) && setting().onSelectFilter) {
+		auto filteredObjects = CCArray::create();
+		for (int i = 0; i < objects->count(); i++) {
+			if (reinterpret_cast<gd::GameObject*>(objects->objectAtIndex(i))->m_objectID == selectFilterObject) {
+				filteredObjects->addObject(objects->objectAtIndex(i));
+			}
+		}
+		return EditorUI::selectObjects(self, filteredObjects);
+	}
+	else return EditorUI::selectObjects(self, objects);
+
+	EditorUI::selectObjects(self, objects);
 }
 
 std::string typeToString(gd::GameObjectType type) {
@@ -258,6 +286,8 @@ std::string typeToString(gd::GameObjectType type) {
 
 void __fastcall EditorUI::updateObjectInfoLabelH(gd::EditorUI* self) {
 	EditorUI::updateObjectInfoLabel(self);
+
+	if (!setting().onExtraObjectInfo) return;
 
 	if (self->m_selectedObject) { // taken from HJFod's BEv4
 		auto baseColor = self->m_selectedObject->m_baseColor;
@@ -451,7 +481,10 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6e330), EditorUI::moveObjectH, reinterpret_cast<void**>(&EditorUI::moveObject));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x71ad0), EditorUI::keyDownH, reinterpret_cast<void**>(&EditorUI::keyDown));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x72910), EditorUI::keyUpH, reinterpret_cast<void**>(&EditorUI::keyUp));
+
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6a540), EditorUI::selectObjectH, reinterpret_cast<void**>(&EditorUI::selectObject));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6a5a0), EditorUI::selectObjectsH, reinterpret_cast<void**>(&EditorUI::selectObjects));
+
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5fb70), EditorUI::updateObjectInfoLabelH, reinterpret_cast<void**>(&EditorUI::updateObjectInfoLabel));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6de70), EditorUI::onGroupDownH, reinterpret_cast<void**>(&EditorUI::onGroupDown));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6de00), EditorUI::onGroupUpH, reinterpret_cast<void**>(&EditorUI::onGroupUp));

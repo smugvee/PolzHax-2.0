@@ -180,6 +180,13 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x1770de, { 0x0f, 0x85, 0x82, 0x00, 0x00, 0x00 });
 		}
 
+		if (setting().onInstantMirror) {
+
+		}
+		else {
+
+		}
+
 		if (setting().onNoBackgroundFlash) {
 			sequence_patch((uint32_t)gd::base + 0x16e331, { 0x6a, 0x00 });
 			sequence_patch((uint32_t)gd::base + 0x16e34b, { 0xc7, 0x04, 0x24, 0x00, 0x00, 0x00, 0x00 });
@@ -212,12 +219,10 @@ void imgui_render() {
 
 		if (setting().onPracticePulse) {
 			sequence_patch((uint32_t)gd::base + 0x39805, { 0x90, 0x90 });
-			sequence_patch((uint32_t)gd::base + 0x176530, { 0x90, 0x90 });
 			sequence_patch((uint32_t)gd::base + 0x17655a, { 0xeb, 0x16 });
 		}
 		else {
 			sequence_patch((uint32_t)gd::base + 0x39805, { 0x75, 0x0c });
-			sequence_patch((uint32_t)gd::base + 0x176530, { 0xeb, 0x1a });
 			sequence_patch((uint32_t)gd::base + 0x17655a, { 0x74, 0x16 });
 		}
 
@@ -794,9 +799,7 @@ void imgui_render() {
 				ImGui::SetTooltip("Hides the player.");
 
 			if (ImGui::Checkbox("Hide Practice Buttons", &setting().onHidePracticeButtons)) {
-				if (playLayer && playLayer->m_isPracticeMode && (from<CCMenu*>(playLayer->m_uiLayer, 0x19c) != nullptr)) {
-					from<CCMenu*>(playLayer->m_uiLayer, 0x19c)->setVisible(!setting().onHidePracticeButtons);
-				}
+				if (playLayer && playLayer->m_uiLayer && playLayer->m_uiLayer->m_checkpointMenu) playLayer->m_uiLayer->m_checkpointMenu->setVisible(!setting().onHidePracticeButtons);
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Hides practice buttons.");

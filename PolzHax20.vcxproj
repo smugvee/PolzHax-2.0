@@ -153,6 +153,7 @@
     <ClInclude Include="ColorSelectPopup.h" />
     <ClInclude Include="CrashLogger.h" />
     <ClInclude Include="CustomizeObjectLayer.h" />
+    <ClInclude Include="EditorOptionsLayer.h" />
     <ClInclude Include="EditorUI.h" />
     <ClInclude Include="explorer.h" />
     <ClInclude Include="framework.h" />
@@ -558,6 +559,7 @@
     <ClInclude Include="libs\gd.h\include\gdMacros.h" />
     <ClInclude Include="libs\gd.h\include\GDProtocols.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\CCBlockLayer.h" />
+    <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\DrawGridLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\EditorUI.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\FLAlertLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\GJBaseGameLayer.h" />
@@ -582,6 +584,7 @@
     <ClInclude Include="libs\gd.h\manager_nodes\GManager.h" />
     <ClInclude Include="libs\gd.h\menu_nodes\CCMenuItemSpriteExtra.h" />
     <ClInclude Include="libs\gd.h\menu_nodes\CCMenuItemToggler.h" />
+    <ClInclude Include="libs\gd.h\other_nodes\LevelTools.h" />
     <ClInclude Include="libs\gd.h\other_nodes\OBB2D.h" />
     <ClInclude Include="libs\gd.h\other_nodes\UndoObject.h" />
     <ClInclude Include="libs\gd.h\scroll_nodes\BoomListView.h" />
@@ -635,6 +638,7 @@
     <ClCompile Include="CustomizeObjectLayer.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="CustomMoveButtons.cpp" />
+    <ClCompile Include="EditorOptionsLayer.cpp" />
     <ClCompile Include="EditorUI.cpp" />
     <ClCompile Include="explorer.cpp" />
     <ClCompile Include="GlobalClipboard.cpp" />

@@ -9,6 +9,8 @@ namespace gd {
 	class GJGroundLayer;
 	class OBB2D;
 	class StartPosObject;
+	class DrawGridLayer;
+	class GameManager;
 
 	class LevelEditorLayer : public GJBaseGameLayer {
 	public:
@@ -50,7 +52,7 @@ namespace gd {
 		cocos2d::CCArray* m_unkArray11; // 0x218
 		PAD(0x8)
 		int m_objectCount; // 0x224
-		void* m_drawGridLayer; // 0x228
+		DrawGridLayer* m_drawGridLayer; // 0x228
 		GJGameLevel* m_level; // 0x22c
 		int m_levelDistancel; // 0x230
 		int m_playerState; // 0x234
@@ -64,7 +66,6 @@ namespace gd {
 		bool m_previewMode; // 0x24d
 		PAD(0x2)
 		GJGroundLayer* m_groundLayer; // 0x250
-
 
 		void updateLevelColors() {
 			return reinterpret_cast<void(__thiscall*)(LevelEditorLayer*)>(base + 0xf3ce0)(this);

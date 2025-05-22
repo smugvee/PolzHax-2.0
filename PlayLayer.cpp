@@ -48,12 +48,12 @@ void setupStartPos(gd::StartPosObject* startPos) { // Eclipse Menu
 
 	gd::GameObject* obj = getClosestObject(m_dualPortals, startPos);
 	if (obj)
-		startPosSettings->m_startDual = from<int>(obj, 0x310) == 286;
+		startPosSettings->m_startDual = obj->m_objectID == 286;
 
 	obj = getClosestObject(m_gamemodePortals, startPos);
 
 	if (obj) {
-		switch (from<int>(obj, 0x310)) {
+		switch (obj->m_objectID) {
 		case 12: startPosSettings->m_startMode = 0;
 			break;
 		case 13: startPosSettings->m_startMode = 1;
@@ -73,11 +73,11 @@ void setupStartPos(gd::StartPosObject* startPos) { // Eclipse Menu
 	obj = getClosestObject(m_miniPortals, startPos);
 
 	if (obj)
-		startPosSettings->m_startMini = from<int>(obj, 0x310) == 101;
+		startPosSettings->m_startMini = obj->m_objectID == 101;
 
 	obj = getClosestObject(m_speedChanges, startPos);
 	if (obj) {
-		switch (from<int>(obj, 0x310)) {
+		switch (obj->m_objectID) {
 		case 200: startPosSettings->m_startSpeed = 1;
 			break;
 		case 201: startPosSettings->m_startSpeed = 0;
@@ -122,13 +122,34 @@ void pickStartPos(gd::PlayLayer* playLayer, int32_t index) { // Eclipse Menu
 	playLayer->startMusic();
 
 	auto spSwitcherLabel = static_cast<CCLabelBMFont*>(static_cast<CCMenu*>(playLayer->m_uiLayer->getChildByTag(177))->getChildByTag(178));
-	spSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos + 1, startPosObjects.size())->getCString());
+	if (spSwitcherLabel) {
+		//auto* prevSP = index >= 0 ? startPosObjects[currentStartPos - 1] : nullptr;
+		//auto* nextSP = index >= 0 ? startPosObjects[currentStartPos + 1] : nullptr;
 
-	std::cout << "da hell" << std::endl;
-	std::cout << currentStartPos << std::endl;
-	std::cout << index << std::endl;
-	std::cout << startPosObjects.size() << std::endl;
-	std::cout << playLayer->m_startPosObject << std::endl;
+		//std::cout << "Previous StartPosObject: " << prevSP << std::endl;
+		//std::cout << "Next StartPosObject: " << nextSP << std::endl;
+
+		//float prevSPXPos;
+		//float nextSPXPos;
+
+		//if (prevSP) prevSPXPos = prevSP->getOrientedBox()->getCenterPoint().x / playLayer->m_levelLength * 100.f;
+		//else prevSPXPos = 0;
+		//
+		//if (nextSP) nextSPXPos = nextSP->getOrientedBox()->getCenterPoint().x / playLayer->m_levelLength * 100.f;
+		//else nextSPXPos = 0;
+
+		//std::cout << prevSPXPos << "%" << std::endl;
+		//std::cout << nextSPXPos << "%" << std::endl;
+
+		spSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos + 1, startPosObjects.size())->getCString());
+		spSwitcherLabel->setOpacity(255);
+		spSwitcherLabel->stopAllActions();
+		spSwitcherLabel->runAction(CCSequence::create(CCDelayTime::create(1.f), CCFadeOut::create(0.5f), nullptr));
+	}
+
+	std::cout << "Current StartPos: " << currentStartPos << std::endl;
+	std::cout << "Total StartPoses: " << startPosObjects.size() << std::endl;
+	std::cout << "Current StartPosObject: " << playLayer->m_startPosObject << std::endl;
 }
 
 void PlayLayer::onNextStartPos() {
@@ -170,33 +191,6 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 	m_mirrorPortals.clear();
 	m_startPositions.clear();
 
-	//auto firstStartPos = gd::StartPosObject::create();
-	//startPosObjects.push_back(firstStartPos);
-
-	//currentStartPos = startPosObjects.size() - 1;
-	//if (setting().onStartPosSwitcher)
-	//{
-	//	startPosSwitcherLabel = CCLabelBMFont::create("", "bigFont.fnt");
-	//	startPosSwitcherLabel->setZOrder(5);
-	//	startPosSwitcherLabel->setScale(0.5f);
-	//	startPosSwitcherLabel->setAnchorPoint({ 0.5f, 0.5f });
-	//	startPosSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos, startPosObjects.size() - 1)->getCString());
-	//	startPosSwitcherLabel->setPosition({ CCDirector::sharedDirector()->getScreenRight() / 2, 20.f });
-	//	if (startPosObjects.size() == 1) startPosSwitcherLabel->setVisible(0);
-	//	self->addChild(startPosSwitcherLabel);
-	//	if (startPosSwitcherLabel) {
-	//		auto fadeout = CCSequence::create(CCDelayTime::create(2.f), CCFadeOut::create(0.5f), nullptr);
-	//		if (!fadeOutFlag)
-	//		{
-	//			startPosSwitcherLabel->runAction(fadeout);
-	//			fadeOutFlag = !fadeOutFlag;
-	//		}
-	//		startPosSwitcherLabel->stopAllActions();
-	//		startPosSwitcherLabel->setOpacity(255);
-	//		startPosSwitcherLabel->runAction(fadeout);
-	//	}
-	//}
-
 	if (setting().onAutoSafeMode && setting().cheatsCount > 0) safeModeON(), setting().isSafeMode = true;
 	else if (!setting().onSafeMode) safeModeOFF(), setting().isSafeMode = false;
 
@@ -226,6 +220,10 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 	spSwitcherMenu->addChild(spSwitcherLabel, 0, 178);
 	spSwitcherLabel->setPositionY(-145.f);
 	spSwitcherLabel->setScale(.5f);
+	if (!startPosObjects.empty()) spSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos + 1, startPosObjects.size())->getCString());
+	spSwitcherLabel->setOpacity(255);
+	spSwitcherLabel->stopAllActions();
+	spSwitcherLabel->runAction(CCSequence::create(CCDelayTime::create(1.f), CCFadeOut::create(0.5f), nullptr));
 
 	return true;
 }
@@ -276,7 +274,9 @@ void __fastcall PlayLayer::togglePracticeModeH(gd::PlayLayer* self, void* edx, b
 		checkpoints.clear();
 	}
 	PlayLayer::togglePracticeMode(self, practice);
-	//inPractice = practice;
+
+	if (setting().onHidePracticeButtons)
+		self->m_uiLayer->m_checkpointMenu->setVisible(!setting().onHidePracticeButtons);
 }
 
 void __fastcall PlayLayer::createCheckpointH(gd::PlayLayer* self) {

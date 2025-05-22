@@ -15,12 +15,13 @@
 #include "ColorSelectPopup.h"
 #include "CustomizeObjectLayer.h"
 #include "InfoLayer.h"
+#include "EditorOptionsLayer.h"
+#include "LevelEditorLayer.h"
 
 #include "LevelShare.h"
 #include "nfd.h"
 
 void(__thiscall* fpMainLoop)(cocos2d::CCDirector* self);
-
 void __fastcall hkMainLoop(cocos2d::CCDirector* self)
 {
 	ImGuiHook::poll(self->getOpenGLView());
@@ -165,6 +166,10 @@ namespace gd {
 	public:
 		SearchType m_type;
 	};
+
+	class LevelSettingsLayer : public FLAlertLayer {
+	public:
+	};
 }
 
 class ImportExportCB {
@@ -258,6 +263,18 @@ void __fastcall CCTextInputNode_updateLabelH(gd::CCTextInputNode* self, void*, s
 	}
 }
 
+class LevelSettingsLayerCB : public gd::LevelSettingsLayer {
+};
+
+inline bool(__thiscall* LevelSettingsLayer_init)(gd::LevelSettingsLayer*, gd::LevelSettingsObject*, gd::LevelEditorLayer*);
+bool __fastcall LevelSettingsLayer_initH(gd::LevelSettingsLayer* self, void*, gd::LevelSettingsObject* obj, gd::LevelEditorLayer* lel) {
+	if (!LevelSettingsLayer_init(self, obj, lel)) return false;
+
+	
+
+	return true;
+}
+
 void(__thiscall* AppDelegate_trySaveGame)(gd::AppDelegate*);
 void __fastcall AppDelegate_trySaveGameH(gd::AppDelegate* self) {
 	if (setting().onAutoSave)
@@ -314,6 +331,9 @@ DWORD WINAPI my_thread(void* hModule) {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x1dac0), CCTextInputNode_updateLabelH, reinterpret_cast<void**>(&CCTextInputNode_updateLabel));
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xe5680), InfoLayer::initH, reinterpret_cast<void**>(&InfoLayer::init));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x102270), LevelSettingsLayer_initH, reinterpret_cast<void**>(&LevelSettingsLayer_init));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xd9900), EditorOptionsLayer::initH, reinterpret_cast<void**>(&EditorOptionsLayer::init));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xfe2e0), DrawGridLayer::drawH, reinterpret_cast<void**>(&DrawGridLayer::draw));
 
 	MH_CreateHook(
 		reinterpret_cast<void*>(gd::base + 0x392a0),

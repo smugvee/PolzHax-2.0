@@ -44,13 +44,21 @@ struct SettingStruct {
 	bool onHidePauseMenu;
 	bool onHidePlayer;
 	bool onHidePracticeButtons;
+	bool onInstantMirror;
+	bool onInversedTrail;
+	bool onNoAnimations;
 	bool onNoBackgroundFlash;
 	bool onNoDeathEffect;
-	bool onNoLightning;
+	bool onNoEffectCircle;
+	bool onNoGhostEffect;
+	bool onNoGravityEffect;
 	bool onNoMiniIcon;
+	bool onNoMirror;
 	bool onNoOrbRing;
 	bool onNoParticles;
+	bool onNoLightning;
 	bool onNoRespawnFlash;
+	bool onNoWavePulse;
 	bool onPracticePulse;
 	bool onSolidWaveTrail;
 	bool onTrailAlwaysOff;
@@ -106,6 +114,9 @@ struct SettingStruct {
 	bool onSpeedhack;
 	bool onSpeedhackMusic;
 	bool onClassicMode;
+
+	bool onSelectFilter;
+	bool onExtraObjectInfo;
 };
 
 LayersStruct& layers();
@@ -133,13 +144,21 @@ DEF_SCHEMA(
 	onHidePauseMenu,
 	onHidePlayer,
 	onHidePracticeButtons,
+	onInstantMirror,
+	onInversedTrail,
+	onNoAnimations,
 	onNoBackgroundFlash,
 	onNoDeathEffect,
-	onNoLightning,
+	onNoEffectCircle,
+	onNoGhostEffect,
+	onNoGravityEffect,
 	onNoMiniIcon,
+	onNoMirror,
 	onNoOrbRing,
 	onNoParticles,
+	onNoLightning,
 	onNoRespawnFlash,
+	onNoWavePulse,
 	onPracticePulse,
 	onSolidWaveTrail,
 	onTrailAlwaysOff,
@@ -192,5 +211,8 @@ DEF_SCHEMA(
 	speedhack,
 	onSpeedhack,
 	onSpeedhackMusic,
-	onClassicMode
+	onClassicMode,
+
+	onSelectFilter,
+	onExtraObjectInfo
 )

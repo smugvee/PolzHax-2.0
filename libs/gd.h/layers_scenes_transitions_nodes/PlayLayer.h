@@ -22,6 +22,7 @@ namespace gd {
 
 	class UILayer : public cocos2d::CCLayerColor {
 	public:
+		PAD(0x8)
 		cocos2d::CCMenu* m_checkpointMenu; // 0x19c
 		CCMenuItemSpriteExtra* m_pauseButton; // 0x1a0
 	};

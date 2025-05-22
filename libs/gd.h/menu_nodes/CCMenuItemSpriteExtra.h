@@ -18,6 +18,10 @@ namespace gd {
 			return ret;
 		}
 
+		static auto* create(cocos2d::CCNode* sprite, cocos2d::CCObject* target, cocos2d::SEL_MenuHandler callback) {
+			return create(sprite, nullptr, target, callback);
+		}
+
 		void setSizeMult(float mult) {
 			__asm movss xmm1, mult
 			return reinterpret_cast<void(__thiscall*)(CCMenuItemSpriteExtra*)>(

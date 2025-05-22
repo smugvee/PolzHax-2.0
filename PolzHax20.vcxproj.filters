@@ -1488,6 +1488,15 @@
     <ClInclude Include="libs\gd.h\sprite_nodes\EffectGameObject.h">
       <Filter>Файлы заголовков\libs\gd.h</Filter>
     </ClInclude>
+    <ClInclude Include="EditorOptionsLayer.h">
+      <Filter>Файлы заголовков\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\DrawGridLayer.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\other_nodes\LevelTools.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1584,6 +1593,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="InfoLayer.cpp">
+      <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorOptionsLayer.cpp">
       <Filter>Исходные файлы\Layers</Filter>
     </ClCompile>
   </ItemGroup>

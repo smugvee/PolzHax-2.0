@@ -47,6 +47,9 @@ namespace EditorUI {
 	inline void(__thiscall* onGroupDown)(gd::EditorUI*, CCObject*);
 	void __fastcall onGroupDownH(gd::EditorUI*, void*, CCObject*);
 
+	inline void(__thiscall* selectObjects)(gd::EditorUI*, CCArray*);
+	void __fastcall selectObjectsH(gd::EditorUI*, void*, CCArray*);
+
 	class Callback : public gd::EditorUI {
 	public:
 		void onCustomMoveObject(CCObject*);
