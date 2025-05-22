@@ -110,8 +110,8 @@ void pickStartPos(gd::PlayLayer* playLayer, int32_t index) { // Eclipse Menu
 		}
 		playLayer->m_startPosObject = startPos;
 	}
-	if (currentStartPos != -1) { // Taswert's shit
-		playLayer->m_playerStartPosition = playLayer->m_startPosObject->getPosition();
+	if (currentStartPos >= 0) { // Taswert's shit
+		playLayer->m_playerStartPosition = playLayer->m_startPosObject->getOrientedBox()->getCenterPoint();
 	}
 	else {
 		playLayer->m_playerStartPosition = ccp(0, 105);
@@ -120,6 +120,9 @@ void pickStartPos(gd::PlayLayer* playLayer, int32_t index) { // Eclipse Menu
 
 	playLayer->resetLevel();
 	playLayer->startMusic();
+
+	auto spSwitcherLabel = static_cast<CCLabelBMFont*>(static_cast<CCMenu*>(playLayer->m_uiLayer->getChildByTag(177))->getChildByTag(178));
+	spSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos + 1, startPosObjects.size())->getCString());
 
 	std::cout << "da hell" << std::endl;
 	std::cout << currentStartPos << std::endl;
@@ -216,6 +219,13 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 			percentLabel->setVisible(0);
 		}
 	}
+
+	auto spSwitcherMenu = CCMenu::create();
+	self->m_uiLayer->addChild(spSwitcherMenu, 16, 177);
+	auto spSwitcherLabel = CCLabelBMFont::create("", "bigFont.fnt");
+	spSwitcherMenu->addChild(spSwitcherLabel, 0, 178);
+	spSwitcherLabel->setPositionY(-145.f);
+	spSwitcherLabel->setScale(.5f);
 
 	return true;
 }

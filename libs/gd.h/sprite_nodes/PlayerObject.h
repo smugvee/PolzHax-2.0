@@ -8,6 +8,7 @@ namespace gd {
 	class GameObject;
 	class AnimatedSpriteDelegate;
 	class GhostTrailEffect {};
+	class OBB2D;
 
 	class HardStreak : public cocos2d::CCDrawNode {
 	public:
@@ -91,6 +92,10 @@ namespace gd {
 		}
 		void releaseButton(int button) {
 			reinterpret_cast<void(__thiscall*)(PlayerObject*, int)>(base + 0x164f10)(this, button);
+		}
+
+		OBB2D* getOrientedBox() {
+			return reinterpret_cast<OBB2D * (__fastcall*)(PlayerObject*)>(base + 0x168880)(this);
 		}
 	};
 }

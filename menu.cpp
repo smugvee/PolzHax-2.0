@@ -166,6 +166,13 @@ void imgui_render() {
 
 		// Cosmetic
 
+		if (setting().onForceDontEnter) {
+			sequence_patch((uint32_t)gd::base + 0x177574, { 0xeb, 0x08 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x177574, { 0x75, 0x08 });
+		}
+
 		if (setting().onForceDontFade) {
 			sequence_patch((uint32_t)gd::base + 0x1770de, { 0xe9, 0x83, 0x00, 0x00, 0x00, 0x90 });
 		}
@@ -732,6 +739,15 @@ void imgui_render() {
 		if (ImGui::Begin("Cosmetic", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
 			ImGui::SetWindowFontScale(setting().UISize);
 
+			if (ImGui::Checkbox("Force Don't Enter", &setting().onForceDontEnter)) {
+				if (setting().onForceDontEnter) {
+					sequence_patch((uint32_t)gd::base + 0x177574, { 0xeb, 0x08 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x177574, { 0x75, 0x08 });
+				}
+			}
+
 			if (ImGui::Checkbox("Force Don't Fade", &setting().onForceDontFade)) {
 				if (setting().onForceDontFade) {
 					sequence_patch((uint32_t)gd::base + 0x1770de, { 0xe9, 0x83, 0x00, 0x00, 0x00, 0x90 });
@@ -1253,9 +1269,9 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Automatically sets gamemode, speed, size & border for a startpos.");
 
-			//ImGui::Checkbox("StartPos Switcher", &setting().onStartPosSwitcher);
-			//if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
-			//	ImGui::SetTooltip("Lets you switch between multiple start positions in-level.");
+			ImGui::Checkbox("StartPos Switcher", &setting().onStartPosSwitcher);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Lets you switch between multiple start positions in-level.");
 		}
 
 		if (ImGui::Begin("Universal", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {

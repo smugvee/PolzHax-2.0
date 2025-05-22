@@ -126,6 +126,7 @@ DEF_SCHEMA(
 	onSliderLimit,
 	onTextLength,
 
+	onForceDontEnter,
 	onForceDontFade,
 	onHideAttempts,
 	onHidePauseButton,

@@ -112,7 +112,7 @@ void __fastcall EditorUI::onCopyH(gd::EditorUI* self, void*, CCObject* obj) {
 	clipboard::write(self->m_clipboard);
 }
 
-void __fastcall EditorUI::scrollWheelH(gd::EditorUI* _self, void* edx, float dy, float dx) { // From MatsHacks
+void __fastcall EditorUI::scrollWheelH(gd::EditorUI* _self, void* edx, float dy, float dx) { // From BEv4
 	auto self = reinterpret_cast<gd::EditorUI*>(reinterpret_cast<uintptr_t>(_self) - 0xf8);
 	
 	float prevScale = self->m_editorLayer->m_objectLayer->getScale();
@@ -264,6 +264,7 @@ void __fastcall EditorUI::updateObjectInfoLabelH(gd::EditorUI* self) {
 		auto detailColor = self->m_selectedObject->m_detailColor;
 
 		std::stringstream ss;
+
 		ss << self->m_objectInfo->getString();
 
 		if (baseColor)

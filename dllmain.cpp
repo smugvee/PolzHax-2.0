@@ -87,21 +87,23 @@ void __fastcall CCKeyboardDispatcher_dispatchKeyboardMSGH(CCKeyboardDispatcher* 
 			}
 		}
 		if (pl) {
-			//if (setting().onStartPosSwitcher) {
+			if (setting().onStartPosSwitcher && !pl->m_hasCompletedLevel) {
 				switch (key)
 				{
 				case KEY_Q:
 				case KEY_Left:
+				case KEY_A:
 					PlayLayer::onPrevStartPos();
 					std::cout << "PrevStartPos" << std::endl;
 					break;
 				case KEY_E:
 				case KEY_Right:
+				case KEY_D:
 					PlayLayer::onNextStartPos();
 					std::cout << "NextStartPos" << std::endl;
 					break;
 				}
-			//}
+			}
 		}
 	}
 	CCKeyboardDispatcher_dispatchKeyboardMSG(self, key, down);
