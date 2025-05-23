@@ -38,6 +38,9 @@ namespace PlayLayer {
 	inline void(__thiscall* lightningFlash)(gd::PlayLayer*, CCPoint, ccColor3B);
 	void __fastcall lightningFlashH(gd::PlayLayer*, void*, CCPoint, ccColor3B);
 
+	inline void(__thiscall* updateVisibility)(gd::PlayLayer*);
+	void __fastcall updateVisibilityH(gd::PlayLayer*);
+
 	void onPrevStartPos();
 	void onNextStartPos();
 

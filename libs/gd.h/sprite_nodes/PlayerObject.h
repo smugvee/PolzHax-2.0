@@ -81,6 +81,20 @@ namespace gd {
 		cocos2d::CCPoint m_lastGroundedPos; // 0x578
 		cocos2d::CCArray* m_touchingRings; // 0x580
 		GameObject* m_lastActivatedPortal; // 0x584
+		bool m_hasJumped; // 0x588
+		bool m_hasRingJumped; // 0x589
+		PAD(2)
+		PAD(4)
+		cocos2d::CCPoint m_realPlayerPos; // 0x590
+		bool m_isSecondPlayer; // 0x598
+		bool m_dualMode; // 0x599
+		PAD(2)
+		double m_clkTimer; // 0x5a0
+		bool m_disableEffects; // 0x5a8
+		PAD(3)
+		float m_audioScale; // 0x5ac
+		float m_groundHeight; // 0x5b0
+		float m_lastYVel; // 0x5b4
 
 		virtual void setVisible(bool visible) {
 			return reinterpret_cast<void(__thiscall*)(PlayerObject*, bool)>(

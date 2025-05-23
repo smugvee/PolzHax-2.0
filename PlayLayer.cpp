@@ -434,6 +434,14 @@ void __fastcall PlayLayer::lightningFlashH(gd::PlayLayer* self, void*, CCPoint p
 	//self->stopActionByTag(1);
 }
 
+void __fastcall PlayLayer::updateVisibilityH(gd::PlayLayer* self) {
+	PlayLayer::updateVisibility(self);
+	if (setting().onNoWavePulse) {
+		self->m_player->m_audioScale = 1.f;
+		self->m_player2->m_audioScale = 1.f;
+	}
+}
+
 void PlayLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16ab80), PlayLayer::initH, reinterpret_cast<void**>(&PlayLayer::init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x170f30), PlayLayer::updateH, reinterpret_cast<void**>(&PlayLayer::update));
@@ -446,5 +454,5 @@ void PlayLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16c830), PlayLayer::levelCompleteH, reinterpret_cast<void**>(&PlayLayer::levelComplete));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16fc00), PlayLayer::addObjectH, reinterpret_cast<void**>(&PlayLayer::addObject));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16f700), PlayLayer::createObjectsFromSetupH, reinterpret_cast<void**>(&PlayLayer::createObjectsFromSetup));
-	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16e1f0), PlayLayer::lightningFlashH, reinterpret_cast<void**>(&PlayLayer::lightningFlash));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x176470), PlayLayer::updateVisibilityH, reinterpret_cast<void**>(&PlayLayer::updateVisibility));
 }

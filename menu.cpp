@@ -909,6 +909,10 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Disables the respawn flash & circle effect.");
 
+			ImGui::Checkbox("No Wave Pulse", &setting().onNoWavePulse);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Disables wave trail pulsing.");
+
 			if (ImGui::Checkbox("Practice Pulse", &setting().onPracticePulse)) {
 				if (setting().onPracticePulse) {
 					sequence_patch((uint32_t)gd::base + 0x39805, { 0x90, 0x90 });

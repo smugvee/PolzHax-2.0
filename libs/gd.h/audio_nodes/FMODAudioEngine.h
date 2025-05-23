@@ -72,6 +72,12 @@ namespace gd {
 		auto currentSound() {
 			return from<FMOD::Channel*>(this, 0x130);
 		}
+
+		void playBackgroundMusic(std::string const& path, bool idk0, bool idk1) {
+			reinterpret_cast<void(__thiscall*)(FMODAudioEngine*, bool, bool, std::string)>(
+				base + 0x207c0
+				)(this, idk0, idk1, path);
+		}
 	};
 }
 

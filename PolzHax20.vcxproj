@@ -585,6 +585,7 @@
     <ClInclude Include="libs\gd.h\manager_nodes\GManager.h" />
     <ClInclude Include="libs\gd.h\menu_nodes\CCMenuItemSpriteExtra.h" />
     <ClInclude Include="libs\gd.h\menu_nodes\CCMenuItemToggler.h" />
+    <ClInclude Include="libs\gd.h\menu_nodes\Slider.h" />
     <ClInclude Include="libs\gd.h\other_nodes\LevelTools.h" />
     <ClInclude Include="libs\gd.h\other_nodes\OBB2D.h" />
     <ClInclude Include="libs\gd.h\other_nodes\UndoObject.h" />
