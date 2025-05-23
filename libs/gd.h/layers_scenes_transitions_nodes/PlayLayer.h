@@ -37,7 +37,22 @@ namespace gd {
 		cocos2d::CCArray* m_checkpoints; // 0x1bc
 		cocos2d::CCArray* m_speedObjects; // 0x1c0
 		cocos2d::CCArray* m_allSpeedObjects; // 0x1c4
-		PAD(64)
+		cocos2d::CCArray* m_unkArray; // 0x1c8
+		int m_activeEnterEffect; // 0x1cc
+		cocos2d::CCSprite* m_backgroundSprite; // 0x1d0
+		float m_backgroundRepeat; // 0x1d4
+		PAD(4)
+		cocos2d::CCArray* m_levelSections; // 0x1dc
+		cocos2d::CCArray* m_unkArray2; // 0x1e0
+		cocos2d::CCArray* m_unkArray3; // 0x1e4
+		cocos2d::CCArray* m_unkArray4; // 0x1e8
+		cocos2d::CCArray* m_unkArray5; // 0x1ec
+		cocos2d::CCArray* m_unkArray6; // 0x1f0
+		cocos2d::CCArray* m_unkArray7; // 0x1f4
+		cocos2d::CCArray* m_objects; // 0x1f8
+		cocos2d::CCArray* m_unkArray8; // 0x1fc
+		cocos2d::CCDictionary* m_unkDict; // 0x200
+		cocos2d::CCArray* m_unkArray9; // 0x204
 		cocos2d::CCParticleSystemQuad* m_particleSystem; // 0x208
 		cocos2d::CCDictionary* m_pickedUpItems; // 0x20c
 		PAD(4)
@@ -50,7 +65,10 @@ namespace gd {
 		bool m_startCameraAtCorner; // 0x231
 		bool m_cameraYLocked; // 0x232
 		bool m_cameraXLocked; // 0x233
-		PAD(28)
+		PAD(4)
+		int m_firstVisibleSection; // 0x238
+		int m_lastVisibleSection; // 0x23c
+		PAD(16)
 		float m_levelLength; // 0x250
 		float m_realLevelLength; // 0x254
 		cocos2d::CCLabelBMFont* m_attemptLabel; // 0x258

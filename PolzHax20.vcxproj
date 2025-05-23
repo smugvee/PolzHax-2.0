@@ -157,6 +157,7 @@
     <ClInclude Include="EditorUI.h" />
     <ClInclude Include="explorer.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Hitboxes.h" />
     <ClInclude Include="InfoLayer.h" />
     <ClInclude Include="LevelEditorLayer.h" />
     <ClInclude Include="LevelShare.h" />
@@ -643,6 +644,7 @@
     <ClCompile Include="explorer.cpp" />
     <ClCompile Include="GlobalClipboard.cpp" />
     <ClCompile Include="GlobalClipboard.h" />
+    <ClCompile Include="Hitboxes.cpp" />
     <ClCompile Include="InfoLayer.cpp" />
     <ClCompile Include="LevelEditorLayer.cpp" />
     <ClCompile Include="libs\imgui-hook\imgui-hook.cpp" />
@@ -656,6 +658,7 @@
     <ClCompile Include="libs\imgui-hook\imgui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="nodes.cpp" />
+    <ClCompile Include="ObjectIDs.h" />
     <ClCompile Include="patching.cpp" />
     <ClCompile Include="PauseLayer.cpp" />
     <ClCompile Include="pch.cpp">

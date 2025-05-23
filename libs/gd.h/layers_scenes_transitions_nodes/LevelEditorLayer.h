@@ -47,9 +47,9 @@ namespace gd {
 		PAD(24)
 		gd::EditorUI* m_editorUI; // 0x208
 		cocos2d::CCSprite* m_backgroundSprite; // 0x20c
-		cocos2d::CCArray* m_undoObjects; // 0x210
-		cocos2d::CCArray* m_redoObjects; // 0x214
-		cocos2d::CCArray* m_unkArray11; // 0x218
+		cocos2d::CCArray* m_levelSections; // 0x210
+		cocos2d::CCArray* m_undoObjects; // 0x214
+		cocos2d::CCArray* m_redoObjects; // 0x218
 		PAD(0x8)
 		int m_objectCount; // 0x224
 		DrawGridLayer* m_drawGridLayer; // 0x228

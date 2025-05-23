@@ -117,6 +117,27 @@ struct SettingStruct {
 
 	bool onSelectFilter;
 	bool onExtraObjectInfo;
+	
+	// Hitboxes
+	bool onHitboxes;
+	bool onHitboxesOnDeath;
+
+	bool onEnablePlayerHitboxes;
+	bool onEnableSolidHitboxes;
+	bool onEnableHazardHitboxes;
+	bool onEnableSpecialHitboxes;
+
+	int solidHitboxesR = 0;
+	int solidHitboxesG = 0;
+	int solidHitboxesB = 255;
+	int hazardHitboxesR = 255;
+	int hazardHitboxesG = 0;
+	int hazardHitboxesB = 0;
+	int specialHitboxesR = 0;
+	int specialHitboxesG = 255;
+	int specialHitboxesB = 0;
+	int hitboxesOpacity = 255;
+
 };
 
 LayersStruct& layers();
@@ -214,5 +235,24 @@ DEF_SCHEMA(
 	onClassicMode,
 
 	onSelectFilter,
-	onExtraObjectInfo
+	onExtraObjectInfo,
+
+	onHitboxes,
+	onHitboxesOnDeath,
+
+	onEnablePlayerHitboxes,
+	onEnableSolidHitboxes,
+	onEnableHazardHitboxes,
+	onEnableSpecialHitboxes,
+
+	solidHitboxesR,
+	solidHitboxesG,
+	solidHitboxesB,
+	hazardHitboxesR,
+	hazardHitboxesG,
+	hazardHitboxesB,
+	specialHitboxesR,
+	specialHitboxesG,
+	specialHitboxesB,
+	hitboxesOpacity
 )

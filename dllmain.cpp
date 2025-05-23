@@ -275,6 +275,11 @@ bool __fastcall LevelSettingsLayer_initH(gd::LevelSettingsLayer* self, void*, gd
 	return true;
 }
 
+inline void(__thiscall* CCCircleWave_draw)(gd::CCCircleWave*);
+void __fastcall CCCircleWave_drawH(gd::CCCircleWave* self) {
+	if (!setting().onNoEffectCircle) CCCircleWave_draw(self);
+}
+
 void(__thiscall* AppDelegate_trySaveGame)(gd::AppDelegate*);
 void __fastcall AppDelegate_trySaveGameH(gd::AppDelegate* self) {
 	if (setting().onAutoSave)
@@ -308,6 +313,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	SetupPulsePopup::mem_init();
 	CustomizeObjectLayer::mem_init();
 	EditButtonBar::mem_init();
+	LevelEditorLayer::mem_init();
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9afc0), GameManager_isIconUnlockedH, reinterpret_cast<void**>(&GameManager_isIconUnlocked));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9b2a0), GameManager_isColorUnlockedH, reinterpret_cast<void**>(&GameManager_isColorUnlocked));
@@ -329,11 +335,11 @@ DWORD WINAPI my_thread(void* hModule) {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x56fa0), EditLevelLayer_initH, reinterpret_cast<void**>(&EditLevelLayer_init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xea4c0), LevelBrowserLayer_initH, reinterpret_cast<void**>(&LevelBrowserLayer_init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x1dac0), CCTextInputNode_updateLabelH, reinterpret_cast<void**>(&CCTextInputNode_updateLabel));
-
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xe5680), InfoLayer::initH, reinterpret_cast<void**>(&InfoLayer::init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x102270), LevelSettingsLayer_initH, reinterpret_cast<void**>(&LevelSettingsLayer_init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xd9900), EditorOptionsLayer::initH, reinterpret_cast<void**>(&EditorOptionsLayer::init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xfe2e0), DrawGridLayer::drawH, reinterpret_cast<void**>(&DrawGridLayer::draw));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x13bf0), CCCircleWave_drawH, reinterpret_cast<void**>(&CCCircleWave_draw));
 
 	MH_CreateHook(
 		reinterpret_cast<void*>(gd::base + 0x392a0),

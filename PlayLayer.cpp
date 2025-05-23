@@ -5,6 +5,8 @@
 #include <vector>
 #include "utils.hpp"
 
+#include "Hitboxes.h"
+
 std::vector<CheckPoint> checkpoints;
 
 std::vector<gd::StartPosObject*> m_startPositions;
@@ -110,8 +112,8 @@ void pickStartPos(gd::PlayLayer* playLayer, int32_t index) { // Eclipse Menu
 		}
 		playLayer->m_startPosObject = startPos;
 	}
-	if (currentStartPos >= 0) { // Taswert's shit
-		playLayer->m_playerStartPosition = playLayer->m_startPosObject->getOrientedBox()->getCenterPoint();
+	if (currentStartPos >= 0) { // Taswert's thing
+		playLayer->m_playerStartPosition = playLayer->m_startPosObject->getOrientedBox()->m_center;
 	}
 	else {
 		playLayer->m_playerStartPosition = ccp(0, 105);
@@ -225,6 +227,36 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 	spSwitcherLabel->stopAllActions();
 	spSwitcherLabel->runAction(CCSequence::create(CCDelayTime::create(1.f), CCFadeOut::create(0.5f), nullptr));
 
+	auto playerDrawNode = CCDrawNode::create();
+	self->m_objectLayer->addChild(playerDrawNode, 1000, 124);
+	auto objectDrawNode = CCDrawNode::create();
+	self->m_objectLayer->addChild(objectDrawNode, 1000, 125);
+
+	if (setting().onHitboxes) {
+		if (setting().onEnablePlayerHitboxes) {
+			if (self->m_player) Hitboxes::drawPlayerHitbox(self->m_player, playerDrawNode);
+			if (self->m_player2) Hitboxes::drawPlayerHitbox(self->m_player2, playerDrawNode);
+		}
+
+		for (int i = self->m_firstVisibleSection + 1; i <= self->m_lastVisibleSection - 1; i++) {
+			if (i < 0) continue;
+			if (i >= self->m_levelSections->count()) break;
+
+			auto objectAtIndex = self->m_levelSections->objectAtIndex(i);
+			auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
+
+			for (int j = 0; j < objArr->count(); j++) {
+				auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+				if (setting().onEnableSolidHitboxes)
+					Hitboxes::drawSolidsObjectHitbox(obj, objectDrawNode);
+				if (setting().onEnableHazardHitboxes)
+					Hitboxes::drawHazardsObjectHitbox(obj, objectDrawNode);
+				if (setting().onEnableSpecialHitboxes)
+					Hitboxes::drawSpecialsObjectHitbox(obj, objectDrawNode);
+			}
+		}
+	}
+
 	return true;
 }
 
@@ -249,6 +281,36 @@ void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 
 	if (setting().onLockCursor && !setting().show && !self->m_hasLevelCompletedMenu && !self->m_isDead) {
 		SetCursorPos(winSize.width / 2, winSize.height / 2);
+	}
+
+	auto playerDrawNode = static_cast<CCDrawNode*>(self->m_objectLayer->getChildByTag(124));
+	playerDrawNode->clear();
+	auto objectDrawNode = static_cast<CCDrawNode*>(self->m_objectLayer->getChildByTag(125));
+	objectDrawNode->clear();
+
+	if ((self->m_player->m_isDead && setting().onHitboxesOnDeath) || setting().onHitboxes) {
+		if (setting().onEnablePlayerHitboxes) {
+			if (self->m_player) Hitboxes::drawPlayerHitbox(self->m_player, playerDrawNode);
+			if (self->m_player2) Hitboxes::drawPlayerHitbox(self->m_player2, playerDrawNode);
+		}
+
+		for (int i = self->m_firstVisibleSection + 1; i <= self->m_lastVisibleSection - 1; i++) {
+			if (i < 0) continue;
+			if (i >= self->m_levelSections->count()) break;
+
+			auto objectAtIndex = self->m_levelSections->objectAtIndex(i);
+			auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
+
+			for (int j = 0; j < objArr->count(); j++) {
+				auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+				if (setting().onEnableSolidHitboxes)
+					Hitboxes::drawSolidsObjectHitbox(obj, objectDrawNode);
+				if (setting().onEnableHazardHitboxes)
+					Hitboxes::drawHazardsObjectHitbox(obj, objectDrawNode);
+				if (setting().onEnableSpecialHitboxes)
+					Hitboxes::drawSpecialsObjectHitbox(obj, objectDrawNode);
+			}
+		}
 	}
 }
 

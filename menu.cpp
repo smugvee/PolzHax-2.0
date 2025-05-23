@@ -83,9 +83,25 @@ void update_pitch_shifter() {
 
 std::vector<std::string> dllNames;
 
+float solidsColor[3];
+float hazardsColor[3];
+float specialsColor[3];
+
 void imgui_render() {
 	if (oneX) {
 		setting().loadState();
+
+		solidsColor[0] = setting().solidHitboxesR / 255.f;
+		solidsColor[1] = setting().solidHitboxesG / 255.f;
+		solidsColor[2] = setting().solidHitboxesB / 255.f;
+
+		hazardsColor[0] = setting().hazardHitboxesR / 255.f;
+		hazardsColor[1] = setting().hazardHitboxesG / 255.f;
+		hazardsColor[2] = setting().hazardHitboxesB / 255.f;
+
+		specialsColor[0] = setting().specialHitboxesR / 255.f;
+		specialsColor[1] = setting().specialHitboxesG / 255.f;
+		specialsColor[2] = setting().specialHitboxesB / 255.f;
 
 		float polzhax_xPos;
 		float bypass_xPos;
@@ -181,10 +197,17 @@ void imgui_render() {
 		}
 
 		if (setting().onInstantMirror) {
-
+			sequence_patch((uint32_t)gd::base + 0x17bdf6, { 0x00, 0x00, 0x00, 0x00 });
 		}
 		else {
+			sequence_patch((uint32_t)gd::base + 0x17bdf6, { 0x00, 0x00, 0x00, 0x3f });
+		}
 
+		if (setting().onInversedTrail) {
+			sequence_patch((uint32_t)libcocosbase + 0xad5b6, { 0x0f, 0x85, 0x55, 0x02, 0x00, 0x00 });
+		}
+		else {
+			sequence_patch((uint32_t)libcocosbase + 0xad5b6, { 0x0f, 0x84, 0x55, 0x02, 0x00, 0x00 });
 		}
 
 		if (setting().onNoBackgroundFlash) {
@@ -804,6 +827,28 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Hides practice buttons.");
 
+			if (ImGui::Checkbox("Instant Mirror", &setting().onInstantMirror)) {
+				if (setting().onInstantMirror) {
+					sequence_patch((uint32_t)gd::base + 0x17bdf6, { 0x00, 0x00, 0x00, 0x00 });
+					cheatAdd();
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x17bdf6, { 0x00, 0x00, 0x00, 0x3f });
+					cheatDec();
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Disables the mirror portal animation.");
+
+			if (ImGui::Checkbox("Inversed Trail", &setting().onInversedTrail)) {
+				if (setting().onInversedTrail) {
+					sequence_patch((uint32_t)libcocosbase + 0xad5b6, { 0x0f, 0x85, 0x55, 0x02, 0x00, 0x00 });
+				}
+				else {
+					sequence_patch((uint32_t)libcocosbase + 0xad5b6, { 0x0f, 0x84, 0x55, 0x02, 0x00, 0x00 });
+				}
+			}
+
 			if (ImGui::Checkbox("No Background Flash", &setting().onNoBackgroundFlash)) {
 				if (setting().onNoBackgroundFlash) {
 					sequence_patch((uint32_t)gd::base + 0x16e331, { 0x6a, 0x00 });
@@ -825,6 +870,10 @@ void imgui_render() {
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("No visual effects on death.");
+
+			ImGui::Checkbox("No Effect Circle", &setting().onNoEffectCircle);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Removes effect circles from orb, portal & pad activations.");
 
 			if (ImGui::Checkbox("No Portal Lightning", &setting().onNoLightning)) {
 				if (setting().onNoLightning) {
@@ -1220,6 +1269,53 @@ void imgui_render() {
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Syncs music to checked speed-portals, instead of only ones the player hit.");
+
+			if (ImGui::Checkbox("Hitboxes", &setting().onHitboxes)) {
+				if (setting().onHitboxes) {
+					cheatAdd();
+				}
+				else {
+					cheatDec();
+				}
+			}
+
+			if (ImGui::TreeNode("Hitboxes Settings")) {
+				ImGui::SetNextItemWidth(setting().UISize * 60.f);
+				ImGui::DragInt("Opacity", &setting().hitboxesOpacity, 1.f, 0, 255);
+
+				ImGui::Checkbox("Player", &setting().onEnablePlayerHitboxes);
+
+				ImGui::Checkbox("Solids", &setting().onEnableSolidHitboxes);
+				ImGui::SameLine();
+				ImGui::ColorEdit3("##solidsColor", solidsColor, ImGuiColorEditFlags_NoInputs);
+				if (ImGui::IsItemDeactivatedAfterEdit()) {
+					setting().solidHitboxesR = solidsColor[0] * 255;
+					setting().solidHitboxesG = solidsColor[1] * 255;
+					setting().solidHitboxesB = solidsColor[2] * 255;
+				}
+
+				ImGui::Checkbox("Hazards", &setting().onEnableHazardHitboxes);
+				ImGui::SameLine();
+				ImGui::ColorEdit3("##hazardsColor", hazardsColor, ImGuiColorEditFlags_NoInputs);
+				if (ImGui::IsItemDeactivatedAfterEdit()) {
+					setting().hazardHitboxesR = hazardsColor[0] * 255;
+					setting().hazardHitboxesG = hazardsColor[1] * 255;
+					setting().hazardHitboxesB = hazardsColor[2] * 255;
+				}
+
+				ImGui::Checkbox("Specials", &setting().onEnableSpecialHitboxes);
+				ImGui::SameLine();
+				ImGui::ColorEdit3("##specialsColor", specialsColor, ImGuiColorEditFlags_NoInputs);
+				if (ImGui::IsItemDeactivatedAfterEdit()) {
+					setting().specialHitboxesR = specialsColor[0] * 255;
+					setting().specialHitboxesG = specialsColor[1] * 255;
+					setting().specialHitboxesB = specialsColor[2] * 255;
+				}
+
+				ImGui::TreePop();
+			}
+
+			ImGui::Checkbox("Hitboxes On Death", &setting().onHitboxesOnDeath);
 
 			if (ImGui::Checkbox("Noclip", &setting().onNoclip)) {
 				if (setting().onNoclip) {

@@ -46,7 +46,10 @@ namespace gd {
 
 	class GameObject : public CCSpritePlus {
 	public:
-		PAD(0x28)
+		PAD(0x24)
+		bool m_editor; // 0x1e8
+		bool m_groupDisable; // 0x1e9
+		PAD(2)
 		int m_baseColorID; // 0x1ec
 		int m_detailColorID; // 0x1f0
 		PAD(0xC)
@@ -54,7 +57,14 @@ namespace gd {
 		bool m_isFlippedX; // 0x201
 		bool m_isFlippedY; // 0x202
 		PAD(0x1)
-		PAD(0x1c)
+		PAD(4) // 0x204
+		PAD(4) // 0x208
+		PAD(4) // 0x20c
+		PAD(4) // 0x210
+		PAD(4) // 0x214
+		OBB2D* m_OBB2D; // 0x218
+		bool m_oriented; // 0x21c
+		PAD(3)
 		cocos2d::CCSprite* m_glowSprite; // 0x220
 		PAD(0x4)
 		cocos2d::CCRepeatForever* m_action; // 0x228
@@ -77,12 +87,16 @@ namespace gd {
 		bool m_hasBeenActivatedP2; // 0x28f
 		PAD(0xC)
 		cocos2d::CCSprite* m_detailSprite; // 0x29c
-		PAD(12)
+		bool m_ignoreScreenCheck; // 0x2a0
+		PAD(3)
+		float m_objectRadius; // 0x2a4
+		bool m_isRotatedSide; // 0x2a8
+		PAD(3)
 		float m_scaleModX; // 0x2ac
 		float m_scaleModY; // 0x2b0
 		int m_uniqueID; // 0x2b4
 		int m_objectType; // 0x2b8
-		int m_section; // 0x2bc
+		int m_section; // 0x2bcs
 		bool m_touchTriggered; // 0x2c0
 		bool m_spawnTriggered; // 0x2c1
 		PAD(0x2)
@@ -223,6 +237,20 @@ namespace gd {
 
 		OBB2D* getOrientedBox() {
 			return reinterpret_cast<OBB2D*(__thiscall*)(GameObject*)>(base + 0xb7af0)(this);
+		}
+
+		void updateOrientedBox() {
+			return reinterpret_cast<void(__thiscall*)(GameObject*)>(base + 0xb7b50)(this);
+		}
+
+		float getObjectRadius() {
+			float radius = m_objectRadius;
+			if (m_scale != 1.f) radius *= m_scale;
+			return radius;
+		}
+
+		cocos2d::CCRect const& getObjectRect() {
+			return *reinterpret_cast<cocos2d::CCRect*(__thiscall*)(GameObject*)>(base + 0xb1340)(this);
 		}
 	};
 }

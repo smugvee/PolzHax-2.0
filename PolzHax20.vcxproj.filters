@@ -1497,6 +1497,9 @@
     <ClInclude Include="libs\gd.h\other_nodes\LevelTools.h">
       <Filter>Файлы заголовков\libs\gd.h</Filter>
     </ClInclude>
+    <ClInclude Include="Hitboxes.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1597,6 +1600,12 @@
     </ClCompile>
     <ClCompile Include="EditorOptionsLayer.cpp">
       <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="Hitboxes.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectIDs.h">
+      <Filter>Файлы заголовков</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
