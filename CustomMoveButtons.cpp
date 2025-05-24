@@ -230,57 +230,7 @@ void EditorUI::Callback::onCustomMoveObject(CCObject* obj) {
 		auto buttonTag = static_cast<gd::CCMenuItemSpriteExtra*>(obj)->getTag();
 		std::cout << buttonTag << std::endl;
 
-		switch (buttonTag)
-		{
-		case static_cast<int>(moveForCommand::kEditCommandHalfUp):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandHalfUp);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandHalfDown):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandHalfDown);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandHalfLeft):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandHalfLeft);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandHalfRight):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandHalfRight);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandQuarterUp):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandQuarterUp);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandQuarterDown):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandQuarterDown);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandQuarterLeft):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandQuarterLeft);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandQuarterRight):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandQuarterRight);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandEightUp):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandEightUp);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandEightDown):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandEightDown);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandEightLeft):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandEightLeft);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandEightRight):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandEightRight);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandUnitUp):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandUnitUp);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandUnitDown):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandUnitDown);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandUnitLeft):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandUnitLeft);
-			break;
-		case static_cast<int>(moveForCommand::kEditCommandUnitRight):
-			editorUI->moveObjectCall(moveForCommand::kEditCommandUnitRight);
-			break;
-		}
+		editorUI->moveObjectCall(static_cast<gd::EditCommand>(buttonTag));
 	}
 }
 
@@ -289,14 +239,6 @@ void EditorUI::Callback::onCustomTransformObject(CCObject* obj) {
 	if (editorUI) {
 		auto buttonTag = static_cast<gd::CCMenuItemSpriteExtra*>(obj)->getTag();
 		std::cout << buttonTag << std::endl;
-		switch (buttonTag)
-		{
-		case static_cast<int>(rotationForCommand::kEditCommandRotate265CW):
-			editorUI->transformObjectCall(rotationForCommand::kEditCommandRotate265CW);
-			break;
-		case static_cast<int>(rotationForCommand::kEditCommandRotate265CCW):
-			editorUI->transformObjectCall(rotationForCommand::kEditCommandRotate265CCW);
-			break;
-		}
+		editorUI->transformObjectCall(static_cast<gd::EditCommand>(buttonTag));
 	}
 }

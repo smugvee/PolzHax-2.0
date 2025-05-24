@@ -64,6 +64,8 @@ struct SettingStruct {
 	bool onTrailAlwaysOff;
 	bool onTrailAlwaysOn;
 	bool onTrailBugFix;
+	bool onWavePulseSize;
+	float wavePulseSize = 2.1f;
 
 	bool onAbsolutePosition;
 	bool onCopyHack;
@@ -185,6 +187,8 @@ DEF_SCHEMA(
 	onTrailAlwaysOff,
 	onTrailAlwaysOn,
 	onTrailBugFix,
+	onWavePulseSize,
+	wavePulseSize,
 
 	onAbsolutePosition,
 	onCopyHack,

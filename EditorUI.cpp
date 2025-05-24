@@ -4,6 +4,7 @@
 #include "utils.hpp"
 #include "GlobalClipboard.h"
 #include "state.h"
+#include "patching.h"
 
 gd::EditorUI* editorUI = nullptr;
 
@@ -226,6 +227,8 @@ void __fastcall EditorUI::selectObjectH(gd::EditorUI* self, void*, gd::GameObjec
 	else {
 		EditorUI::selectObject(self, object);
 	}
+
+	std::cout << self->m_editorLayer->m_drawGridLayer->timeForXPos(object->getOrientedBox()->m_center.x) / 100000.f << std::endl;
 }
 
 void __fastcall EditorUI::selectObjectsH(gd::EditorUI* self, void*, CCArray* objects) {
@@ -339,6 +342,26 @@ void __fastcall EditorUI::onGroupDownH(gd::EditorUI* self, void*, CCObject* obj)
 			btn->setEnabled(false);
 		}
 	}
+}
+
+void __fastcall EditorUI::moveObjectCallH(gd::EditorUI* self, void*, gd::EditCommand command) {
+	EditorUI::moveObjectCall(self, command);
+	self->updateObjectInfoLabel();
+}
+
+void __fastcall EditorUI::transformObjectCallH(gd::EditorUI* self, void*, gd::EditCommand command) {
+	EditorUI::transformObjectCall(self, command);
+	self->updateObjectInfoLabel();
+}
+
+void __fastcall GJScaleControl::ccTouchMovedH(gd::GJScaleControl* self, void*, CCTouch* touch, CCEvent* event) {
+	GJScaleControl::ccTouchMoved(self, touch, event);
+	gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->updateObjectInfoLabel();
+}
+
+void __fastcall GJRotationControl::ccTouchMovedH(gd::GJRotationControl* self, void*, CCTouch* touch, CCEvent* event) {
+	GJRotationControl::ccTouchMoved(self, touch, event);
+	gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->updateObjectInfoLabel();
 }
 
 class SaveLevelProtocol : public gd::FLAlertLayerProtocol {
@@ -488,6 +511,12 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5fb70), EditorUI::updateObjectInfoLabelH, reinterpret_cast<void**>(&EditorUI::updateObjectInfoLabel));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6de70), EditorUI::onGroupDownH, reinterpret_cast<void**>(&EditorUI::onGroupDown));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6de00), EditorUI::onGroupUpH, reinterpret_cast<void**>(&EditorUI::onGroupUp));
+
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6e1b0), EditorUI::moveObjectCallH, reinterpret_cast<void**>(&EditorUI::moveObjectCall));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6e540), EditorUI::transformObjectCallH, reinterpret_cast<void**>(&EditorUI::transformObjectCall));
+
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x740e0), GJRotationControl::ccTouchMovedH, reinterpret_cast<void**>(&GJRotationControl::ccTouchMoved));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x74780), GJScaleControl::ccTouchMovedH, reinterpret_cast<void**>(&GJScaleControl::ccTouchMoved));
 	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6303e), EditorUI::blocksArrayH, reinterpret_cast<void**>(&EditorUI::blocksArray));
 }
 

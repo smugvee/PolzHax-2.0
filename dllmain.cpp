@@ -40,9 +40,10 @@ bool __fastcall GameManager_isColorUnlockedH(gd::GameManager* self, void*, int i
 	else return GameManager_isColorUnlocked(self, id, type);
 }
 
-void(__thiscall* CCParticleSystemQuad_draw)(CCParticleSystemQuad*);
-void __fastcall CCParticleSystemQuad_drawH(CCParticleSystemQuad* self) {
-	if (!setting().onNoParticles) return CCParticleSystemQuad_draw(self);
+inline void(__thiscall* CCParticleSystem_initWithTotalParticles)(CCParticleSystem*, unsigned int);
+void __fastcall CCParticleSystem_initWithTotalParticlesH(CCParticleSystem* self, void*, unsigned int amt) {
+	if (setting().onNoParticles) return CCParticleSystem_initWithTotalParticles(self, 0);
+	else return CCParticleSystem_initWithTotalParticles(self, amt);
 }
 
 void(__thiscall* PlayerObject_updatePlayerFrame)(gd::PlayerObject*, int);
@@ -280,6 +281,12 @@ void __fastcall CCCircleWave_drawH(gd::CCCircleWave* self) {
 	if (!setting().onNoEffectCircle) CCCircleWave_draw(self);
 }
 
+inline void(__thiscall* HardStreak_updateStroke)(gd::HardStreak*, float);
+void __fastcall HardStreak_updateStrokeH(gd::HardStreak* self, void*, float dt) {
+	if (setting().onWavePulseSize) self->m_pulseSize = setting().wavePulseSize;
+	HardStreak_updateStroke(self, dt);
+}
+
 void(__thiscall* AppDelegate_trySaveGame)(gd::AppDelegate*);
 void __fastcall AppDelegate_trySaveGameH(gd::AppDelegate* self) {
 	if (setting().onAutoSave)
@@ -294,6 +301,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	sequence_patch((uint32_t)gd::base + 0x558db, { 0xb8, 0x01, 0x00, 0x00, 0x00, 0x90, 0x90 }); // Play music button in level page
 	sequence_patch((uint32_t)gd::base + 0x38a85, { 0x6a, 0x00 }); // 2.2 color format (better texture quality)
 	sequence_patch((uint32_t)gd::base + 0xfefdc, { 0x90, 0x90 }); // Lines editor fix
+	sequence_patch((uint32_t)gd::base + 0x1d13f6, { 0x0a }); // "EL: %s\n"
 
 	AllocConsole();
 	freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
@@ -318,7 +326,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9afc0), GameManager_isIconUnlockedH, reinterpret_cast<void**>(&GameManager_isIconUnlocked));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9b2a0), GameManager_isColorUnlockedH, reinterpret_cast<void**>(&GameManager_isColorUnlocked));
 
-	MH_CreateHook(reinterpret_cast<void*>(GetProcAddress(cocos, "?draw@CCParticleSystemQuad@cocos2d@@UAEXXZ")), CCParticleSystemQuad_drawH, reinterpret_cast<void**>(&CCParticleSystemQuad_draw));
+	MH_CreateHook(reinterpret_cast<void*>(GetProcAddress(cocos, "?initWithTotalParticles@CCParticleSystem@cocos2d@@UAE_NI@Z")), CCParticleSystem_initWithTotalParticlesH, reinterpret_cast<void**>(&CCParticleSystem_initWithTotalParticles));
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x167400), PlayerObject_updatePlayerFrameH, reinterpret_cast<void**>(&PlayerObject_updatePlayerFrame));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x167840), PlayerObject_updatePlayerRollFrameH, reinterpret_cast<void**>(&PlayerObject_updatePlayerRollFrame));
@@ -340,6 +348,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xd9900), EditorOptionsLayer::initH, reinterpret_cast<void**>(&EditorOptionsLayer::init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xfe2e0), DrawGridLayer::drawH, reinterpret_cast<void**>(&DrawGridLayer::draw));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x13bf0), CCCircleWave_drawH, reinterpret_cast<void**>(&CCCircleWave_draw));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xe4680), HardStreak_updateStrokeH, reinterpret_cast<void**>(&HardStreak_updateStroke));
 
 	MH_CreateHook(
 		reinterpret_cast<void*>(gd::base + 0x392a0),

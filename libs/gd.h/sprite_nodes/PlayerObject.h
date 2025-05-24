@@ -9,10 +9,7 @@ namespace gd {
 	class AnimatedSpriteDelegate;
 	class GhostTrailEffect {};
 	class OBB2D;
-
-	class HardStreak : public cocos2d::CCDrawNode {
-	public:
-	};
+	class HardStreak;
 
 	class GJRobotSprite : public CCAnimatedSprite {
 	public:

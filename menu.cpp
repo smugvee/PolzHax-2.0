@@ -226,6 +226,13 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x164c2d, { 0x0f, 0x84, 0xd5, 0x01, 0x00, 0x00 });
 		}
 
+		if (setting().onNoGravityEffect) {
+			sequence_patch((uint32_t)gd::base + 0x17e6f6, { 0x90, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x17e6f6, { 0x75, 0x07 });
+		}
+
 		if (setting().onNoLightning) {
 			sequence_patch((uint32_t)gd::base + 0x16e28f, { 0xe9, 0x97, 0x00, 0x00, 0x00, 0x90 });
 		}
@@ -875,16 +882,16 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Removes effect circles from orb, portal & pad activations.");
 
-			if (ImGui::Checkbox("No Portal Lightning", &setting().onNoLightning)) {
-				if (setting().onNoLightning) {
-					sequence_patch((uint32_t)gd::base + 0x16e28f, { 0xe9, 0x97, 0x00, 0x00, 0x00, 0x90 });
+			if (ImGui::Checkbox("No Gravity Effect", &setting().onNoGravityEffect)) {
+				if (setting().onNoGravityEffect) {
+					sequence_patch((uint32_t)gd::base + 0x17e6f6, { 0x90, 0x90 });
 				}
 				else {
-					sequence_patch((uint32_t)gd::base + 0x16e28f, { 0x0f, 0x85, 0x96, 0x00, 0x00, 0x00 });
+					sequence_patch((uint32_t)gd::base + 0x17e6f6, { 0x75, 0x07 });
 				}
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
-				ImGui::SetTooltip("Disables portal lightning from size-changing portals.");
+				ImGui::SetTooltip("Disables gravity effect.");
 
 			ImGui::Checkbox("No Mini Icon", &setting().onNoMiniIcon);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
@@ -897,6 +904,17 @@ void imgui_render() {
 			ImGui::Checkbox("No Particles", &setting().onNoParticles);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Disables the particle system.");
+
+			if (ImGui::Checkbox("No Portal Lightning", &setting().onNoLightning)) {
+				if (setting().onNoLightning) {
+					sequence_patch((uint32_t)gd::base + 0x16e28f, { 0xe9, 0x97, 0x00, 0x00, 0x00, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x16e28f, { 0x0f, 0x85, 0x96, 0x00, 0x00, 0x00 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Disables portal lightning from size-changing portals.");
 
 			if (ImGui::Checkbox("No Respawn Flash", &setting().onNoRespawnFlash)) {
 				if (setting().onNoRespawnFlash) {
@@ -969,6 +987,18 @@ void imgui_render() {
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Fixes trail cutting on high refresh rates.");
+
+			ImGui::Checkbox("Wave Pulse Size", &setting().onWavePulseSize);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Changes the wave pulse size multiplier.");
+			ImGui::SameLine();
+			if (ImGui::TreeNode("##wavePulseSize")) {
+
+				ImGui::SetNextItemWidth(setting().UISize * 120.f);
+				ImGui::DragFloat("##waveSize", &setting().wavePulseSize, .1f, .1f, 2.3f, "%.1fx");
+
+				ImGui::TreePop();
+			}
 		}
 
 		if (ImGui::Begin("Creator", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {

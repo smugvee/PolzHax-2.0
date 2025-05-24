@@ -118,6 +118,7 @@ namespace gd {
 #include "sprite_nodes/ColorActionSprite.h"
 #include "sprite_nodes/GJSpriteColor.h"
 #include "sprite_nodes/EffectGameObject.h"
+#include "sprite_nodes/HardStreak.h"
 
 #include "text_input_nodes/CCTextInputNode.h"
 

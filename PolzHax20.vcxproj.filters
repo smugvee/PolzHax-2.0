@@ -1503,6 +1503,9 @@
     <ClInclude Include="libs\gd.h\menu_nodes\Slider.h">
       <Filter>Файлы заголовков\libs\gd.h</Filter>
     </ClInclude>
+    <ClInclude Include="libs\gd.h\sprite_nodes\HardStreak.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

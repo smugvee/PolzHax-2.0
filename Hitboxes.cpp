@@ -98,24 +98,27 @@ void Hitboxes::drawPlayerHitbox(gd::PlayerObject* player, CCDrawNode* drawNode)
 }
 
 void Hitboxes::drawSolidsObjectHitbox(gd::GameObject* obj, CCDrawNode* drawNode) {
-    if (obj->m_groupDisable) return;
-    if (obj->m_objectType == gd::GameObjectType::kGameObjectTypeSolid)
-        Hitboxes::drawRectObj(drawNode, obj, { setting().solidHitboxesR / 255.f, setting().solidHitboxesG / 255.f, setting().solidHitboxesB / 255.f, setting().hitboxesOpacity / 255.f });
-    else if (obj->m_objectType == gd::GameObjectType::kGameObjectTypeSlope)
-        Hitboxes::drawTriangleObj(drawNode, obj, { setting().solidHitboxesR / 255.f, setting().solidHitboxesG / 255.f, setting().solidHitboxesB / 255.f, setting().hitboxesOpacity / 255.f });
+    if (obj->m_groupDisable || obj->m_isDestroyed) return;
+    switch (obj->m_objectType)
+    {
+    case gd::GameObjectType::kGameObjectTypeSolid:
+    case gd::GameObjectType::kGameObjectTypeBreakable:
+        Hitboxes::drawRectObj(drawNode, obj, { setting().solidHitboxesR / 255.f, setting().solidHitboxesG / 255.f, setting().solidHitboxesB / 255.f, setting().hitboxesOpacity / 255.f }); break;
+    case gd::GameObjectType::kGameObjectTypeSlope:
+        Hitboxes::drawTriangleObj(drawNode, obj, { setting().solidHitboxesR / 255.f, setting().solidHitboxesG / 255.f, setting().solidHitboxesB / 255.f, setting().hitboxesOpacity / 255.f }); break;
+    }
 }
 
 void Hitboxes::drawHazardsObjectHitbox(gd::GameObject* obj, CCDrawNode* drawNode) {
-    if (obj->m_groupDisable) return;
+    if (obj->m_groupDisable || obj->m_isDestroyed) return;
     if (obj->getObjectRadius() > 0)
         Hitboxes::drawCircleObj(drawNode, obj, { setting().hazardHitboxesR / 255.f, setting().hazardHitboxesG / 255.f, setting().hazardHitboxesB / 255.f, setting().hitboxesOpacity / 255.f });
     else if (obj->m_objectType == gd::GameObjectType::kGameObjectTypeHazard)
         Hitboxes::drawRectObj(drawNode, obj, { setting().hazardHitboxesR / 255.f, setting().hazardHitboxesG / 255.f, setting().hazardHitboxesB / 255.f, setting().hitboxesOpacity / 255.f });
-
 }
 
 void Hitboxes::drawSpecialsObjectHitbox(gd::GameObject* obj, CCDrawNode* drawNode) {
-    if (obj->m_groupDisable) return;
+    if (obj->m_groupDisable || obj->m_isDestroyed) return;
     switch (obj->m_objectType)
     {
     case gd::GameObjectType::kGameObjectTypeInverseGravityPortal:

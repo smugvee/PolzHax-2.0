@@ -125,23 +125,14 @@ void pickStartPos(gd::PlayLayer* playLayer, int32_t index) { // Eclipse Menu
 
 	auto spSwitcherLabel = static_cast<CCLabelBMFont*>(static_cast<CCMenu*>(playLayer->m_uiLayer->getChildByTag(177))->getChildByTag(178));
 	if (spSwitcherLabel) {
-		//auto* prevSP = index >= 0 ? startPosObjects[currentStartPos - 1] : nullptr;
-		//auto* nextSP = index >= 0 ? startPosObjects[currentStartPos + 1] : nullptr;
+		auto* prevSP = index >= 0 ? startPosObjects[currentStartPos - 1] : nullptr;
+		auto* nextSP = index >= 0 ? startPosObjects[currentStartPos + 1] : nullptr;
 
-		//std::cout << "Previous StartPosObject: " << prevSP << std::endl;
-		//std::cout << "Next StartPosObject: " << nextSP << std::endl;
+		std::cout << "Previous StartPosObject: " << prevSP << std::endl;
+		std::cout << "Next StartPosObject: " << nextSP << std::endl;
 
-		//float prevSPXPos;
-		//float nextSPXPos;
-
-		//if (prevSP) prevSPXPos = prevSP->getOrientedBox()->getCenterPoint().x / playLayer->m_levelLength * 100.f;
-		//else prevSPXPos = 0;
-		//
-		//if (nextSP) nextSPXPos = nextSP->getOrientedBox()->getCenterPoint().x / playLayer->m_levelLength * 100.f;
-		//else nextSPXPos = 0;
-
-		//std::cout << prevSPXPos << "%" << std::endl;
-		//std::cout << nextSPXPos << "%" << std::endl;
+		std::cout << startPosObjects.front() << std::endl;
+		std::cout << startPosObjects.back() << std::endl;
 
 		spSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos + 1, startPosObjects.size())->getCString());
 		spSwitcherLabel->setOpacity(255);
@@ -168,6 +159,9 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 	inPractice = false;
 	inTestmode = self->m_isTestMode;
 	smoothOut = 0;
+
+	auto director = CCDirector::sharedDirector();
+	auto winSize = director->getWinSize();
 	
 	std::cout << "GameManager: " << gd::GameManager::sharedState() << std::endl;
 	std::cout << "FMODAudioEngine: " << gd::FMODAudioEngine::sharedEngine() << std::endl;
@@ -256,6 +250,15 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 			}
 		}
 	}
+
+	//CCRenderTexture* tex = CCRenderTexture::create(winSize.width, winSize.height);
+	//tex->setPosition(winSize / 2.f);
+
+	//tex->begin();
+	//director->getRunningScene()->visit();
+	//tex->end();
+
+	//tex->saveToFile("Image_Save.png", kCCImageFormatPNG);
 
 	return true;
 }

@@ -12,6 +12,8 @@ bool __fastcall LevelEditorLayer::initH(gd::LevelEditorLayer* self, void*, gd::G
 	auto objectDrawNode = CCDrawNode::create();
 	self->m_objectLayer->addChild(objectDrawNode, 1000, 125);
 
+	std::cout << self->m_drawGridLayer->timeForXPos(500.f) << std::endl;
+
 	return true;
 }
 
@@ -66,7 +68,20 @@ void __fastcall LevelEditorLayer::updateH(gd::LevelEditorLayer* self, void*, flo
 void __fastcall DrawGridLayer::drawH(gd::DrawGridLayer* self) {
 	DrawGridLayer::draw(self);
 
-	
+	for (int i = self->m_editorLayer->m_firstVisibleSection + 1; i <= self->m_editorLayer->m_lastVisibleSection - 1; i++) {
+		if (i < 0) continue;
+		if (i >= self->m_editorLayer->m_levelSections->count()) break;
+
+		auto objectAtIndex = self->m_editorLayer->m_levelSections->objectAtIndex(i);
+		auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
+
+		for (int j = 0; j < objArr->count(); j++) {
+			auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+			glLineWidth(2);
+			ccDrawColor4B(100, 100, 100, 75);
+			ccDrawLine(obj->getOrientedBox()->m_center, { obj->getOrientedBox()->m_center.x + 100.f, obj->getOrientedBox()->m_center.y });
+		}
+	}
 }
 
 void LevelEditorLayer::mem_init() {

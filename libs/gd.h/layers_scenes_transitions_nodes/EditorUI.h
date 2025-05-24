@@ -233,6 +233,10 @@ namespace gd {
 				base + 0x6fc80
 				)(this);
 		}
+
+		void updateObjectInfoLabel() {
+			reinterpret_cast<void(__thiscall*)(EditorUI*)>(base + 0x5fb70)(this);
+		}
 	};
 
 	class ColorSelectPopup : public FLAlertLayer {

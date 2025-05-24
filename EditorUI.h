@@ -50,6 +50,12 @@ namespace EditorUI {
 	inline void(__thiscall* selectObjects)(gd::EditorUI*, CCArray*);
 	void __fastcall selectObjectsH(gd::EditorUI*, void*, CCArray*);
 
+	inline void(__thiscall* transformObjectCall)(gd::EditorUI*, gd::EditCommand);
+	void __fastcall transformObjectCallH(gd::EditorUI*, void*, gd::EditCommand);
+
+	inline void(__thiscall* moveObjectCall)(gd::EditorUI*, gd::EditCommand);
+	void __fastcall moveObjectCallH(gd::EditorUI*, void*, gd::EditCommand);
+
 	class Callback : public gd::EditorUI {
 	public:
 		void onCustomMoveObject(CCObject*);
@@ -94,4 +100,14 @@ namespace LevelSettingsLayer {
 	bool __fastcall initH(gd::FLAlertLayer*, void*, gd::LevelEditorLayer*);
 
 	void mem_init();
+}
+
+namespace GJScaleControl {
+	inline void(__thiscall* ccTouchMoved)(gd::GJScaleControl*, CCTouch*, CCEvent*);
+	void __fastcall ccTouchMovedH(gd::GJScaleControl*, void*, CCTouch*, CCEvent*);
+}
+
+namespace GJRotationControl {
+	inline void(__thiscall* ccTouchMoved)(gd::GJRotationControl*, CCTouch*, CCEvent*);
+	void __fastcall ccTouchMovedH(gd::GJRotationControl*, void*, CCTouch*, CCEvent*);
 }
