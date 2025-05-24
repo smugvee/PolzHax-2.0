@@ -5,43 +5,35 @@ CCMenu* m_togglerMenu = nullptr;
 
 void PauseLayer::Callback::onShowPercentage(CCObject*) {
     gd::GameManager::sharedState()->toggleGameVariable("0040");
-    if (gd::GameManager::sharedState()->getGameVariable("0040")) {
-        if (gd::GameManager::sharedState()->getPlayLayer())
-            from<CCLabelBMFont*>(gd::GameManager::sharedState()->getPlayLayer(), 0x25c)->setVisible(1);
-    }
-    else {
-        if (gd::GameManager::sharedState()->getPlayLayer())
-            from<CCLabelBMFont*>(gd::GameManager::sharedState()->getPlayLayer(), 0x25c)->setVisible(0);
+    auto playLayer = gd::GameManager::sharedState()->getPlayLayer();
+    if (playLayer) {
+        playLayer->m_percentLabel->setVisible(gd::GameManager::sharedState()->getGameVariable("0040"));
+        playLayer->updateProgressBar();
     }
 }
 
 void __fastcall PauseLayer::onProgressBarH(gd::PauseLayer* self, void*, CCObject* obj) {
     const auto bar = gd::GameManager::sharedState()->getProgressBar();
     auto size = CCDirector::sharedDirector()->getWinSize();
-    if (gd::GameManager::sharedState()->getPlayLayer()) {
-        auto percentLabel = from<CCLabelBMFont*>(gd::GameManager::sharedState()->getPlayLayer(), 0x25c);
+    auto playLayer = gd::GameManager::sharedState()->getPlayLayer();
+    if (playLayer) {
+        auto percentLabel = playLayer->m_percentLabel;
         if (percentLabel) {
             percentLabel->setAnchorPoint({ bar ? 0.5f : 0.f, 0.5f });
             percentLabel->setPosition({ size.width / 2.f + (bar ? 0.f : 110.2f), size.height - 8.f });
         }
     }
     PauseLayer::onProgressBar(self, obj);
-    if (gd::GameManager::sharedState()->getPlayLayer()) {
-        auto percentLabel = from<CCLabelBMFont*>(gd::GameManager::sharedState()->getPlayLayer(), 0x25c);
+    if (playLayer) {
+        auto percentLabel = playLayer->m_percentLabel;
         if (percentLabel) {
-            if (gd::GameManager::sharedState()->getGameVariable("0040")) {
-                percentLabel->setVisible(1);
-            }
-            else {
-                percentLabel->setVisible(0);
-            }
+            percentLabel->setVisible(gd::GameManager::sharedState()->getGameVariable("0040"));
         }
     }
 } // Horrible thing
 
 auto showPercentageTogglerSpr(CCSprite* toggleOn, CCSprite* toggleOff) {
-    bool showPercentage_enabled = gd::GameManager::sharedState()->getGameVariable("0040");
-    return (showPercentage_enabled) ? toggleOn : toggleOff;
+    return (gd::GameManager::sharedState()->getGameVariable("0040")) ? toggleOn : toggleOff;
 }
 
 void __fastcall PauseLayer::customSetupH(gd::PauseLayer* self) {

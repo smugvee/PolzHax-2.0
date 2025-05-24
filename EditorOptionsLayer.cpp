@@ -50,8 +50,8 @@ void __fastcall EditorOptionsLayer::initH(gd::EditorOptionsLayer* self) {
 	self->m_pLayer->addChild(onExtraObjectInfoLabel);
 
 	auto onSelectFilter = gd::CCMenuItemToggler::create(
-		extraObjectInfoToggleSpr(toggleOn, toggleOff),
-		extraObjectInfoToggleSpr(toggleOff, toggleOn),
+		selectFilterToggleSpr(toggleOn, toggleOff),
+		selectFilterToggleSpr(toggleOff, toggleOn),
 		self,
 		menu_selector(EditorOptionsLayer::Callback::onSelectFilter));
 

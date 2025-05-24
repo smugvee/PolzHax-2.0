@@ -227,8 +227,6 @@ void __fastcall EditorUI::selectObjectH(gd::EditorUI* self, void*, gd::GameObjec
 	else {
 		EditorUI::selectObject(self, object);
 	}
-
-	std::cout << self->m_editorLayer->m_drawGridLayer->timeForXPos(object->getOrientedBox()->m_center.x) / 100000.f << std::endl;
 }
 
 void __fastcall EditorUI::selectObjectsH(gd::EditorUI* self, void*, CCArray* objects) {

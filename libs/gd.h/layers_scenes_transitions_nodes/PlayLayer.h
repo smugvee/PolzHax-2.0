@@ -118,6 +118,10 @@ namespace gd {
 		void startMusic() {
 			reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x17d0c0)(this);
 		}
+
+		void updateProgressBar() {
+			reinterpret_cast<void(__thiscall*)(PlayLayer*)>(base + 0x179430)(this);
+		}
 	};
 }
 
