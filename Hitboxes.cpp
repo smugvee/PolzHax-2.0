@@ -12,7 +12,7 @@ void Hitboxes::drawRect(CCDrawNode* drawer, CCRect const& rect, ccColor4F col) {
 
     auto colorA = ccc4FFromccc4B(ccc4(col.r, col.g, col.b, 0));
 
-    drawer->drawPolygon(vert, N, colorA, 0.5, col);
+    drawer->drawPolygon(vert, N, colorA, .5f, col);
 }
 
 void Hitboxes::drawTriangleObj(CCDrawNode* drawer, gd::GameObject* ob, ccColor4F col) {
@@ -50,7 +50,7 @@ void Hitboxes::drawRectObj(CCDrawNode* drawer, gd::GameObject* ob, ccColor4F col
         vert[3] = ob->m_OBB2D->m_p1_4;
     }
 
-    drawer->drawPolygon(vert, 4, { 0, 0, 0, 0 }, 0.5, col);
+    drawer->drawPolygon(vert, 4, { 0, 0, 0, 0 }, .5f, col);
 }
 
 void Hitboxes::drawCircleObj(CCDrawNode* drawer, gd::GameObject* ob, ccColor4F col) {

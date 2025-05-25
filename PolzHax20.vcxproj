@@ -574,6 +574,7 @@
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\PauseLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\PlayLayer.h" />
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\ScrollingLayer.h" />
+    <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\SetGroupIDLayer.h" />
     <ClInclude Include="libs\gd.h\level_nodes\ColorAction.h" />
     <ClInclude Include="libs\gd.h\level_nodes\GJGameLevel.h" />
     <ClInclude Include="libs\gd.h\level_nodes\LevelSettingsObject.h" />
@@ -629,6 +630,7 @@
     <ClInclude Include="portable-file-dialogs.h" />
     <ClInclude Include="RGBColorInputWidget.hpp" />
     <ClInclude Include="schema.hpp" />
+    <ClInclude Include="SetGroupIDLayer.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="utils.hpp" />
   </ItemGroup>
@@ -671,6 +673,7 @@
     </ClCompile>
     <ClCompile Include="PlayLayer.cpp" />
     <ClCompile Include="RGBColorInputWidget.cpp" />
+    <ClCompile Include="SetGroupIDLayer.cpp" />
     <ClCompile Include="SpeedHack.cpp" />
     <ClCompile Include="state.cpp" />
   </ItemGroup>

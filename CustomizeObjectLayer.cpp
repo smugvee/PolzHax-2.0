@@ -93,11 +93,6 @@ bool __fastcall CustomizeObjectLayer::initH(gd::CustomizeObjectLayer* self, void
 	self->m_colorNodes->addObject(lighter);
 	self->m_pButtonMenu->addChild(lighter);
 
-	std::cout << gd::GameManager::sharedState()->getLevelEditorLayer()->m_levelSettings->m_effectManager->getColorAction(1000) << std::endl;
-	std::cout << gd::GameManager::sharedState()->getLevelEditorLayer()->m_levelSettings->m_effectManager->getColorAction(1000)->m_colorID << std::endl;
-	std::cout << gd::GameManager::sharedState()->getLevelEditorLayer()->m_levelSettings << std::endl;
-	std::cout << gd::GameManager::sharedState()->getLevelEditorLayer()->m_levelSettings->m_effectManager << std::endl;
-
 	return true;
 }
 

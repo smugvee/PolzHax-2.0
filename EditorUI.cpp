@@ -320,6 +320,16 @@ void __fastcall EditorUI::updateObjectInfoLabelH(gd::EditorUI* self) {
 
 		self->m_objectInfo->setString(ss.str().c_str());
 	}
+
+	if (self->m_selectedObjects->count() > 1) {
+		std::stringstream ss;
+
+		ss << self->m_objectInfo->getString();
+
+		ss << "Objects: " << self->m_selectedObjects->count() << "\n";
+
+		self->m_objectInfo->setString(ss.str().c_str());
+	}
 }
 
 void __fastcall EditorUI::onGroupUpH(gd::EditorUI* self, void*, CCObject* obj) {

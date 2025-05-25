@@ -226,6 +226,20 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x164c2d, { 0x0f, 0x84, 0xd5, 0x01, 0x00, 0x00 });
 		}
 
+		if (setting().onNoGhostEffect) {
+			sequence_patch((uint32_t)gd::base + 0x17d664, { 0x6a, 0x00, 0x90 });
+			sequence_patch((uint32_t)gd::base + 0x17d67d, { 0x6a, 0x00, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x17d664, { 0xff, 0x75, 0x08 });
+			sequence_patch((uint32_t)gd::base + 0x17d67d, { 0xff, 0x75, 0x08 });
+		}
+
+		if (setting().onNoGlow)
+			sequence_patch((uint32_t)gd::base + 0xa4442, { 0xe9, 0x91, 0x01, 0x00, 0x00, 0x90 });
+		else
+			sequence_patch((uint32_t)gd::base + 0xa4442, { 0x0f, 0x85, 0x90, 0x01, 0x00, 0x00 });
+
 		if (setting().onNoGravityEffect) {
 			sequence_patch((uint32_t)gd::base + 0x17e6f6, { 0x90, 0x90 });
 		}
@@ -623,7 +637,7 @@ void imgui_render() {
 		if (ImGui::Begin("PolzHax", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
 			ImGui::SetWindowFontScale(setting().UISize);
 
-			ImGui::Text("2.011 - v1.0.0 (Beta.4)");
+			ImGui::Text("2.011 - v1.0.0");
 
 			ImGui::Checkbox("Auto Save", &setting().onAutoSave);
 			ImGui::SameLine();
@@ -882,6 +896,28 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Removes effect circles from orb, portal & pad activations.");
 
+			if (ImGui::Checkbox("No Ghost Trail", &setting().onNoGhostEffect)) {
+				if (setting().onNoGhostEffect) {
+					sequence_patch((uint32_t)gd::base + 0x17d664, { 0x6a, 0x00, 0x90 });
+					sequence_patch((uint32_t)gd::base + 0x17d67d, { 0x6a, 0x00, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x17d664, { 0xff, 0x75, 0x08 });
+					sequence_patch((uint32_t)gd::base + 0x17d67d, { 0xff, 0x75, 0x08 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Disables player ghost trail triggers.");
+
+			if (ImGui::Checkbox("No Glow", &setting().onNoGlow)) {
+				if (setting().onNoGlow)
+					sequence_patch((uint32_t)gd::base + 0xa4442, { 0xe9, 0x91, 0x01, 0x00, 0x00, 0x90 });
+				else
+					sequence_patch((uint32_t)gd::base + 0xa4442, { 0x0f, 0x85, 0x90, 0x01, 0x00, 0x00 });
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Disables objects glow.");
+
 			if (ImGui::Checkbox("No Gravity Effect", &setting().onNoGravityEffect)) {
 				if (setting().onNoGravityEffect) {
 					sequence_patch((uint32_t)gd::base + 0x17e6f6, { 0x90, 0x90 });
@@ -915,6 +951,8 @@ void imgui_render() {
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Disables portal lightning from size-changing portals.");
+
+			ImGui::Checkbox("No Pulse", &setting().onNoPulse);
 
 			if (ImGui::Checkbox("No Respawn Flash", &setting().onNoRespawnFlash)) {
 				if (setting().onNoRespawnFlash) {

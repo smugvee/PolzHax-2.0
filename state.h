@@ -51,12 +51,14 @@ struct SettingStruct {
 	bool onNoDeathEffect;
 	bool onNoEffectCircle;
 	bool onNoGhostEffect;
+	bool onNoGlow;
 	bool onNoGravityEffect;
 	bool onNoMiniIcon;
 	bool onNoMirror;
 	bool onNoOrbRing;
 	bool onNoParticles;
 	bool onNoLightning;
+	bool onNoPulse;
 	bool onNoRespawnFlash;
 	bool onNoWavePulse;
 	bool onPracticePulse;
@@ -174,12 +176,14 @@ DEF_SCHEMA(
 	onNoDeathEffect,
 	onNoEffectCircle,
 	onNoGhostEffect,
+	onNoGlow,
 	onNoGravityEffect,
 	onNoMiniIcon,
 	onNoMirror,
 	onNoOrbRing,
 	onNoParticles,
 	onNoLightning,
+	onNoPulse,
 	onNoRespawnFlash,
 	onNoWavePulse,
 	onPracticePulse,

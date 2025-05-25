@@ -1506,6 +1506,12 @@
     <ClInclude Include="libs\gd.h\sprite_nodes\HardStreak.h">
       <Filter>Файлы заголовков\libs\gd.h</Filter>
     </ClInclude>
+    <ClInclude Include="SetGroupIDLayer.h">
+      <Filter>Файлы заголовков\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\SetGroupIDLayer.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1612,6 +1618,9 @@
     </ClCompile>
     <ClCompile Include="ObjectIDs.h">
       <Filter>Файлы заголовков</Filter>
+    </ClCompile>
+    <ClCompile Include="SetGroupIDLayer.cpp">
+      <Filter>Исходные файлы\Layers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

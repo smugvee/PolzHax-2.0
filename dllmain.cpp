@@ -287,6 +287,18 @@ void __fastcall HardStreak_updateStrokeH(gd::HardStreak* self, void*, float dt) 
 	HardStreak_updateStroke(self, dt);
 }
 
+inline void(__thiscall* AudioEffectsLayer_updateTweenAction)(gd::AudioEffectsLayer*, float, char const*);
+void __fastcall AudioEffectsLayer_updateTweenActionH(gd::AudioEffectsLayer* self, void*, float idk, char const* idk2) {
+	AudioEffectsLayer_updateTweenAction(self, idk, idk2);
+	if (setting().onNoPulse) from<float>(self, 0x1ac) = 1.f;
+}
+
+inline void(__thiscall* FMODAudioEngine_update)(gd::FMODAudioEngine*, float);
+void __fastcall FMODAudioEngine_updateH(gd::FMODAudioEngine* self, void*, float dt) {
+	FMODAudioEngine_update(self, dt);
+	if (setting().onNoPulse) self->m_pulse1 = 1.f;
+}
+
 void(__thiscall* AppDelegate_trySaveGame)(gd::AppDelegate*);
 void __fastcall AppDelegate_trySaveGameH(gd::AppDelegate* self) {
 	if (setting().onAutoSave)
@@ -349,6 +361,8 @@ DWORD WINAPI my_thread(void* hModule) {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xfe2e0), DrawGridLayer::drawH, reinterpret_cast<void**>(&DrawGridLayer::draw));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x13bf0), CCCircleWave_drawH, reinterpret_cast<void**>(&CCCircleWave_draw));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xe4680), HardStreak_updateStrokeH, reinterpret_cast<void**>(&HardStreak_updateStroke));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x39950), AudioEffectsLayer_updateTweenActionH, reinterpret_cast<void**>(&AudioEffectsLayer_updateTweenAction));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x20560), FMODAudioEngine_updateH, reinterpret_cast<void**>(&FMODAudioEngine_update));
 
 	MH_CreateHook(
 		reinterpret_cast<void*>(gd::base + 0x392a0),
