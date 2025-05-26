@@ -56,6 +56,15 @@ namespace EditorUI {
 	inline void(__thiscall* moveObjectCall)(gd::EditorUI*, gd::EditCommand);
 	void __fastcall moveObjectCallH(gd::EditorUI*, void*, gd::EditCommand);
 
+	inline bool(__thiscall* ccTouchBegan)(gd::EditorUI*, CCTouch*, CCEvent*);
+	bool __fastcall ccTouchBeganH(gd::EditorUI*, void*, CCTouch*, CCEvent*);
+
+	inline void(__thiscall* ccTouchEnded)(gd::EditorUI*, CCTouch*, CCEvent*);
+	void __fastcall ccTouchEndedH(gd::EditorUI*, void*, CCTouch*, CCEvent*);
+
+	inline void(__thiscall* onPlaytest)(gd::EditorUI*, CCObject*);
+	void __fastcall onPlaytestH(gd::EditorUI*, void*, CCObject*);
+
 	class Callback : public gd::EditorUI {
 	public:
 		void onCustomMoveObject(CCObject*);
@@ -89,8 +98,8 @@ namespace EditorPauseLayer {
 }
 
 namespace EditButtonBar {
-	inline bool(__thiscall* init)(gd::EditButtonBar*, CCArray*, int, int, int, int, CCPoint);
-	bool __fastcall initH(gd::EditButtonBar*, void*, CCArray*, int, int, int, int, CCPoint);
+	inline bool(__thiscall* init)(gd::EditButtonBar*, CCArray*, int, bool, int, int, CCPoint);
+	bool __fastcall initH(gd::EditButtonBar*, void*, CCArray*, int, bool, int, int, CCPoint);
 
 	void mem_init();
 }

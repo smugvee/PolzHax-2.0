@@ -362,6 +362,22 @@ void __fastcall EditorUI::transformObjectCallH(gd::EditorUI* self, void*, gd::Ed
 	self->updateObjectInfoLabel();
 }
 
+bool m_isHoldingInEditor;
+
+bool __fastcall EditorUI::ccTouchBeganH(gd::EditorUI* self, void*, CCTouch* touch, CCEvent* event) {
+	m_isHoldingInEditor = true;
+	return EditorUI::ccTouchBegan(self, touch, event);
+}
+
+void __fastcall EditorUI::ccTouchEndedH(gd::EditorUI* self, void*, CCTouch* touch, CCEvent* event) {
+	m_isHoldingInEditor = false;
+	return EditorUI::ccTouchEnded(self, touch, event);
+}
+
+void __fastcall EditorUI::onPlaytestH(gd::EditorUI* self, void*, CCObject* obj) {
+	if (!m_isHoldingInEditor) EditorUI::onPlaytest(self, obj);
+}
+
 void __fastcall GJScaleControl::ccTouchMovedH(gd::GJScaleControl* self, void*, CCTouch* touch, CCEvent* event) {
 	GJScaleControl::ccTouchMoved(self, touch, event);
 	gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->updateObjectInfoLabel();
@@ -451,13 +467,13 @@ void addObject(int id) {
 	objArr->addObject(obj);
 }
 
-bool __fastcall EditButtonBar::initH(gd::EditButtonBar* self, void*, CCArray* objs, int page, int absolute, int rows, int columns, CCPoint pos) {
+bool __fastcall EditButtonBar::initH(gd::EditButtonBar* self, void*, CCArray* objs, int page, bool isObjects, int rows, int columns, CCPoint pos) {
 	objArr = objs;
 
-	if (editorUI) {
+	if (editorUI && setting().onUnusedObjects && isObjects) {
 		switch (page)
 		{
-		case 1:
+		case 0:
 			addObject(160);
 			addObject(161);
 			addObject(162);
@@ -497,7 +513,7 @@ bool __fastcall EditButtonBar::initH(gd::EditButtonBar* self, void*, CCArray* ob
 		}
 	}
 
-	if (!EditButtonBar::init(self, objs, page, absolute, rows, columns, pos)) return false;
+	if (!EditButtonBar::init(self, objs, page, isObjects, rows, columns, pos)) return false;
 	return true;
 }
 
@@ -525,7 +541,10 @@ void EditorUI::mem_init() {
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x740e0), GJRotationControl::ccTouchMovedH, reinterpret_cast<void**>(&GJRotationControl::ccTouchMoved));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x74780), GJScaleControl::ccTouchMovedH, reinterpret_cast<void**>(&GJScaleControl::ccTouchMoved));
-	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6303e), EditorUI::blocksArrayH, reinterpret_cast<void**>(&EditorUI::blocksArray));
+
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x70a20), EditorUI::ccTouchBeganH, reinterpret_cast<void**>(&EditorUI::ccTouchBegan));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x71340), EditorUI::ccTouchEndedH, reinterpret_cast<void**>(&EditorUI::ccTouchEnded));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6b200), EditorUI::onPlaytestH, reinterpret_cast<void**>(&EditorUI::onPlaytest));
 }
 
 void EditorPauseLayer::mem_init() {

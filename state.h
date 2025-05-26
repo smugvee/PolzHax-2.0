@@ -121,6 +121,7 @@ struct SettingStruct {
 
 	bool onSelectFilter;
 	bool onExtraObjectInfo;
+	bool onUnusedObjects;
 	
 	// Hitboxes
 	bool onHitboxes;
@@ -244,6 +245,7 @@ DEF_SCHEMA(
 
 	onSelectFilter,
 	onExtraObjectInfo,
+	onUnusedObjects,
 
 	onHitboxes,
 	onHitboxesOnDeath,

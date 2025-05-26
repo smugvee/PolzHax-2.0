@@ -1,12 +1,6 @@
 #include "CustomizeObjectLayer.h"
 #include "utils.hpp"
 
-void updateSprite(gd::ColorChannelSprite* sprite) {
-	auto channel = static_cast<int>(sprite->getTag());
-	auto action = gd::GameManager::sharedState()->getLevelEditorLayer()->m_levelSettings->m_effectManager->getColorAction(channel);
-	sprite->updateValues(action);
-}
-
 bool __fastcall CustomizeObjectLayer::initH(gd::CustomizeObjectLayer* self, void*, gd::GameObject* obj, CCArray* objarr) {
 	if (!CustomizeObjectLayer::init(self, obj, objarr)) return false;
 	

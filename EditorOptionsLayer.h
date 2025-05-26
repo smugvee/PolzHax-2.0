@@ -15,5 +15,6 @@ namespace EditorOptionsLayer {
 	public:
 		void onSelectFilter(CCObject*);
 		void onExtraObjectInfo(CCObject*);
+		void onUnusedObjects(CCObject*);
 	};
 }
