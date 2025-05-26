@@ -22,7 +22,7 @@
 
 #include "portable-file-dialogs.h"
 
-DWORD libcocosbase = (DWORD)GetModuleHandleA("libcocos2d.dll");
+auto libcocosbase = GetModuleHandleA("libcocos2d.dll");
 
 ImVec4 color1;
 ImVec4 color2;
@@ -578,7 +578,7 @@ void imgui_render() {
 		}
 		else {
 			sequence_patch((uint32_t)libcocosbase + 0x1110db, { 0xe8, 0xb0, 0xf3, 0xff, 0xff });
-			sequence_patch((uint32_t)libcocosbase + 0x10fd93, { 0xff, 0x15, 0x90, 0xa5, 0xb7, 0x5b });
+			//sequence_patch((uint32_t)libcocosbase + 0x10fd93, { 0xff, 0x15, 0x90, 0xa5, 0x8e, 0x55 });
 			sequence_patch((uint32_t)libcocosbase + 0x110ad1, { 0x0f, 0x85, 0x2e, 0xff, 0xff, 0xff });
 		}
 
@@ -1547,7 +1547,7 @@ void imgui_render() {
 				}
 				else {
 					sequence_patch((uint32_t)libcocosbase + 0x1110db, { 0xe8, 0xb0, 0xf3, 0xff, 0xff });
-					sequence_patch((uint32_t)libcocosbase + 0x10fd93, { 0xff, 0x15, 0x90, 0xa5, 0xb7, 0x5b });
+					//sequence_patch((uint32_t)libcocosbase + 0x10fd93, { 0xff, 0x15, 0x90, 0xa5, 0x8e, 0x55 });
 					sequence_patch((uint32_t)libcocosbase + 0x110ad1, { 0x0f, 0x85, 0x2e, 0xff, 0xff, 0xff });
 				}
 			}
