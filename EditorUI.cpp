@@ -545,6 +545,8 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x70a20), EditorUI::ccTouchBeganH, reinterpret_cast<void**>(&EditorUI::ccTouchBegan));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x71340), EditorUI::ccTouchEndedH, reinterpret_cast<void**>(&EditorUI::ccTouchEnded));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6b200), EditorUI::onPlaytestH, reinterpret_cast<void**>(&EditorUI::onPlaytest));
+
+	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6cbf0), EditorUI::toggleSpecialEditButtonsH, reinterpret_cast<void**>(&EditorUI::toggleSpecialEditButtons));
 }
 
 void EditorPauseLayer::mem_init() {

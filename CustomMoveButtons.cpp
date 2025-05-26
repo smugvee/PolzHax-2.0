@@ -204,32 +204,37 @@ CCPoint* __fastcall EditorUI::moveForCommandH(gd::EditorUI* self, void* edx, CCP
 		break;
 	}
 
-	EditorUI::moveForCommand(self, pos, com);
+	return EditorUI::moveForCommand(self, pos, com);
 }
 
 void __fastcall EditorUI::transformObjectH(gd::EditorUI* self, void* edx, gd::GameObject* obj, gd::EditCommand com, bool idk) {
 	CCArray* selectedObjects = self->getSelectedObjects();
 	auto selectedObjCount = selectedObjects->count();
-	switch (com)
-	{
-	case rotationForCommand::kEditCommandRotate265CW:
-		self->rotateObjects(selectedObjects, (26.5f / selectedObjCount), { 0,0 });
-		break;
-	case rotationForCommand::kEditCommandRotate265CCW:
-		self->rotateObjects(selectedObjects, -(26.5f / selectedObjCount), { 0,0 });
-		break;
+	if (obj->canRotateFree()) {
+		switch (com)
+		{
+		case rotationForCommand::kEditCommandRotate265CW:
+			self->rotateObjects(selectedObjects, (26.565f / selectedObjCount), { 0,0 });
+			break;
+		case rotationForCommand::kEditCommandRotate265CCW:
+			self->rotateObjects(selectedObjects, -(26.565f / selectedObjCount), { 0,0 });
+			break;
+		}
 	}
 
-	EditorUI::transformObject(self, obj, com, idk);
+	return EditorUI::transformObject(self, obj, com, idk);
+}
+
+gd::GameObject* m_obj;
+
+void __fastcall EditorUI::toggleSpecialEditButtonsH(gd::EditorUI* self) {
+	return EditorUI::toggleSpecialEditButtons(self);
 }
 
 void EditorUI::Callback::onCustomMoveObject(CCObject* obj) {
 	auto editorUI = gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI;
-	std::cout << editorUI << std::endl;
 	if (editorUI) {
 		auto buttonTag = static_cast<gd::CCMenuItemSpriteExtra*>(obj)->getTag();
-		std::cout << buttonTag << std::endl;
-
 		editorUI->moveObjectCall(static_cast<gd::EditCommand>(buttonTag));
 	}
 }
@@ -238,7 +243,6 @@ void EditorUI::Callback::onCustomTransformObject(CCObject* obj) {
 	auto editorUI = gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI;
 	if (editorUI) {
 		auto buttonTag = static_cast<gd::CCMenuItemSpriteExtra*>(obj)->getTag();
-		std::cout << buttonTag << std::endl;
 		editorUI->transformObjectCall(static_cast<gd::EditCommand>(buttonTag));
 	}
 }

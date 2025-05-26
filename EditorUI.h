@@ -65,6 +65,9 @@ namespace EditorUI {
 	inline void(__thiscall* onPlaytest)(gd::EditorUI*, CCObject*);
 	void __fastcall onPlaytestH(gd::EditorUI*, void*, CCObject*);
 
+	inline void(__thiscall* toggleSpecialEditButtons)(gd::EditorUI*);
+	void __fastcall toggleSpecialEditButtonsH(gd::EditorUI*);
+
 	class Callback : public gd::EditorUI {
 	public:
 		void onCustomMoveObject(CCObject*);

@@ -107,6 +107,7 @@ struct SettingStruct {
 	bool onAntiCheatBypass;
 	bool onAutoSafeMode;
 	bool onForceVisibility;
+	bool onFreeWindowResize;
 	bool onLockCursor;
 	bool onNoTransition;
 	bool onRetryKeybind;
@@ -231,6 +232,7 @@ DEF_SCHEMA(
 	onAntiCheatBypass,
 	onAutoSafeMode,
 	onForceVisibility,
+	onFreeWindowResize,
 	onLockCursor,
 	onNoTransition,
 	onRetryKeybind,

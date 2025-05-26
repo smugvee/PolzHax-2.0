@@ -91,6 +91,9 @@ void imgui_render() {
 	if (oneX) {
 		setting().loadState();
 
+		setting().cheatsCount = 0;
+		setting().beforeRestartCheatsCount = 0;
+
 		solidsColor[0] = setting().solidHitboxesR / 255.f;
 		solidsColor[1] = setting().solidHitboxesG / 255.f;
 		solidsColor[2] = setting().solidHitboxesB / 255.f;
@@ -198,10 +201,10 @@ void imgui_render() {
 
 		if (setting().onInstantMirror) {
 			sequence_patch((uint32_t)gd::base + 0x17bdf6, { 0x00, 0x00, 0x00, 0x00 });
+			cheatAdd();
 		}
-		else {
+		else
 			sequence_patch((uint32_t)gd::base + 0x17bdf6, { 0x00, 0x00, 0x00, 0x3f });
-		}
 
 		if (setting().onInversedTrail) {
 			sequence_patch((uint32_t)libcocosbase + 0xad5b6, { 0x0f, 0x85, 0x55, 0x02, 0x00, 0x00 });
@@ -253,6 +256,13 @@ void imgui_render() {
 		else {
 			sequence_patch((uint32_t)gd::base + 0x16e28f, { 0x0f, 0x85, 0x96, 0x00, 0x00, 0x00 });
 		}
+
+		if (setting().onNoMirror) {
+			sequence_patch((uint32_t)gd::base + 0x17bcb2, { 0xe9, 0x9b, 0x01, 0x00, 0x00, 0x90 });
+			cheatAdd();
+		}
+		else
+			sequence_patch((uint32_t)gd::base + 0x17bcb2, { 0x0f, 0x84, 0x91, 0x01, 0x00, 0x00 });
 
 		if (setting().onNoRespawnFlash) {
 			sequence_patch((uint32_t)gd::base + 0x1643a1, { 0xe9, 0x9f, 0x00, 0x00, 0x00, 0x00 });
@@ -526,6 +536,10 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x17d981, { 0xe8, 0x2a, 0x3f, 0xea, 0xff });
 		}
 
+		if (setting().onNoclip) cheatAdd();
+
+		if (setting().onHitboxes) cheatAdd();
+
 		// Universal
 
 		if (setting().onAllowLowVolume) {
@@ -555,6 +569,17 @@ void imgui_render() {
 		else {
 			sequence_patch((uint32_t)libcocosbase + 0x60813, { 0x8a, 0x45, 0x08 });
 			sequence_patch((uint32_t)libcocosbase + 0x60d2a, { 0x0f, 0x84, 0xcb, 0x00, 0x00, 0x00 });
+		}
+
+		if (setting().onFreeWindowResize) {
+			sequence_patch((uint32_t)libcocosbase + 0x1110db, { 0x90, 0x90, 0x90, 0x90, 0x90 });
+			sequence_patch((uint32_t)libcocosbase + 0x10fd93, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+			sequence_patch((uint32_t)libcocosbase + 0x110ad1, { 0xe9, 0x2f, 0xff, 0xff, 0xff, 0x90 });
+		}
+		else {
+			sequence_patch((uint32_t)libcocosbase + 0x1110db, { 0xe8, 0xb0, 0xf3, 0xff, 0xff });
+			sequence_patch((uint32_t)libcocosbase + 0x10fd93, { 0xff, 0x15, 0x90, 0xa5, 0xb7, 0x5b });
+			sequence_patch((uint32_t)libcocosbase + 0x110ad1, { 0x0f, 0x85, 0x2e, 0xff, 0xff, 0xff });
 		}
 
 		if (setting().onSafeMode) safeModeON();
@@ -932,6 +957,19 @@ void imgui_render() {
 			ImGui::Checkbox("No Mini Icon", &setting().onNoMiniIcon);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Replaces default mini icon with normal one.");
+
+			if (ImGui::Checkbox("No Mirror", &setting().onNoMirror)) {
+				if (setting().onNoMirror) {
+					sequence_patch((uint32_t)gd::base + 0x17bcb2, { 0xe9, 0x9b, 0x01, 0x00, 0x00, 0x90 });
+					cheatAdd();
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x17bcb2, { 0x0f, 0x84, 0x91, 0x01, 0x00, 0x00 });
+					cheatDec();
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Disables mirror portals.");
 
 			ImGui::Checkbox("No Orb Ring", &setting().onNoOrbRing);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
@@ -1500,6 +1538,21 @@ void imgui_render() {
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Sets all nodes to be visible.");
+
+			if (ImGui::Checkbox("Free Window Resize", &setting().onFreeWindowResize)) {
+				if (setting().onFreeWindowResize) {
+					sequence_patch((uint32_t)libcocosbase + 0x1110db, { 0x90, 0x90, 0x90, 0x90, 0x90 });
+					sequence_patch((uint32_t)libcocosbase + 0x10fd93, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+					sequence_patch((uint32_t)libcocosbase + 0x110ad1, { 0xe9, 0x2f, 0xff, 0xff, 0xff, 0x90 });
+				}
+				else {
+					sequence_patch((uint32_t)libcocosbase + 0x1110db, { 0xe8, 0xb0, 0xf3, 0xff, 0xff });
+					sequence_patch((uint32_t)libcocosbase + 0x10fd93, { 0xff, 0x15, 0x90, 0xa5, 0xb7, 0x5b });
+					sequence_patch((uint32_t)libcocosbase + 0x110ad1, { 0x0f, 0x85, 0x2e, 0xff, 0xff, 0xff });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Removes limits in place for window resizing.");
 
 			ImGui::Checkbox("Lock Cursor", &setting().onLockCursor);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)

@@ -315,8 +315,8 @@ DWORD WINAPI my_thread(void* hModule) {
 	sequence_patch((uint32_t)gd::base + 0xfefdc, { 0x90, 0x90 }); // Lines editor fix
 	sequence_patch((uint32_t)gd::base + 0x1d13f6, { 0x0a }); // "EL: %s\n"
 
-	AllocConsole();
-	freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
+	//AllocConsole();
+	//freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
 
 	if (MH_Initialize() != MH_OK) {
 		FreeLibraryAndExitThread(reinterpret_cast<HMODULE>(hModule), 0);
