@@ -106,6 +106,7 @@ struct SettingStruct {
 	bool onAllowLowVolume;
 	bool onAntiCheatBypass;
 	bool onAutoSafeMode;
+	bool onFastAltTab;
 	bool onForceVisibility;
 	bool onFreeWindowResize;
 	bool onLockCursor;
@@ -113,6 +114,7 @@ struct SettingStruct {
 	bool onRetryKeybind;
 	bool onSafeMode;
 	bool onShowRestartButton;
+	bool onTransparentBG;
 	bool onZeroDelay;
 
 	float speedhack = 1.f;
@@ -128,10 +130,10 @@ struct SettingStruct {
 	bool onHitboxes;
 	bool onHitboxesOnDeath;
 
-	bool onEnablePlayerHitboxes;
-	bool onEnableSolidHitboxes;
-	bool onEnableHazardHitboxes;
-	bool onEnableSpecialHitboxes;
+	bool onEnablePlayerHitboxes = true;
+	bool onEnableSolidHitboxes = true;
+	bool onEnableHazardHitboxes = true;
+	bool onEnableSpecialHitboxes = true;
 
 	int solidHitboxesR = 0;
 	int solidHitboxesG = 0;
@@ -143,7 +145,6 @@ struct SettingStruct {
 	int specialHitboxesG = 255;
 	int specialHitboxesB = 0;
 	int hitboxesOpacity = 255;
-
 };
 
 LayersStruct& layers();
@@ -231,6 +232,7 @@ DEF_SCHEMA(
 	onAllowLowVolume,
 	onAntiCheatBypass,
 	onAutoSafeMode,
+	onFastAltTab,
 	onForceVisibility,
 	onFreeWindowResize,
 	onLockCursor,
@@ -238,6 +240,7 @@ DEF_SCHEMA(
 	onRetryKeybind,
 	onSafeMode,
 	onShowRestartButton,
+	onTransparentBG,
 	onZeroDelay,
 
 	speedhack,

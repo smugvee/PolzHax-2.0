@@ -7,6 +7,8 @@
 
 #include "Hitboxes.h"
 
+#include "imgui.h"
+
 std::vector<CheckPoint> checkpoints;
 
 std::vector<gd::StartPosObject*> m_startPositions;
@@ -125,24 +127,31 @@ void pickStartPos(gd::PlayLayer* playLayer, int32_t index) { // Eclipse Menu
 
 	auto spSwitcherLabel = static_cast<CCLabelBMFont*>(static_cast<CCMenu*>(playLayer->m_uiLayer->getChildByTag(177))->getChildByTag(178));
 	if (spSwitcherLabel) {
-		auto* prevSP = index >= 0 ? startPosObjects[currentStartPos - 1] : nullptr;
-		auto* nextSP = index >= 0 ? startPosObjects[currentStartPos + 1] : nullptr;
+		//gd::StartPosObject* prevSP = nullptr;
+		//gd::StartPosObject* nextSP = nullptr;
 
-		std::cout << "Previous StartPosObject: " << prevSP << std::endl;
-		std::cout << "Next StartPosObject: " << nextSP << std::endl;
-
-		std::cout << startPosObjects.front() << std::endl;
-		std::cout << startPosObjects.back() << std::endl;
+		//if (currentStartPos == -1) {
+		//	prevSP = startPosObjects.back();
+		//}
+		//else if (currentStartPos + 1 == startPosObjects.size()) {
+		//	nextSP = startPosObjects.front();
+		//}
+		//else {
+		//	prevSP = index >= 0 ? startPosObjects[currentStartPos - 1] : nullptr;
+		//	nextSP = index >= 0 ? startPosObjects[currentStartPos + 1] : nullptr;
+		//}
+		//if (nextSP && prevSP) {
+		//	std::cout << "Previous StartPosObject: " << prevSP << std::endl;
+		//	std::cout << prevSP->getPositionX() / playLayer->m_levelLength * 100.f << "%" << std::endl;
+		//	std::cout << "Next StartPosObject: " << nextSP << std::endl;
+		//	std::cout << nextSP->getPositionX() / playLayer->m_levelLength * 100.f << "%" << std::endl;
+		//}
 
 		spSwitcherLabel->setString(CCString::createWithFormat("%d/%d", currentStartPos + 1, startPosObjects.size())->getCString());
 		spSwitcherLabel->setOpacity(255);
 		spSwitcherLabel->stopAllActions();
 		spSwitcherLabel->runAction(CCSequence::create(CCDelayTime::create(1.f), CCFadeOut::create(0.5f), nullptr));
 	}
-
-	std::cout << "Current StartPos: " << currentStartPos << std::endl;
-	std::cout << "Total StartPoses: " << startPosObjects.size() << std::endl;
-	std::cout << "Current StartPosObject: " << playLayer->m_startPosObject << std::endl;
 }
 
 void PlayLayer::onNextStartPos() {
@@ -250,15 +259,6 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 			}
 		}
 	}
-
-	//CCRenderTexture* tex = CCRenderTexture::create(winSize.width, winSize.height);
-	//tex->setPosition(winSize / 2.f);
-
-	//tex->begin();
-	//director->getRunningScene()->visit();
-	//tex->end();
-
-	//tex->saveToFile("Image_Save.png", kCCImageFormatPNG);
 
 	return true;
 }

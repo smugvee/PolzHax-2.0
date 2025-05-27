@@ -186,10 +186,10 @@ void imgui_render() {
 		// Cosmetic
 
 		if (setting().onForceDontEnter) {
-			sequence_patch((uint32_t)gd::base + 0x177574, { 0xeb, 0x08 });
+			sequence_patch((uint32_t)gd::base + 0x177926, { 0xe9, 0xe4, 0x01, 0x00, 0x00, 0x90 });
 		}
 		else {
-			sequence_patch((uint32_t)gd::base + 0x177574, { 0x75, 0x08 });
+			sequence_patch((uint32_t)gd::base + 0x177926, { 0x0f, 0x85, 0xe3, 0x01, 0x00, 0x00 });
 		}
 
 		if (setting().onForceDontFade) {
@@ -562,6 +562,11 @@ void imgui_render() {
 			sequence_patch((uint32_t)gd::base + 0x170fc2, { 0xe8, 0xb9, 0xce, 0x00, 0x00 });
 		}
 
+		if (setting().onFastAltTab)
+			sequence_patch((uint32_t)gd::base + 0x38cae, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+		else
+			sequence_patch((uint32_t)gd::base + 0x38cae, { 0x8b, 0x03, 0x8b, 0xcb, 0xff, 0x50, 0x18 });
+
 		if (setting().onForceVisibility) {
 			sequence_patch((uint32_t)libcocosbase + 0x60813, { 0xb0, 0x01, 0x90 });
 			sequence_patch((uint32_t)libcocosbase + 0x60d2a, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
@@ -590,6 +595,35 @@ void imgui_render() {
 		}
 		else {
 			sequence_patch((uint32_t)gd::base + 0x15bc99, { 0x75, 0x29 });
+		}
+
+		if (setting().onTransparentBG) {
+			sequence_patch((uint32_t)gd::base + 0x40f17, { 0x90, 0xb1, 0xff }); // CreatorLayer
+			sequence_patch((uint32_t)gd::base + 0x40f1f, { 0xff, 0xff });
+			sequence_patch((uint32_t)gd::base + 0xea5fb, { 0x90, 0xb1, 0xff }); // LevelBrowserLayer
+			sequence_patch((uint32_t)gd::base + 0xea602, { 0xff, 0xff });
+			sequence_patch((uint32_t)gd::base + 0x10c1fd, { 0x90, 0xb1, 0xff }); // LevelSearchLayer
+			sequence_patch((uint32_t)gd::base + 0x10c205, { 0xff, 0xff });
+			sequence_patch((uint32_t)gd::base + 0x107933, { 0x90, 0xb1, 0xff }); // LevelInfoLayer
+			sequence_patch((uint32_t)gd::base + 0x10793a, { 0xff, 0xff });
+			sequence_patch((uint32_t)gd::base + 0x571a1, { 0x90, 0xb1, 0xff }); // EditLevelLayer
+			sequence_patch((uint32_t)gd::base + 0x571a8, { 0xff, 0xff });
+			sequence_patch((uint32_t)gd::base + 0xe8da2, { 0x90, 0xb1, 0xff }); // LeaderboardsLayer
+			sequence_patch((uint32_t)gd::base + 0xe8daa, { 0xff, 0xff });
+		}
+		else {
+			sequence_patch((uint32_t)gd::base + 0x40f17, { 0x80, 0xc9, 0xff });
+			sequence_patch((uint32_t)gd::base + 0x40f1f, { 0x00, 0x66 });
+			sequence_patch((uint32_t)gd::base + 0xea5fb, { 0x80, 0xc9, 0xff });
+			sequence_patch((uint32_t)gd::base + 0xea602, { 0x00, 0x66 });
+			sequence_patch((uint32_t)gd::base + 0x10c1fd, { 0x80, 0xc9, 0xff });
+			sequence_patch((uint32_t)gd::base + 0x10c205, { 0x00, 0x66 });
+			sequence_patch((uint32_t)gd::base + 0x107933, { 0x80, 0xc9, 0xff });
+			sequence_patch((uint32_t)gd::base + 0x10793a, { 0x00, 0x66 });
+			sequence_patch((uint32_t)gd::base + 0x571a1, { 0x80, 0xc9, 0xff });
+			sequence_patch((uint32_t)gd::base + 0x571a8, { 0x00, 0x66 });
+			sequence_patch((uint32_t)gd::base + 0xe8da2, { 0x80, 0xc9, 0xff });
+			sequence_patch((uint32_t)gd::base + 0xe8daa, { 0x00, 0x66 });
 		}
 
 		auto* colors = ImGui::GetStyle().Colors;
@@ -662,7 +696,7 @@ void imgui_render() {
 		if (ImGui::Begin("PolzHax", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
 			ImGui::SetWindowFontScale(setting().UISize);
 
-			ImGui::Text("2.011 - v1.0.0");
+			ImGui::Text("2.011 - v1.0.1");
 
 			ImGui::Checkbox("Auto Save", &setting().onAutoSave);
 			ImGui::SameLine();
@@ -815,10 +849,10 @@ void imgui_render() {
 
 			if (ImGui::Checkbox("Force Don't Enter", &setting().onForceDontEnter)) {
 				if (setting().onForceDontEnter) {
-					sequence_patch((uint32_t)gd::base + 0x177574, { 0xeb, 0x08 });
+					sequence_patch((uint32_t)gd::base + 0x177926, { 0xe9, 0xe4, 0x01, 0x00, 0x00, 0x90 });
 				}
 				else {
-					sequence_patch((uint32_t)gd::base + 0x177574, { 0x75, 0x08 });
+					sequence_patch((uint32_t)gd::base + 0x177926, { 0x0f, 0x85, 0xe3, 0x01, 0x00, 0x00 });
 				}
 			}
 
@@ -1526,6 +1560,15 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Enables Safe Mode only when cheats are enabled.");
 
+			if (ImGui::Checkbox("Fast Alt-Tab", &setting().onFastAltTab)) {
+				if (setting().onFastAltTab)
+					sequence_patch((uint32_t)gd::base + 0x38cae, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+				else
+					sequence_patch((uint32_t)gd::base + 0x38cae, { 0x8b, 0x03, 0x8b, 0xcb, 0xff, 0x50, 0x18 });
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Disables savefile saving on minimize.");
+
 			if (ImGui::Checkbox("Force Visibility", &setting().onForceVisibility)) {
 				if (setting().onForceVisibility) {
 					sequence_patch((uint32_t)libcocosbase + 0x60813, { 0xb0, 0x01, 0x90 });
@@ -1583,6 +1626,39 @@ void imgui_render() {
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Shows the restart button in pause menu.");
+
+			if (ImGui::Checkbox("Transparent BG", &setting().onTransparentBG)) {
+				if (setting().onTransparentBG) {
+					sequence_patch((uint32_t)gd::base + 0x40f17, { 0x90, 0xb1, 0xff }); // CreatorLayer
+					sequence_patch((uint32_t)gd::base + 0x40f1f, { 0xff, 0xff });
+					sequence_patch((uint32_t)gd::base + 0xea5fb, { 0x90, 0xb1, 0xff }); // LevelBrowserLayer
+					sequence_patch((uint32_t)gd::base + 0xea602, { 0xff, 0xff });
+					sequence_patch((uint32_t)gd::base + 0x10c1fd, { 0x90, 0xb1, 0xff }); // LevelSearchLayer
+					sequence_patch((uint32_t)gd::base + 0x10c205, { 0xff, 0xff });
+					sequence_patch((uint32_t)gd::base + 0x107933, { 0x90, 0xb1, 0xff }); // LevelInfoLayer
+					sequence_patch((uint32_t)gd::base + 0x10793a, { 0xff, 0xff });
+					sequence_patch((uint32_t)gd::base + 0x571a1, { 0x90, 0xb1, 0xff }); // EditLevelLayer
+					sequence_patch((uint32_t)gd::base + 0x571a8, { 0xff, 0xff });
+					sequence_patch((uint32_t)gd::base + 0xe8da2, { 0x90, 0xb1, 0xff }); // LeaderboardsLayer
+					sequence_patch((uint32_t)gd::base + 0xe8daa, { 0xff, 0xff });
+				}
+				else {
+					sequence_patch((uint32_t)gd::base + 0x40f17, { 0x80, 0xc9, 0xff });
+					sequence_patch((uint32_t)gd::base + 0x40f1f, { 0x00, 0x66 });
+					sequence_patch((uint32_t)gd::base + 0xea5fb, { 0x80, 0xc9, 0xff });
+					sequence_patch((uint32_t)gd::base + 0xea602, { 0x00, 0x66 });
+					sequence_patch((uint32_t)gd::base + 0x10c1fd, { 0x80, 0xc9, 0xff });
+					sequence_patch((uint32_t)gd::base + 0x10c205, { 0x00, 0x66 });
+					sequence_patch((uint32_t)gd::base + 0x107933, { 0x80, 0xc9, 0xff });
+					sequence_patch((uint32_t)gd::base + 0x10793a, { 0x00, 0x66 });
+					sequence_patch((uint32_t)gd::base + 0x571a1, { 0x80, 0xc9, 0xff });
+					sequence_patch((uint32_t)gd::base + 0x571a8, { 0x00, 0x66 });
+					sequence_patch((uint32_t)gd::base + 0xe8da2, { 0x80, 0xc9, 0xff });
+					sequence_patch((uint32_t)gd::base + 0xe8daa, { 0x00, 0x66 });
+				}
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Removes the blue filter from menu's backgrounds.");
 
 			if (ImGui::Checkbox("Zero Delay", &setting().onZeroDelay)) {
 				auto cocos = GetModuleHandleA("libcocos2d.dll");
