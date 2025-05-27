@@ -9,15 +9,16 @@ namespace gd {
 
 	#pragma runtime_checks("s", off)
 	class GJDropDownLayer : public cocos2d::CCLayerColor {
-	protected:
-		cocos2d::CCPoint m_obEndPosition;
-		cocos2d::CCPoint m_obStartPosition;
-		cocos2d::CCMenu* m_pButtonMenu;
-		GJListLayer* m_pListLayer;
-		bool m_bControllerEnabled; //?
-		cocos2d::CCLayer* m_pLayer;
-		bool m_bHidden; //?
-		PAD(7);
+	public:
+		cocos2d::CCPoint m_endPosition; // 0x190
+    	cocos2d::CCPoint m_startPosition; // 0x19c
+    	cocos2d::CCMenu* m_buttonMenu; // 0x1a4
+    	GJListLayer* m_listLayer; // 0x1a8
+		PAD(0x4)
+    	cocos2d::CCLayer* m_mainLayer; // 0x1b0
+    	bool m_closeOnHide;
+    	GJDropDownLayerDelegate* m_delegate;
+    	bool m_fastMenu;
 
 	public:
 		//CCNode vtable

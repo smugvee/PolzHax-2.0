@@ -17,6 +17,7 @@
 #include "InfoLayer.h"
 #include "EditorOptionsLayer.h"
 #include "LevelEditorLayer.h"
+#include "EndLevelLayer.h"
 
 #include "LevelShare.h"
 #include "nfd.h"
@@ -315,8 +316,8 @@ DWORD WINAPI my_thread(void* hModule) {
 	sequence_patch((uint32_t)gd::base + 0xfefdc, { 0x90, 0x90 }); // Lines editor fix
 	sequence_patch((uint32_t)gd::base + 0x1d13f6, { 0x0a }); // "EL: %s\n"
 
-	//AllocConsole();
-	//freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
+	AllocConsole();
+	freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
 
 	if (MH_Initialize() != MH_OK) {
 		FreeLibraryAndExitThread(reinterpret_cast<HMODULE>(hModule), 0);
@@ -363,6 +364,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xe4680), HardStreak_updateStrokeH, reinterpret_cast<void**>(&HardStreak_updateStroke));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x39950), AudioEffectsLayer_updateTweenActionH, reinterpret_cast<void**>(&AudioEffectsLayer_updateTweenAction));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x20560), FMODAudioEngine_updateH, reinterpret_cast<void**>(&FMODAudioEngine_update));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x74c00), EndLevelLayer::customSetupH, reinterpret_cast<void**>(&EndLevelLayer::customSetup));
 
 	MH_CreateHook(
 		reinterpret_cast<void*>(gd::base + 0x392a0),

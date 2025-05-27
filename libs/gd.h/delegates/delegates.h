@@ -12,6 +12,7 @@ namespace gd {
     class GJSpecialColorSelect;
     class BoomScrollLayer;
     class HSVWidgetPopup : public cocos2d::CCNode {};
+    class GJDropDownLayer;
 
     enum GJSongError {
         kGJSongErrorUnknown = 0,
@@ -159,6 +160,10 @@ namespace gd {
 
     class AnimatedSpriteDelegate {
         virtual void animationFinished(const char*) {}
+    };
+
+    class GJDropDownLayerDelegate {
+        virtual void dropDownLayerWillClose(GJDropDownLayer*) {}
     };
 }
 

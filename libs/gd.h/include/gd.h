@@ -88,6 +88,7 @@ namespace gd {
 #include "layers_scenes_transitions_nodes/InfoLayer.h"
 #include "layers_scenes_transitions_nodes/DrawGridLayer.h"
 #include "layers_scenes_transitions_nodes/SetGroupIDLayer.h"
+#include "layers_scenes_transitions_nodes/EndLevelLayer.h"
 
 #include "scroll_nodes/CCContentLayer.h"
 #include "scroll_nodes/CCIndexPath.h"

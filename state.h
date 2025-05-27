@@ -82,6 +82,7 @@ struct SettingStruct {
 	bool onNoDeathX;
 	bool onObjectBypass;
 	bool onPlaceOver;
+	bool onLastCheckpoint;
 	bool onScaleSnapBypass;
 	bool onSmoothTrail;
 	bool onToolboxBypass;
@@ -224,6 +225,7 @@ DEF_SCHEMA(
 	onPauseDuringComplete,
 	onPracticeBugFix,
 	onPracticeMusic,
+	onLastCheckpoint,
 	onSmartStartPos,
 	onStartPosSwitcher,
 

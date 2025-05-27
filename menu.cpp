@@ -1508,6 +1508,10 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Plays the level's song in-sync with your position.");
 
+			ImGui::Checkbox("Replay Last Checkpoint", &setting().onLastCheckpoint);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Respawn from your last practice mode checkpoint after completing a level.");
+
 			ImGui::Checkbox("Smart StartPos", &setting().onSmartStartPos);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Automatically sets gamemode, speed, size & border for a startpos.");
