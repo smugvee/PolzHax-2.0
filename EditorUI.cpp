@@ -10,6 +10,35 @@ gd::EditorUI* editorUI = nullptr;
 
 gd::EditorPauseLayer* m_editorPauseLayer{ nullptr };
 
+void EditorUI::updateObjectHitbox(gd::EditorUI* self) {
+	gd::GameObject* obj = nullptr;
+	obj = self->m_selectedObject;
+	if (obj == nullptr) {
+		if (self->m_selectedObjects->count() != 0)
+		{
+			for (int i = 0; i <= self->m_selectedObjects->count(); i++)
+			{
+				obj = dynamic_cast<gd::GameObject*>(self->m_selectedObjects->objectAtIndex(i));
+				if (obj)
+				{
+					float rot = obj->getRotation() / 90.0;
+					if (rot != 0.0)
+					{
+						obj->calculateOrientedBox();
+					}
+				}
+			}
+		}
+	}
+	else {
+		float rot = obj->getRotation() / 90;
+		if (rot != 0) {
+			obj->calculateOrientedBox();
+			return;
+		}
+	}
+}
+
 void EditorUI::Callback::onNextFreeEditorLayer(CCObject*) { // BEv4
 	auto objs = this->m_editorLayer->m_objects;
 
@@ -360,6 +389,7 @@ void __fastcall EditorUI::moveObjectCallH(gd::EditorUI* self, void*, gd::EditCom
 void __fastcall EditorUI::transformObjectCallH(gd::EditorUI* self, void*, gd::EditCommand command) {
 	EditorUI::transformObjectCall(self, command);
 	self->updateObjectInfoLabel();
+	if (setting().onHitboxBugFix) updateObjectHitbox(self);
 }
 
 bool m_isHoldingInEditor;
@@ -376,6 +406,27 @@ void __fastcall EditorUI::ccTouchEndedH(gd::EditorUI* self, void*, CCTouch* touc
 
 void __fastcall EditorUI::onPlaytestH(gd::EditorUI* self, void*, CCObject* obj) {
 	if (!m_isHoldingInEditor) EditorUI::onPlaytest(self, obj);
+}
+
+void __fastcall EditorUI::angleChangedH(gd::EditorUI* _self, void*, float angle) {
+	EditorUI::angleChanged(_self, angle);
+	gd::EditorUI* self = reinterpret_cast<gd::EditorUI*>(reinterpret_cast<uintptr_t>(_self) - 0x120);
+	if (setting().onHitboxBugFix) updateObjectHitbox(self);
+}
+
+void __fastcall EditorUI::onPasteH(gd::EditorUI* self, void*, CCObject* sender) {
+	EditorUI::onPaste(self, sender);
+	if (setting().onHitboxBugFix) updateObjectHitbox(self);
+}
+
+void __fastcall EditorUI::onDuplicateH(gd::EditorUI* self, void*, CCObject* sender) {
+	EditorUI::onDuplicate(self, sender);
+	if (setting().onHitboxBugFix) updateObjectHitbox(self);
+}
+
+void __fastcall EditorUI::onCreateObjectH(gd::EditorUI* self, void*, int id) {
+	EditorUI::onCreateObject(self, id);
+	if (setting().onHitboxBugFix) updateObjectHitbox(self);
 }
 
 void __fastcall GJScaleControl::ccTouchMovedH(gd::GJScaleControl* self, void*, CCTouch* touch, CCEvent* event) {
@@ -545,6 +596,11 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x70a20), EditorUI::ccTouchBeganH, reinterpret_cast<void**>(&EditorUI::ccTouchBegan));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x71340), EditorUI::ccTouchEndedH, reinterpret_cast<void**>(&EditorUI::ccTouchEnded));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6b200), EditorUI::onPlaytestH, reinterpret_cast<void**>(&EditorUI::onPlaytest));
+
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x70390), EditorUI::angleChangedH, reinterpret_cast<void**>(&EditorUI::angleChanged));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bbd0), EditorUI::onPasteH, reinterpret_cast<void**>(&EditorUI::onPaste));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6b830), EditorUI::onDuplicateH, reinterpret_cast<void**>(&EditorUI::onDuplicate));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x699c0), EditorUI::onCreateObjectH, reinterpret_cast<void**>(&EditorUI::onCreateObject));
 
 	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6cbf0), EditorUI::toggleSpecialEditButtonsH, reinterpret_cast<void**>(&EditorUI::toggleSpecialEditButtons));
 }

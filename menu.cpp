@@ -1220,6 +1220,10 @@ void imgui_render() {
 					gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->setVisible(!setting().onHideUI);
 			}
 
+			ImGui::Checkbox("Hitbox Bug Fix", &setting().onHitboxBugFix);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Fixes oriented hitboxes in the editor.");
+
 			if (ImGui::Checkbox("Level Edit", &setting().onLevelEdit)) {
 				if (setting().onLevelEdit) {
 					sequence_patch((uint32_t)gd::base + 0x15baaf, { 0x90, 0x90 });

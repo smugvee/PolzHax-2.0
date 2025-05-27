@@ -260,6 +260,10 @@ namespace gd {
 				m_objectType != GameObjectType::kGameObjectTypeSlope
 				);
 		}
+
+		void calculateOrientedBox() {
+			return reinterpret_cast<void(__fastcall*)(GameObject*)>(base + 0xb7b30)(this);
+		}
 	};
 }
 

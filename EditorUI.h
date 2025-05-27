@@ -68,6 +68,20 @@ namespace EditorUI {
 	inline void(__thiscall* toggleSpecialEditButtons)(gd::EditorUI*);
 	void __fastcall toggleSpecialEditButtonsH(gd::EditorUI*);
 
+	inline void(__thiscall* angleChanged)(gd::EditorUI*, float);
+	void __fastcall angleChangedH(gd::EditorUI*, void*, float);
+
+	inline void(__thiscall* onPaste)(gd::EditorUI*, CCObject*);
+	void __fastcall onPasteH(gd::EditorUI*, void*, CCObject*);
+
+	inline void(__thiscall* onDuplicate)(gd::EditorUI*, CCObject*);
+	void __fastcall onDuplicateH(gd::EditorUI*, void*, CCObject*);
+
+	inline void(__thiscall* onCreateObject)(gd::EditorUI*, int);
+	void __fastcall onCreateObjectH(gd::EditorUI*, void*, int);
+
+	void updateObjectHitbox(gd::EditorUI*);
+
 	class Callback : public gd::EditorUI {
 	public:
 		void onCustomMoveObject(CCObject*);

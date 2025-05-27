@@ -7,6 +7,27 @@
 bool __fastcall LevelEditorLayer::initH(gd::LevelEditorLayer* self, void*, gd::GJGameLevel* level) {
 	if (!LevelEditorLayer::init(self, level)) return false;
 
+	if (setting().onHitboxBugFix) {
+		if (self->m_levelSections) {
+			for (int i = 0; i <= self->m_levelSections->count(); i++) {
+				if (i < 0) continue;
+				if (i >= self->m_levelSections->count()) break;
+
+				auto objectAtIndex = self->m_levelSections->objectAtIndex(i);
+				auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
+
+				for (int j = 0; j < objArr->count(); j++) {
+					auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+					if (obj && obj->canRotateFree()) {
+						if ((obj->getRotation() / 90.f) != 0.f) {
+							obj->calculateOrientedBox();
+						}
+					}
+				}
+			}
+		}
+	}
+
 	auto playerDrawNode = CCDrawNode::create();
 	self->m_objectLayer->addChild(playerDrawNode, 1000, 124);
 	auto objectDrawNode = CCDrawNode::create();

@@ -77,6 +77,7 @@ struct SettingStruct {
 	bool onFreeScroll;
 	bool onHidePreviewLine;
 	bool onHideUI;
+	bool onHitboxBugFix;
 	bool onLevelEdit;
 	bool onNoCMark;
 	bool onNoDeathX;
@@ -206,6 +207,7 @@ DEF_SCHEMA(
 	onFreeScroll,
 	onHidePreviewLine,
 	onHideUI,
+	onHitboxBugFix,
 	onLevelEdit,
 	onNoCMark,
 	onNoDeathX,
