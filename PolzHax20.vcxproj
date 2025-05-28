@@ -154,6 +154,7 @@
     <ClInclude Include="CrashLogger.h" />
     <ClInclude Include="CustomizeObjectLayer.h" />
     <ClInclude Include="EditorOptionsLayer.h" />
+    <ClInclude Include="EditorPauseLayer.h" />
     <ClInclude Include="EditorUI.h" />
     <ClInclude Include="EndLevelLayer.h" />
     <ClInclude Include="explorer.h" />
@@ -646,6 +647,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="CustomMoveButtons.cpp" />
     <ClCompile Include="EditorOptionsLayer.cpp" />
+    <ClCompile Include="EditorPauseLayer.cpp" />
     <ClCompile Include="EditorUI.cpp" />
     <ClCompile Include="EndLevelLayer.cpp" />
     <ClCompile Include="explorer.cpp" />

@@ -8,33 +8,22 @@
 
 gd::EditorUI* editorUI = nullptr;
 
-gd::EditorPauseLayer* m_editorPauseLayer{ nullptr };
+void EditorUI::updateObjectHitbox(gd::EditorUI* eui) {
+	gd::LevelEditorLayer* self = eui->m_editorLayer;
+	for (int i = self->m_firstVisibleSection + 1; i <= self->m_lastVisibleSection - 1; i++) {
+		if (i < 0) continue;
+		if (i >= self->m_levelSections->count()) break;
 
-void EditorUI::updateObjectHitbox(gd::EditorUI* self) {
-	gd::GameObject* obj = nullptr;
-	obj = self->m_selectedObject;
-	if (obj == nullptr) {
-		if (self->m_selectedObjects->count() != 0)
-		{
-			for (int i = 0; i <= self->m_selectedObjects->count(); i++)
-			{
-				obj = dynamic_cast<gd::GameObject*>(self->m_selectedObjects->objectAtIndex(i));
-				if (obj)
-				{
-					float rot = obj->getRotation() / 90.0;
-					if (rot != 0.0)
-					{
-						obj->calculateOrientedBox();
-					}
+		auto objectAtIndex = self->m_levelSections->objectAtIndex(i);
+		auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
+
+		for (int j = 0; j < objArr->count(); j++) {
+			auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+			if (obj && obj->canRotateFree()) {
+				if ((obj->getRotation() / 90.f) != 0.f) {
+					obj->calculateOrientedBox();
 				}
 			}
-		}
-	}
-	else {
-		float rot = obj->getRotation() / 90;
-		if (rot != 0) {
-			obj->calculateOrientedBox();
-			return;
 		}
 	}
 }
@@ -414,15 +403,20 @@ void __fastcall EditorUI::angleChangedH(gd::EditorUI* _self, void*, float angle)
 	if (setting().onHitboxBugFix) updateObjectHitbox(self);
 }
 
-void __fastcall EditorUI::onPasteH(gd::EditorUI* self, void*, CCObject* sender) {
-	EditorUI::onPaste(self, sender);
-	if (setting().onHitboxBugFix) updateObjectHitbox(self);
-}
-
+//void __fastcall EditorUI::onPasteH(gd::EditorUI* self, void*, CCObject* sender) {
+//	EditorUI::onPaste(self, sender);
+//	if (setting().onHitboxBugFix) updateObjectHitbox(self);
+//}
+//
 void __fastcall EditorUI::onDuplicateH(gd::EditorUI* self, void*, CCObject* sender) {
 	EditorUI::onDuplicate(self, sender);
 	if (setting().onHitboxBugFix) updateObjectHitbox(self);
 }
+
+//CCArray* __fastcall EditorUI::pasteObjectsH(gd::EditorUI* self, void*, std::string objs) {
+//	return EditorUI::pasteObjects(self, objs);
+//	if (setting().onHitboxBugFix) updateObjectHitbox(self);
+//}
 
 void __fastcall EditorUI::onCreateObjectH(gd::EditorUI* self, void*, int id) {
 	EditorUI::onCreateObject(self, id);
@@ -437,78 +431,6 @@ void __fastcall GJScaleControl::ccTouchMovedH(gd::GJScaleControl* self, void*, C
 void __fastcall GJRotationControl::ccTouchMovedH(gd::GJRotationControl* self, void*, CCTouch* touch, CCEvent* event) {
 	GJRotationControl::ccTouchMoved(self, touch, event);
 	gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->updateObjectInfoLabel();
-}
-
-class SaveLevelProtocol : public gd::FLAlertLayerProtocol {
-protected:
-	void FLAlert_Clicked(gd::FLAlertLayer* layer, bool btn2) {
-		if (btn2) {
-			m_editorPauseLayer->saveLevel();
-		}
-	}
-};
-
-SaveLevelProtocol saveLevelProtocol;
-
-void EditorPauseLayer::Callback::onSaveLevel(CCObject*) {
-	gd::FLAlertLayer::create(&saveLevelProtocol, "Save", "NO", "YES", 300.f, "<cy>Save</c> the level?")->show();
-}
-
-void EditorPauseLayer::Callback::onPasteString(CCObject*) {
-	if (gd::GameManager::sharedState()->getLevelEditorLayer()) {
-		auto string = clipboard::read();
-		gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->pasteObjects(string);
-		gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->updateButtons();
-	}
-}
-
-void __fastcall EditorPauseLayer::customSetupH(gd::EditorPauseLayer* self) {
-	EditorPauseLayer::customSetup(self);
-	m_editorPauseLayer = self;
-
-	auto director = CCDirector::sharedDirector();
-	auto winSize = director->getWinSize();
-
-	auto mainMenu = static_cast<CCMenu*>(self->getChildren()->objectAtIndex(0));
-	auto actionsMenu = static_cast<CCMenu*>(self->m_audioOnBtn->getParent());
-
-	auto onResume = static_cast<gd::CCMenuItemSpriteExtra*>(mainMenu->getChildren()->objectAtIndex(0));
-	onResume->setPositionY(84.f);
-	auto onSaveAndPlay = static_cast<gd::CCMenuItemSpriteExtra*>(mainMenu->getChildren()->objectAtIndex(1));
-	onSaveAndPlay->setPositionY(42.f);
-	auto onSaveAndExit = static_cast<gd::CCMenuItemSpriteExtra*>(mainMenu->getChildren()->objectAtIndex(2));
-	onSaveAndExit->setPositionY(0.f);
-	auto onExitNoSave = static_cast<gd::CCMenuItemSpriteExtra*>(mainMenu->getChildren()->objectAtIndex(3));
-	onExitNoSave->setPositionY(-84.f);
-
-	auto onSaveSpr = gd::ButtonSprite::create("Save", 0xb4, true, "goldFont.fnt", "GJ_button_01.png", 28.f, .8f);
-	auto onSave = gd::CCMenuItemSpriteExtra::create(onSaveSpr, nullptr, self, menu_selector(EditorPauseLayer::Callback::onSaveLevel));
-	onSave->setPositionY(-42.f);
-
-	mainMenu->addChild(onSave);
-
-	auto onPasteStringSpr = gd::ButtonSprite::create("Paste\nString", 0x28, true, "bigFont.fnt", "GJ_button_04.png", 30.f, .6f);
-	auto onPasteString = gd::CCMenuItemSpriteExtra::create(onPasteStringSpr, nullptr, self, menu_selector(EditorPauseLayer::Callback::onPasteString));
-	onPasteString->setPosition(actionsMenu->convertToNodeSpace({ winSize.width - 45.f, winSize.height - 30.f }));
-
-	actionsMenu->addChild(onPasteString);
-
-	auto onSettingsSpr = CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png");
-	onSettingsSpr->setScale(.65f);
-	auto onSettings = gd::CCMenuItemSpriteExtra::create(onSettingsSpr, nullptr, self, menu_selector(gd::MenuLayer::onOptions));
-	onSettings->setPosition(actionsMenu->convertToNodeSpace({ winSize.width - 32.f, winSize.height - 66.f }));
-
-	actionsMenu->addChild(onSettings);
-}
-
-void __fastcall EditorPauseLayer::dtorH(gd::EditorPauseLayer* self) {
-	m_editorPauseLayer = nullptr;
-	EditorPauseLayer::dtor(self);
-}
-
-void __fastcall EditorPauseLayer::keyDownH(gd::EditorPauseLayer* self, void*, enumKeyCodes key) {
-	if (key == KEY_Escape) reinterpret_cast<gd::EditorPauseLayer*>(reinterpret_cast<uintptr_t>(self) - 0xf4)->onResume(nullptr);
-	else EditorPauseLayer::keyDown(self, key);
 }
 
 CCArray* objArr;
@@ -598,17 +520,13 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6b200), EditorUI::onPlaytestH, reinterpret_cast<void**>(&EditorUI::onPlaytest));
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x70390), EditorUI::angleChangedH, reinterpret_cast<void**>(&EditorUI::angleChanged));
-	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bbd0), EditorUI::onPasteH, reinterpret_cast<void**>(&EditorUI::onPaste));
+	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bbd0), EditorUI::onPasteH, reinterpret_cast<void**>(&EditorUI::onPaste));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6b830), EditorUI::onDuplicateH, reinterpret_cast<void**>(&EditorUI::onDuplicate));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x699c0), EditorUI::onCreateObjectH, reinterpret_cast<void**>(&EditorUI::onCreateObject));
 
-	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6cbf0), EditorUI::toggleSpecialEditButtonsH, reinterpret_cast<void**>(&EditorUI::toggleSpecialEditButtons));
-}
+	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bd20), EditorUI::pasteObjectsH, reinterpret_cast<void**>(&EditorUI::pasteObjects));
 
-void EditorPauseLayer::mem_init() {
-	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5aa90), EditorPauseLayer::customSetupH, reinterpret_cast<void**>(&EditorPauseLayer::customSetup));
-	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5a5f0), EditorPauseLayer::dtorH, reinterpret_cast<void**>(&EditorPauseLayer::dtor));
-	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5ca20), EditorPauseLayer::keyDownH, reinterpret_cast<void**>(&EditorPauseLayer::keyDown));
+	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6cbf0), EditorUI::toggleSpecialEditButtonsH, reinterpret_cast<void**>(&EditorUI::toggleSpecialEditButtons));
 }
 
 void EditButtonBar::mem_init() {

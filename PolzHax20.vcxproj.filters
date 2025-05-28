@@ -1518,6 +1518,9 @@
     <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\EndLevelLayer.h">
       <Filter>Файлы заголовков\libs\gd.h</Filter>
     </ClInclude>
+    <ClInclude Include="EditorPauseLayer.h">
+      <Filter>Файлы заголовков\Layers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1629,6 +1632,9 @@
       <Filter>Исходные файлы\Layers</Filter>
     </ClCompile>
     <ClCompile Include="EndLevelLayer.cpp">
+      <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorPauseLayer.cpp">
       <Filter>Исходные файлы\Layers</Filter>
     </ClCompile>
   </ItemGroup>

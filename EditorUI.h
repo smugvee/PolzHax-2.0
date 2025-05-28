@@ -80,6 +80,9 @@ namespace EditorUI {
 	inline void(__thiscall* onCreateObject)(gd::EditorUI*, int);
 	void __fastcall onCreateObjectH(gd::EditorUI*, void*, int);
 
+	inline CCArray* (__thiscall* pasteObjects)(gd::EditorUI*, std::string);
+	CCArray* __fastcall pasteObjectsH(gd::EditorUI*, void*, std::string);
+
 	void updateObjectHitbox(gd::EditorUI*);
 
 	class Callback : public gd::EditorUI {
@@ -90,25 +93,6 @@ namespace EditorUI {
 
 		void onNextFreeEditorLayer(CCObject*);
 		void onAllEditorLayer(CCObject*);
-	};
-
-	void mem_init();
-}
-
-namespace EditorPauseLayer {
-	inline void(__thiscall* customSetup)(gd::EditorPauseLayer*);
-	void __fastcall customSetupH(gd::EditorPauseLayer*);
-
-	inline void(__thiscall* dtor)(gd::EditorPauseLayer*);
-	void __fastcall dtorH(gd::EditorPauseLayer*);
-
-	inline void(__thiscall* keyDown)(gd::EditorPauseLayer*, enumKeyCodes);
-	void __fastcall keyDownH(gd::EditorPauseLayer*, void*, enumKeyCodes);
-
-	class Callback {
-	public:
-		void onSaveLevel(CCObject*);
-		void onPasteString(CCObject*);
 	};
 
 	void mem_init();

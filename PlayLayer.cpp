@@ -211,12 +211,7 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 			percentLabel->setPosition({ size.width / 2.f, size.height - 8.f });
 			percentLabel->setAnchorPoint({ 0.5f, 0.5f });
 		}
-		if (gd::GameManager::sharedState()->getGameVariable("0040")) {
-			percentLabel->setVisible(1);
-		}
-		else {
-			percentLabel->setVisible(0);
-		}
+		percentLabel->setVisible(gd::GameManager::sharedState()->getGameVariable("0040"));
 	}
 
 	auto spSwitcherMenu = CCMenu::create();

@@ -20,6 +20,7 @@ namespace gd {
 	class BoomScrollLayer : public cocos2d::CCNode {};
 	class ButtonPage : public cocos2d::CCNode {};
 	class ExtendedLayer : public cocos2d::CCNode {};
+	class Slider;
 
 	enum class EditCommand {};
 
@@ -78,7 +79,7 @@ namespace gd {
 		cocos2d::CCDictionary* m_editButtonDict; // 0x174
 		EditButtonBar* m_buildButtonBar; // 0x178 // first tab
 		EditButtonBar* m_moveButtonBar; // 0x17c
-		void* m_slider; // 0x180
+		Slider* m_slider; // 0x180
 		PAD(12)
 		bool m_swipeEnabled; // 0x190
 		PAD(3)
@@ -236,6 +237,14 @@ namespace gd {
 
 		void updateObjectInfoLabel() {
 			reinterpret_cast<void(__thiscall*)(EditorUI*)>(base + 0x5fb70)(this);
+		}
+
+		void deactivateRotationControl() {
+			reinterpret_cast<void(__thiscall*)(EditorUI*)>(base + 0x73fa0)(this);
+		}
+
+		void deactivateScaleControl() {
+			reinterpret_cast<void(__thiscall*)(EditorUI*)>(base + 0x6c2f0)(this);
 		}
 	};
 
