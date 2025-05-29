@@ -41,6 +41,11 @@ namespace PlayLayer {
 	inline void(__thiscall* updateVisibility)(gd::PlayLayer*);
 	void __fastcall updateVisibilityH(gd::PlayLayer*);
 
+	inline void(__thiscall* spawnPlayer2)(gd::PlayLayer*);
+	void __fastcall spawnPlayer2H(gd::PlayLayer*);
+
+	void updateSameDualColor(gd::PlayLayer*);
+
 	void onPrevStartPos();
 	void onNextStartPos();
 

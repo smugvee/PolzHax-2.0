@@ -162,6 +162,31 @@ void PlayLayer::onPrevStartPos() {
 	pickStartPos(gd::GameManager::sharedState()->getPlayLayer(), currentStartPos - 1);
 }
 
+void PlayLayer::updateSameDualColor(gd::PlayLayer* self) {
+	//if (!self) return;
+
+	//auto gm = gd::GameManager::sharedState();
+
+	//ccColor3B p1col = gm->colorForIdx(gm->m_playerColor);
+	//ccColor3B p2col = gm->colorForIdx(gm->m_playerColor2);
+
+	//CCParticleSystemQuad* p1particles = static_cast<CCParticleSystemQuad*>(self->m_player->m_particleSystems->objectAtIndex(1));
+	//CCParticleSystemQuad* p2particles = static_cast<CCParticleSystemQuad*>(self->m_player2->m_particleSystems->objectAtIndex(1));
+
+
+
+	////if (setting().onSameDualColor) {
+	//	self->m_player2->m_iconSprite->setColor(p1col);
+	//	self->m_player2->m_iconSpriteSecondary->setColor(p2col);
+	//	self->m_player2->m_iconGlowSprite->setColor(p2col);
+	//	self->m_player2->m_vehicleSprite->setColor(p1col);
+	//	self->m_player2->m_vehicleSpriteSecondary->setColor(p2col);
+	//	self->m_player2->m_vehicleGlowSprite->setColor(p2col);
+	//	self->m_player2->m_motionStreak->setColor(p2col);
+	//	self->m_
+	////}
+}
+
 bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* level) {
 	startPosObjects.clear();
 	if (!PlayLayer::init(self, level)) return false;
@@ -440,6 +465,10 @@ void __fastcall PlayLayer::updateVisibilityH(gd::PlayLayer* self) {
 	}
 }
 
+void __fastcall PlayLayer::spawnPlayer2H(gd::PlayLayer* self) {
+	if (setting().onInvisibleDualFix) self->m_player2->setVisible(true);
+}
+
 void PlayLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16ab80), PlayLayer::initH, reinterpret_cast<void**>(&PlayLayer::init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x170f30), PlayLayer::updateH, reinterpret_cast<void**>(&PlayLayer::update));
@@ -453,4 +482,5 @@ void PlayLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16fc00), PlayLayer::addObjectH, reinterpret_cast<void**>(&PlayLayer::addObject));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16f700), PlayLayer::createObjectsFromSetupH, reinterpret_cast<void**>(&PlayLayer::createObjectsFromSetup));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x176470), PlayLayer::updateVisibilityH, reinterpret_cast<void**>(&PlayLayer::updateVisibility));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x179ef0), PlayLayer::spawnPlayer2H, reinterpret_cast<void**>(&PlayLayer::spawnPlayer2));
 }

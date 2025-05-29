@@ -27,7 +27,7 @@ struct SettingStruct {
 	int beforeRestartCheatsCount = 0;
 	bool isSafeMode;
 
-	bool onAutoSave;
+	bool onAutoSave = true;
 
 	bool onCharFilter;
 	bool onIcons;
@@ -62,6 +62,7 @@ struct SettingStruct {
 	bool onNoRespawnFlash;
 	bool onNoWavePulse;
 	bool onPracticePulse;
+	bool onSameDualColor;
 	bool onSolidWaveTrail;
 	bool onTrailAlwaysOff;
 	bool onTrailAlwaysOn;
@@ -95,6 +96,8 @@ struct SettingStruct {
 	bool onCheckpointLagFix;
 	bool onConfirmExit;
 	bool onCorrectiveMusicSync;
+	bool onHighFPSRotationFix;
+	bool onInvisibleDualFix;
 	bool onNoclip;
 	bool onPauseDuringComplete;
 	bool onPracticeBugFix;
@@ -105,6 +108,7 @@ struct SettingStruct {
 	float fps = 60.f;
 	bool onFPSBypass;
 	float pitch = 0.8f;
+	bool onPitchShifter;
 	bool onAllowLowVolume;
 	bool onAntiCheatBypass;
 	bool onAutoSafeMode;
@@ -192,6 +196,7 @@ DEF_SCHEMA(
 	onNoRespawnFlash,
 	onNoWavePulse,
 	onPracticePulse,
+	onSameDualColor,
 	onSolidWaveTrail,
 	onTrailAlwaysOff,
 	onTrailAlwaysOn,
@@ -223,6 +228,8 @@ DEF_SCHEMA(
 	onBallRotatingBugFix,
 	onConfirmExit,
 	onCorrectiveMusicSync,
+	onHighFPSRotationFix,
+	onInvisibleDualFix,
 	onNoclip,
 	onPauseDuringComplete,
 	onPracticeBugFix,

@@ -69,18 +69,6 @@ void update_speed_hack() {
 	}
 }
 
-FMOD::DSP* pitchShifterDSP = nullptr;
-
-void update_pitch_shifter() {
-	auto fme = gd::FMODAudioEngine::sharedEngine();
-	if (!fme || !fme->m_system || !fme->m_globalChannel) return;
-	
-	fme->m_globalChannel->removeDSP(pitchShifterDSP);
-	fme->m_system->createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &pitchShifterDSP);
-	fme->m_globalChannel->addDSP(0, pitchShifterDSP);
-	pitchShifterDSP->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH, setting().pitch);
-}
-
 std::vector<std::string> dllNames;
 
 float solidsColor[3];
@@ -511,6 +499,11 @@ void imgui_render() {
 		else {
 			sequence_patch((uint32_t)gd::base + 0x179cbe, { 0x75, 0x08 });
 		}
+
+		if (setting().onHighFPSRotationFix)
+			sequence_patch((uint32_t)gd::base + 0x16286b, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+		else
+			sequence_patch((uint32_t)gd::base + 0x16286b, { 0x0f, 0x82, 0x21, 0x01, 0x00, 0x00 });
 
 		if (setting().onPauseDuringComplete) {
 			sequence_patch((uint32_t)gd::base + 0x16a146, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
@@ -1418,6 +1411,17 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Syncs music to checked speed-portals, instead of only ones the player hit.");
 
+			if (ImGui::Checkbox("High FPS Rotation Fix", &setting().onHighFPSRotationFix)) {
+				if (setting().onHighFPSRotationFix)
+					sequence_patch((uint32_t)gd::base + 0x16286b, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 });
+				else
+					sequence_patch((uint32_t)gd::base + 0x16286b, { 0x0f, 0x82, 0x21, 0x01, 0x00, 0x00 });
+			}
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Fixes ship/ufo/wave rotation on high fps, affects hitboxes.");
+
+			ImGui::Checkbox("Invisible Dual Fix", &setting().onInvisibleDualFix);
+
 			if (ImGui::Checkbox("Hitboxes", &setting().onHitboxes)) {
 				if (setting().onHitboxes) {
 					cheatAdd();
@@ -1435,8 +1439,7 @@ void imgui_render() {
 
 				ImGui::Checkbox("Solids", &setting().onEnableSolidHitboxes);
 				ImGui::SameLine();
-				ImGui::ColorEdit3("##solidsColor", solidsColor, ImGuiColorEditFlags_NoInputs);
-				if (ImGui::IsItemDeactivatedAfterEdit()) {
+				if (ImGui::ColorEdit3("##solidsColor", solidsColor, ImGuiColorEditFlags_NoInputs)) {
 					setting().solidHitboxesR = solidsColor[0] * 255;
 					setting().solidHitboxesG = solidsColor[1] * 255;
 					setting().solidHitboxesB = solidsColor[2] * 255;
@@ -1444,8 +1447,7 @@ void imgui_render() {
 
 				ImGui::Checkbox("Hazards", &setting().onEnableHazardHitboxes);
 				ImGui::SameLine();
-				ImGui::ColorEdit3("##hazardsColor", hazardsColor, ImGuiColorEditFlags_NoInputs);
-				if (ImGui::IsItemDeactivatedAfterEdit()) {
+				if (ImGui::ColorEdit3("##hazardsColor", hazardsColor, ImGuiColorEditFlags_NoInputs)) {
 					setting().hazardHitboxesR = hazardsColor[0] * 255;
 					setting().hazardHitboxesG = hazardsColor[1] * 255;
 					setting().hazardHitboxesB = hazardsColor[2] * 255;
@@ -1453,8 +1455,7 @@ void imgui_render() {
 
 				ImGui::Checkbox("Specials", &setting().onEnableSpecialHitboxes);
 				ImGui::SameLine();
-				ImGui::ColorEdit3("##specialsColor", specialsColor, ImGuiColorEditFlags_NoInputs);
-				if (ImGui::IsItemDeactivatedAfterEdit()) {
+				if (ImGui::ColorEdit3("##specialsColor", specialsColor, ImGuiColorEditFlags_NoInputs)) {
 					setting().specialHitboxesR = specialsColor[0] * 255;
 					setting().specialHitboxesG = specialsColor[1] * 255;
 					setting().specialHitboxesB = specialsColor[2] * 255;
@@ -1529,10 +1530,10 @@ void imgui_render() {
 			ImGui::SetWindowFontScale(setting().UISize);
 
 			ImGui::SetNextItemWidth(80 * setting().UISize);
-			if (ImGui::DragFloat("##fpsbypass", &setting().fps, 1.f, 1.f, 360.f))
+			if (ImGui::InputFloat("##fpsbypass", &setting().fps, 0.f, 0.f, "%.0ffps"))
 				update_fps_bypass();
 			ImGui::SameLine();
-			if (ImGui::Checkbox("FPS bypass", &setting().onFPSBypass))
+			if (ImGui::Checkbox("FPS Bypass", &setting().onFPSBypass))
 				update_fps_bypass();
 			ImGui::EndTabItem();
 
@@ -1686,7 +1687,7 @@ void imgui_render() {
 
 			ImGui::SetNextItemWidth(80 * setting().UISize);
 
-			if (ImGui::DragFloat("##speedhack", &setting().speedhack, 0.05f, 0.f, 10.f))
+			if (ImGui::InputFloat("##speedhack", &setting().speedhack, 0.f, 0.f, "%.2fx"))
 			{
 				update_speed_hack();
 				if (setting().speedhack < 0.f) setting().speedhack = 0;
@@ -1712,7 +1713,6 @@ void imgui_render() {
 	if (setting().onSpeedhack) {
 		update_speed_hack();
 	}
-	//update_pitch_shifter();
 }
 
 void imgui_init() {
