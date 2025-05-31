@@ -75,6 +75,9 @@ float solidsColor[3];
 float hazardsColor[3];
 float specialsColor[3];
 
+float levelBGColor[3];
+float levelGColor[3];
+
 void imgui_render() {
 	if (oneX) {
 		setting().loadState();
@@ -93,6 +96,14 @@ void imgui_render() {
 		specialsColor[0] = setting().specialHitboxesR / 255.f;
 		specialsColor[1] = setting().specialHitboxesG / 255.f;
 		specialsColor[2] = setting().specialHitboxesB / 255.f;
+
+		levelBGColor[0] = setting().levelBGColorR / 255.f;
+		levelBGColor[1] = setting().levelBGColorG / 255.f;
+		levelBGColor[2] = setting().levelBGColorB / 255.f;
+
+		levelGColor[0] = setting().levelGColorR / 255.f;
+		levelGColor[1] = setting().levelGColorG / 255.f;
+		levelGColor[2] = setting().levelGColorB / 255.f;
 
 		float polzhax_xPos;
 		float bypass_xPos;
@@ -533,6 +544,8 @@ void imgui_render() {
 
 		if (setting().onHitboxes) cheatAdd();
 
+		if (setting().onShowLayout) cheatAdd();
+
 		// Universal
 
 		if (setting().onAllowLowVolume) {
@@ -876,11 +889,8 @@ void imgui_render() {
 				ImGui::SetTooltip("Hides the pause button when the in-game cursor is enabled.");
 
 			if (ImGui::Checkbox("Hide Pause Menu", &setting().onHidePauseMenu)) {
-				if (layers().PauseLayerObject)
-				{
-					if (setting().onHidePauseMenu) layers().PauseLayerObject->setVisible(0);
-					else layers().PauseLayerObject->setVisible(1);
-				}
+				if (layers().PauseLayerObject && playLayer)
+					layers().PauseLayerObject->setVisible(!setting().onHidePauseMenu);
 			}
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Hides the pause menu.");
@@ -1516,6 +1526,25 @@ void imgui_render() {
 			ImGui::Checkbox("Replay Last Checkpoint", &setting().onLastCheckpoint);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Respawn from your last practice mode checkpoint after completing a level.");
+
+			if (ImGui::Checkbox("Show Layout", &setting().onShowLayout)) {
+				if (setting().onShowLayout) cheatAdd();
+				else cheatDec();
+			}
+
+			if (ImGui::TreeNode("Show Layout Settings")) {
+				if (ImGui::ColorEdit3("Ground Colour", levelGColor, ImGuiColorEditFlags_NoInputs)) {
+					setting().levelGColorR = levelGColor[0] * 255.f;
+					setting().levelGColorG = levelGColor[1] * 255.f;
+					setting().levelGColorB = levelGColor[2] * 255.f;
+				}
+				if (ImGui::ColorEdit3("BG Colour", levelBGColor, ImGuiColorEditFlags_NoInputs)) {
+					setting().levelBGColorR = levelBGColor[0] * 255.f;
+					setting().levelBGColorG = levelBGColor[1] * 255.f;
+					setting().levelBGColorB = levelBGColor[2] * 255.f;
+				}
+				ImGui::TreePop();
+			}
 
 			ImGui::Checkbox("Smart StartPos", &setting().onSmartStartPos);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)

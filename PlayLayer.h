@@ -35,8 +35,8 @@ namespace PlayLayer {
 	inline void(__thiscall* createObjectsFromSetup)(gd::PlayLayer*, gd::string);
 	void __fastcall createObjectsFromSetupH(gd::PlayLayer*, void*, gd::string);
 
-	inline void(__thiscall* lightningFlash)(gd::PlayLayer*, CCPoint, ccColor3B);
-	void __fastcall lightningFlashH(gd::PlayLayer*, void*, CCPoint, ccColor3B);
+	inline void(__thiscall* lightningFlash)(gd::PlayLayer*, CCPoint, _ccColor3B);
+	void __fastcall lightningFlashH(gd::PlayLayer*, void*, CCPoint, _ccColor3B);
 
 	inline void(__thiscall* updateVisibility)(gd::PlayLayer*);
 	void __fastcall updateVisibilityH(gd::PlayLayer*);

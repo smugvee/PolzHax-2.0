@@ -264,6 +264,18 @@ namespace gd {
 		void calculateOrientedBox() {
 			return reinterpret_cast<void(__fastcall*)(GameObject*)>(base + 0xb7b30)(this);
 		}
+
+		void setObjectColor(const cocos2d::ccColor3B& color) {
+			return reinterpret_cast<void(__thiscall*)(GameObject*, const cocos2d::ccColor3B&)>(base + 0xb7060)(this, color);
+		}
+
+		void setGlowColor(cocos2d::ccColor3B color) {
+			if (!m_glowUseBGColor) {
+				if (m_glowSprite) {
+					m_glowSprite->setColor(color);
+				}
+			}
+		}
 	};
 }
 

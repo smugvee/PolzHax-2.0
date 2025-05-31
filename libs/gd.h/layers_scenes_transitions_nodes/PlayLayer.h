@@ -13,10 +13,22 @@ namespace gd {
 	using EndPortalObject = GameObject;
 	class AudioEffectsLayer : public cocos2d::CCNode {};
 
-	class GJGroundLayer {
+	class GJGroundLayer : public cocos2d::CCLayer {
 	public:
 		void updateGroundWidth() {
 			return reinterpret_cast<void(__thiscall*)(GJGroundLayer*)>(base + 0xd2610)(this);
+		}
+
+		void updateGround01Color(cocos2d::ccColor3B color) {
+			return reinterpret_cast<void(__thiscall*)(GJGroundLayer*, cocos2d::ccColor3B)>(base + 0xd23b0)(this, color);
+		}
+
+		void updateGround02Color(cocos2d::ccColor3B color) {
+			return reinterpret_cast<void(__thiscall*)(GJGroundLayer*, cocos2d::ccColor3B)>(base + 0xd2410)(this, color);
+		}
+
+		void updateLineColor(cocos2d::ccColor3B color) { // Custom function
+			from<cocos2d::CCSprite*>(this, 0x124)->setColor(color);
 		}
 	};
 

@@ -301,6 +301,26 @@ void __fastcall FMODAudioEngine_updateH(gd::FMODAudioEngine* self, void*, float 
 	if (setting().onNoPulse) self->m_pulse1 = 1.f;
 }
 
+inline void(__thiscall* EffectGameObject_triggerObject)(gd::EffectGameObject*);
+void __fastcall EffectGameObject_triggerObjectH(gd::EffectGameObject* self) {
+	if (setting().onShowLayout) {
+		switch (self->m_objectID)
+		{
+		case 29:
+		case 30:
+		case 105:
+		case 744:
+		case 899:
+		case 900:
+		case 915:
+		case 1006:
+		case 1007:
+			return; break;
+		}
+	}
+	EffectGameObject_triggerObject(self);
+}
+
 void(__thiscall* AppDelegate_trySaveGame)(gd::AppDelegate*);
 void __fastcall AppDelegate_trySaveGameH(gd::AppDelegate* self) {
 	if (setting().onAutoSave)
@@ -366,6 +386,8 @@ DWORD WINAPI my_thread(void* hModule) {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x39950), AudioEffectsLayer_updateTweenActionH, reinterpret_cast<void**>(&AudioEffectsLayer_updateTweenAction));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x20560), FMODAudioEngine_updateH, reinterpret_cast<void**>(&FMODAudioEngine_update));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x74c00), EndLevelLayer::customSetupH, reinterpret_cast<void**>(&EndLevelLayer::customSetup));
+
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x19e250), EffectGameObject_triggerObjectH, reinterpret_cast<void**>(&EffectGameObject_triggerObject));
 
 	MH_CreateHook(
 		reinterpret_cast<void*>(gd::base + 0x392a0),

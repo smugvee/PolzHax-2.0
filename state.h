@@ -84,7 +84,6 @@ struct SettingStruct {
 	bool onNoDeathX;
 	bool onObjectBypass;
 	bool onPlaceOver;
-	bool onLastCheckpoint;
 	bool onScaleSnapBypass;
 	bool onSmoothTrail;
 	bool onToolboxBypass;
@@ -102,6 +101,8 @@ struct SettingStruct {
 	bool onPauseDuringComplete;
 	bool onPracticeBugFix;
 	bool onPracticeMusic;
+	bool onLastCheckpoint;
+	bool onShowLayout;
 	bool onSmartStartPos;
 	bool onStartPosSwitcher;
 
@@ -151,6 +152,14 @@ struct SettingStruct {
 	int specialHitboxesG = 255;
 	int specialHitboxesB = 0;
 	int hitboxesOpacity = 255;
+
+	// Show Layout
+	int levelBGColorR = 40;
+	int levelBGColorG = 125;
+	int levelBGColorB = 255;
+	int levelGColorR = 0;
+	int levelGColorG = 102;
+	int levelGColorB = 255;
 };
 
 LayersStruct& layers();
@@ -235,6 +244,7 @@ DEF_SCHEMA(
 	onPracticeBugFix,
 	onPracticeMusic,
 	onLastCheckpoint,
+	onShowLayout,
 	onSmartStartPos,
 	onStartPosSwitcher,
 
@@ -280,5 +290,12 @@ DEF_SCHEMA(
 	specialHitboxesR,
 	specialHitboxesG,
 	specialHitboxesB,
-	hitboxesOpacity
+	hitboxesOpacity,
+
+	levelBGColorR,
+	levelBGColorG,
+	levelBGColorB,
+	levelGColorR,
+	levelGColorG,
+	levelGColorB
 )

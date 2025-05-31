@@ -14,10 +14,8 @@ std::vector<CheckPoint> checkpoints;
 std::vector<gd::StartPosObject*> m_startPositions;
 std::vector<gd::GameObject*> m_dualPortals, m_gamemodePortals, m_miniPortals, m_speedChanges, m_mirrorPortals;
 
-CCArray* startPosArray;
 int currentStartPos = 0;
 bool fadeOutFlag = false;
-CCLabelBMFont* startPosSwitcherLabel = nullptr;
 std::vector<gd::StartPosObject*> startPosObjects;
 
 bool inPractice;
@@ -280,6 +278,10 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 		}
 	}
 
+	if (setting().onShowLayout) {
+		
+	}
+
 	return true;
 }
 
@@ -332,6 +334,37 @@ void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 					Hitboxes::drawHazardsObjectHitbox(obj, objectDrawNode);
 				if (setting().onEnableSpecialHitboxes)
 					Hitboxes::drawSpecialsObjectHitbox(obj, objectDrawNode);
+			}
+		}
+	}
+
+	if (setting().onShowLayout) {
+		self->m_backgroundSprite->setColor(ccc3(setting().levelBGColorR, setting().levelBGColorG, setting().levelBGColorB));
+		self->m_bottomGround->updateGround01Color(ccc3(setting().levelGColorR, setting().levelGColorG, setting().levelGColorB));
+		self->m_bottomGround->updateGround02Color(ccc3(setting().levelGColorR, setting().levelGColorG, setting().levelGColorB));
+		self->m_bottomGround->updateLineColor({ 255, 255, 255 });
+		self->m_topGround->updateGround01Color(ccc3(setting().levelGColorR, setting().levelGColorG, setting().levelGColorB));
+		self->m_topGround->updateGround02Color(ccc3(setting().levelGColorR, setting().levelGColorG, setting().levelGColorB));
+		self->m_topGround->updateLineColor({ 255, 255, 255 });
+
+		self->m_backgroundFlashNode->setVisible(false);
+
+		for (int i = self->m_firstVisibleSection - 1; i <= self->m_lastVisibleSection + 1; i++) {
+			if (i < 0) continue;
+			if (i >= self->m_levelSections->count()) break;
+
+			auto objectAtIndex = self->m_levelSections->objectAtIndex(i);
+			auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
+
+			for (int j = 0; j < objArr->count(); j++) {
+				auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+				if (obj->m_objectType == gd::kGameObjectTypeDecoration && obj->isVisible() && (obj->m_objectID != 10 && obj->m_objectID != 11 && obj->m_objectID != 12 && obj->m_objectID != 13 && obj->m_objectID != 38 && obj->m_objectID != 44 && obj->m_objectID != 45 && obj->m_objectID != 46 && obj->m_objectID != 47 && obj->m_objectID != 99 && obj->m_objectID != 101 && obj->m_objectID != 111 && obj->m_objectID != 286 && obj->m_objectID != 287 && obj->m_objectID != 660 && obj->m_objectID != 745 && obj->m_objectID != 749) && obj != self->m_endPortal)
+					obj->setVisible(false);
+
+				obj->setObjectColor({ 255, 255, 255 });
+				if (obj->m_detailSprite) obj->m_detailSprite->setColor({ 255, 255, 255 });
+				if (obj->m_detailColor) obj->m_detailColor->colorID = 1011;
+				obj->m_detailColorID = 1011;
 			}
 		}
 	}
@@ -389,6 +422,7 @@ void __fastcall PlayLayer::onQuitH(gd::PlayLayer* self) {
 		checkpoints.clear();
 	}
 	PlayLayer::onQuit(self);
+	layers().PauseLayerObject = nullptr;
 }
 
 void __fastcall PlayLayer::levelCompleteH(gd::PlayLayer* self) {
@@ -403,7 +437,6 @@ void __fastcall PlayLayer::addObjectH(gd::PlayLayer* self, void*, gd::GameObject
 
 	if (obj->m_objectID == 31) {
 		startPosObjects.push_back(reinterpret_cast<gd::StartPosObject*>(obj));
-		std::cout << startPosObjects.size() << std::endl;
 	}
 
 	switch (obj->m_objectID)
@@ -452,9 +485,8 @@ void __fastcall PlayLayer::createObjectsFromSetupH(gd::PlayLayer* self, void*, g
 	}
 }
 
-void __fastcall PlayLayer::lightningFlashH(gd::PlayLayer* self, void*, CCPoint p0, ccColor3B p1) {
-	PlayLayer::lightningFlash(self, p0, p1);
-	//self->stopActionByTag(1);
+void __fastcall PlayLayer::lightningFlashH(gd::PlayLayer* self, void*, CCPoint p0, _ccColor3B p1) {
+	if (!setting().onShowLayout) PlayLayer::lightningFlash(self, p0, p1);
 }
 
 void __fastcall PlayLayer::updateVisibilityH(gd::PlayLayer* self) {
@@ -466,6 +498,7 @@ void __fastcall PlayLayer::updateVisibilityH(gd::PlayLayer* self) {
 }
 
 void __fastcall PlayLayer::spawnPlayer2H(gd::PlayLayer* self) {
+	PlayLayer::spawnPlayer2(self);
 	if (setting().onInvisibleDualFix) self->m_player2->setVisible(true);
 }
 
@@ -483,4 +516,5 @@ void PlayLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16f700), PlayLayer::createObjectsFromSetupH, reinterpret_cast<void**>(&PlayLayer::createObjectsFromSetup));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x176470), PlayLayer::updateVisibilityH, reinterpret_cast<void**>(&PlayLayer::updateVisibility));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x179ef0), PlayLayer::spawnPlayer2H, reinterpret_cast<void**>(&PlayLayer::spawnPlayer2));
+	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x16e110), PlayLayer::lightningFlashH, reinterpret_cast<void**>(&PlayLayer::lightningFlash));
 }

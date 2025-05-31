@@ -40,9 +40,7 @@ void __fastcall PauseLayer::customSetupH(gd::PauseLayer* self) {
 	m_togglerMenu = nullptr;
 	PauseLayer::customSetup(self);
 	layers().PauseLayerObject = self;
-	if (setting().onHidePauseMenu)
-		self->setVisible(0);
-	else self->setVisible(1);
+    self->setVisible(!setting().onHidePauseMenu);
 
     auto director = CCDirector::sharedDirector();
     auto winSize = director->getWinSize();
@@ -72,8 +70,7 @@ void __fastcall PauseLayer::customSetupH(gd::PauseLayer* self) {
 }
 
 void __fastcall PauseLayer::onRestartH(CCObject* object) {
-    if (!gd::GameManager::sharedState()->getGameVariable("0024"))
-        CCEGLView::sharedOpenGLView()->showCursor(false);
+    CCEGLView::sharedOpenGLView()->showCursor(gd::GameManager::sharedState()->getGameVariable("0024"));
     layers().PauseLayerObject = nullptr;
     PauseLayer::onRestart(object);
 }

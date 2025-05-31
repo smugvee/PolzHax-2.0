@@ -110,7 +110,7 @@ void CircleToolPopup::onClose(CCObject*) {
 }
 
 void CircleToolPopup::updateLabels() {
-	auto objs = gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->getSelectedObjects();
+	auto objs = gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->m_selectedObjects;
 	const auto amt = static_cast<size_t>(std::ceilf(m_angle / m_step) - 1.f);
 	const auto obj_count = amt * objs->count();
 	m_label->setString(("Copies: " + std::to_string(amt) + "\nObjects: " + std::to_string(obj_count)).c_str());
@@ -118,7 +118,7 @@ void CircleToolPopup::updateLabels() {
 
 void CircleToolPopup::onApply(CCObject*) {
 	auto* editor = gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI;
-	auto objs = editor->getSelectedObjects();
+	auto objs = editor->m_selectedObjects;
 	const auto amt = static_cast<size_t>(std::ceilf(m_angle / m_step) - 1.f);
 	if (objs && objs->count()) {
 		const auto obj_count = objs->count() * amt;
@@ -137,15 +137,15 @@ void CircleToolPopup::perform() {
 	auto* objs = CCArray::create();
 	for (float i = 1; i * m_step < m_angle; ++i) {
 		editor_ui->onDuplicate(nullptr);
-		auto selected = editor_ui->getSelectedObjects();
+		auto selected = editor_ui->m_selectedObjects;
 		editor_ui->rotateObjects(selected, m_step, { 0.f, 0.f });
 
 		const float angle = i * m_step;
 
-		from<CCArray*>(editor, 0x214)->removeLastObject();
+		editor->m_undoObjects->removeLastObject();
 		objs->addObjectsFromArray(selected);
 	}
-	from<CCArray*>(editor, 0x214)->addObject(gd::UndoObject::createWithArray(objs, gd::UndoCommand::Paste));
+	editor->m_undoObjects->addObject(gd::UndoObject::createWithArray(objs, gd::UndoCommand::Paste));
 	editor_ui->selectObjects(objs);
 	this->keyBackClicked();
 }
