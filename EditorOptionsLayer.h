@@ -16,5 +16,6 @@ namespace EditorOptionsLayer {
 		void onSelectFilter(CCObject*);
 		void onExtraObjectInfo(CCObject*);
 		void onUnusedObjects(CCObject*);
+		void onPreviewAnimations(CCObject*);
 	};
 }

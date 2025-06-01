@@ -108,6 +108,15 @@ namespace gd {
 		OBB2D* getOrientedBox() {
 			return reinterpret_cast<OBB2D * (__fastcall*)(PlayerObject*)>(base + 0x168880)(this);
 		}
+
+		virtual void setColor(cocos2d::_ccColor3B const& color) {
+			return reinterpret_cast<void(__thiscall*)(PlayerObject*, cocos2d::_ccColor3B const&)>(base + 0x166fd0)(reinterpret_cast<PlayerObject*>(this) + 0xe8, color);
+		}
+
+		void setSecondColor(cocos2d::_ccColor3B const& color) {
+			m_iconSpriteSecondary->setColor(color);
+			m_vehicleSpriteSecondary->setColor(color);
+		}
 	};
 }
 

@@ -1,5 +1,7 @@
 #include "EditorPauseLayer.h"
 #include "utils.hpp"
+#include "RotateSaws.h"
+#include "state.h"
 
 gd::EditorPauseLayer* m_editorPauseLayer{ nullptr };
 
@@ -95,8 +97,19 @@ void __fastcall EditorPauseLayer::keyDownH(gd::EditorPauseLayer* self, void*, en
 	else EditorPauseLayer::keyDown(self, key);
 }
 
+void __fastcall EditorPauseLayer::saveLevelH(gd::EditorPauseLayer* self) {
+	if (setting().onRotateSaws) RotateSaws::stopRotations(self->m_editorLayer);
+	if (self->m_editorLayer->m_playerState != 0)
+		self->m_editorLayer->m_editorUI->onStopPlaytest(nullptr);
+
+	EditorPauseLayer::saveLevel(self);
+
+	if (setting().onRotateSaws) RotateSaws::beginRotations(self->m_editorLayer);
+}
+
 void EditorPauseLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5aa90), EditorPauseLayer::customSetupH, reinterpret_cast<void**>(&EditorPauseLayer::customSetup));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5a5f0), EditorPauseLayer::dtorH, reinterpret_cast<void**>(&EditorPauseLayer::dtor));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5ca20), EditorPauseLayer::keyDownH, reinterpret_cast<void**>(&EditorPauseLayer::keyDown));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5c290), EditorPauseLayer::saveLevelH, reinterpret_cast<void**>(&EditorPauseLayer::saveLevel));
 }

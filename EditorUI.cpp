@@ -5,6 +5,7 @@
 #include "GlobalClipboard.h"
 #include "state.h"
 #include "patching.h"
+#include "RotateSaws.h"
 
 gd::EditorUI* editorUI = nullptr;
 
@@ -403,13 +404,15 @@ void __fastcall EditorUI::angleChangedH(gd::EditorUI* _self, void*, float angle)
 	if (setting().onHitboxBugFix) updateObjectHitbox(self);
 }
 
-//void __fastcall EditorUI::onPasteH(gd::EditorUI* self, void*, CCObject* sender) {
-//	EditorUI::onPaste(self, sender);
-//	if (setting().onHitboxBugFix) updateObjectHitbox(self);
-//}
-//
+void __fastcall EditorUI::onPasteH(gd::EditorUI* self, void*, CCObject* sender) {
+	EditorUI::onPaste(self, sender);
+	if (setting().onHitboxBugFix) updateObjectHitbox(self);
+}
+
 void __fastcall EditorUI::onDuplicateH(gd::EditorUI* self, void*, CCObject* sender) {
+	if (setting().onRotateSaws) RotateSaws::stopRotations(self->m_editorLayer);
 	EditorUI::onDuplicate(self, sender);
+	if (setting().onRotateSaws) RotateSaws::beginRotations(self->m_editorLayer);
 	if (setting().onHitboxBugFix) updateObjectHitbox(self);
 }
 
@@ -520,7 +523,7 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6b200), EditorUI::onPlaytestH, reinterpret_cast<void**>(&EditorUI::onPlaytest));
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x70390), EditorUI::angleChangedH, reinterpret_cast<void**>(&EditorUI::angleChanged));
-	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bbd0), EditorUI::onPasteH, reinterpret_cast<void**>(&EditorUI::onPaste));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bbd0), EditorUI::onPasteH, reinterpret_cast<void**>(&EditorUI::onPaste));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6b830), EditorUI::onDuplicateH, reinterpret_cast<void**>(&EditorUI::onDuplicate));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x699c0), EditorUI::onCreateObjectH, reinterpret_cast<void**>(&EditorUI::onCreateObject));
 

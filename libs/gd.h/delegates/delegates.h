@@ -165,6 +165,8 @@ namespace gd {
     class GJDropDownLayerDelegate {
         virtual void dropDownLayerWillClose(GJDropDownLayer*) {}
     };
+
+    class SpritePartDelegate {};
 }
 
 #endif

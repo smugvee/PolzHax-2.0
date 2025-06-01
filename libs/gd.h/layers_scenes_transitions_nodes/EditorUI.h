@@ -246,6 +246,10 @@ namespace gd {
 		void deactivateScaleControl() {
 			reinterpret_cast<void(__thiscall*)(EditorUI*)>(base + 0x6c2f0)(this);
 		}
+
+		void onStopPlaytest(CCObject* sender) {
+			reinterpret_cast<void(__thiscall*)(EditorUI*, cocos2d::CCObject*)>(base + 0x6b310)(this, sender);
+		}
 	};
 
 	class ColorSelectPopup : public FLAlertLayer {

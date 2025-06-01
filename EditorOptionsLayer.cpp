@@ -1,6 +1,7 @@
 #include "EditorOptionsLayer.h"
 #include "state.h"
 #include "patching.h"
+#include "RotateSaws.h"
 
 void EditorOptionsLayer::Callback::onExtraObjectInfo(CCObject*) {
 	setting().onExtraObjectInfo = !setting().onExtraObjectInfo;
@@ -24,6 +25,18 @@ void EditorOptionsLayer::Callback::onUnusedObjects(CCObject*) {
 
 auto unusedObjectsToggleSpr(CCSprite* on, CCSprite* off) {
 	return (setting().onUnusedObjects) ? on : off;
+}
+
+void EditorOptionsLayer::Callback::onPreviewAnimations(CCObject*) {
+	setting().onRotateSaws = !setting().onRotateSaws;
+	if (setting().onRotateSaws)
+		RotateSaws::beginRotations(gd::GameManager::sharedState()->getLevelEditorLayer());
+	else
+		RotateSaws::stopRotations(gd::GameManager::sharedState()->getLevelEditorLayer());
+}
+
+auto previewAnimsToggleSpr(CCSprite* on, CCSprite* off) {
+	return (setting().onRotateSaws) ? on : off;
 }
 
 void __fastcall EditorOptionsLayer::initH(gd::EditorOptionsLayer* self) {
@@ -88,4 +101,20 @@ void __fastcall EditorOptionsLayer::initH(gd::EditorOptionsLayer* self) {
 	onUnusedObjectsLabel->setAnchorPoint({ 0.f, .5f });
 	onUnusedObjectsLabel->setScale(.485f);
 	self->m_pLayer->addChild(onUnusedObjectsLabel);
+
+	auto onPreviewAnimations = gd::CCMenuItemToggler::create(
+		previewAnimsToggleSpr(toggleOn, toggleOff),
+		previewAnimsToggleSpr(toggleOff, toggleOn),
+		self,
+		menu_selector(EditorOptionsLayer::Callback::onPreviewAnimations));
+
+	onPreviewAnimations->setPosition({ 32.f, 0.f });
+	onPreviewAnimations->setScale(.8f);
+	self->m_pButtonMenu->addChild(onPreviewAnimations);
+
+	auto onPreviewAnimationsLabel = CCLabelBMFont::create("Preview rotations", "bigFont.fnt");
+	onPreviewAnimationsLabel->setPosition({ winSize.width / 2.f + 54.f, winSize.height / 2.f + 0.f });
+	onPreviewAnimationsLabel->setAnchorPoint({ 0.f, .5f });
+	onPreviewAnimationsLabel->setScale(.385f);
+	self->m_pLayer->addChild(onPreviewAnimationsLabel);
 }

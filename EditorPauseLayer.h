@@ -11,7 +11,10 @@ namespace EditorPauseLayer {
 	inline void(__thiscall* keyDown)(gd::EditorPauseLayer*, enumKeyCodes);
 	void __fastcall keyDownH(gd::EditorPauseLayer*, void*, enumKeyCodes);
 
-	class Callback {
+	inline void(__thiscall* saveLevel)(gd::EditorPauseLayer*);
+	void __fastcall saveLevelH(gd::EditorPauseLayer*);
+
+	class Callback : public gd::EditorPauseLayer {
 	public:
 		void onSaveLevel(CCObject*);
 		void onPasteString(CCObject*);

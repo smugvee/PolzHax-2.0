@@ -3,6 +3,7 @@
 #include "Hitboxes.h"
 
 #include "state.h"
+#include "RotateSaws.h"
 
 bool __fastcall LevelEditorLayer::initH(gd::LevelEditorLayer* self, void*, gd::GJGameLevel* level) {
 	if (!LevelEditorLayer::init(self, level)) return false;
@@ -59,6 +60,7 @@ void __fastcall LevelEditorLayer::updateVisibilityH(gd::LevelEditorLayer* self, 
 
 			for (int j = 0; j < objArr->count(); j++) {
 				auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+				if (!obj) return;
 				if (setting().onEnableSolidHitboxes)
 					Hitboxes::drawSolidsObjectHitbox(obj, objectDrawNode);
 				if (setting().onEnableHazardHitboxes)
@@ -107,4 +109,11 @@ void LevelEditorLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xed990), LevelEditorLayer::initH, reinterpret_cast<void**>(&LevelEditorLayer::init));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xf18b0), LevelEditorLayer::updateVisibilityH, reinterpret_cast<void**>(&LevelEditorLayer::updateVisibility));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xfb840), LevelEditorLayer::updateH, reinterpret_cast<void**>(&LevelEditorLayer::update));
+
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xfa670), LevelEditorLayer::onPlaytestH, reinterpret_cast<void**>(&LevelEditorLayer::onPlaytest));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xfadd0), LevelEditorLayer::onResumePlaytestH, reinterpret_cast<void**>(&LevelEditorLayer::onResumePlaytest));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xfad20), LevelEditorLayer::onPausePlaytestH, reinterpret_cast<void**>(&LevelEditorLayer::onPausePlaytest));
+	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xfafa0), LevelEditorLayer::onStopPlaytestH, reinterpret_cast<void**>(&LevelEditorLayer::onStopPlaytest));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xf1040), LevelEditorLayer::addSpecialH, reinterpret_cast<void**>(&LevelEditorLayer::addSpecial));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0xf0510), LevelEditorLayer::removeObjectH, reinterpret_cast<void**>(&LevelEditorLayer::removeObject));
 }

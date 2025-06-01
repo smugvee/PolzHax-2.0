@@ -132,6 +132,7 @@ struct SettingStruct {
 	bool onSelectFilter;
 	bool onExtraObjectInfo;
 	bool onUnusedObjects;
+	bool onRotateSaws;
 	
 	// Hitboxes
 	bool onHitboxes;
@@ -272,6 +273,7 @@ DEF_SCHEMA(
 	onSelectFilter,
 	onExtraObjectInfo,
 	onUnusedObjects,
+	onRotateSaws,
 
 	onHitboxes,
 	onHitboxesOnDeath,

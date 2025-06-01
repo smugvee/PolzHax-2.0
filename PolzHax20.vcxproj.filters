@@ -1521,6 +1521,9 @@
     <ClInclude Include="EditorPauseLayer.h">
       <Filter>Файлы заголовков\Layers</Filter>
     </ClInclude>
+    <ClInclude Include="RotateSaws.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1636,6 +1639,9 @@
     </ClCompile>
     <ClCompile Include="EditorPauseLayer.cpp">
       <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateSaws.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -224,7 +224,7 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 
 	const auto bar = gd::GameManager::sharedState()->getProgressBar();
 	auto size = CCDirector::sharedDirector()->getWinSize();
-	auto percentLabel = from<CCLabelBMFont*>(self, 0x25c);
+	auto percentLabel = self->m_percentLabel;
 	if (percentLabel) {
 		if (bar) {
 			percentLabel->setPosition({ size.width / 2.f + 110.2f, size.height - 8.f });
@@ -276,10 +276,6 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 					Hitboxes::drawSpecialsObjectHitbox(obj, objectDrawNode);
 			}
 		}
-	}
-
-	if (setting().onShowLayout) {
-		
 	}
 
 	return true;
@@ -363,7 +359,6 @@ void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 
 				obj->setObjectColor({ 255, 255, 255 });
 				if (obj->m_detailSprite) obj->m_detailSprite->setColor({ 255, 255, 255 });
-				if (obj->m_detailColor) obj->m_detailColor->colorID = 1011;
 				obj->m_detailColorID = 1011;
 			}
 		}

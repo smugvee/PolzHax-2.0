@@ -632,6 +632,7 @@
     <ClInclude Include="PlayLayer.h" />
     <ClInclude Include="portable-file-dialogs.h" />
     <ClInclude Include="RGBColorInputWidget.hpp" />
+    <ClInclude Include="RotateSaws.h" />
     <ClInclude Include="schema.hpp" />
     <ClInclude Include="SetGroupIDLayer.h" />
     <ClInclude Include="state.h" />
@@ -678,6 +679,7 @@
     </ClCompile>
     <ClCompile Include="PlayLayer.cpp" />
     <ClCompile Include="RGBColorInputWidget.cpp" />
+    <ClCompile Include="RotateSaws.cpp" />
     <ClCompile Include="SetGroupIDLayer.cpp" />
     <ClCompile Include="SpeedHack.cpp" />
     <ClCompile Include="state.cpp" />
