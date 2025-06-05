@@ -115,6 +115,37 @@ void __fastcall LevelEditorLayer::onStopPlaytestH(gd::LevelEditorLayer* self) {
 void __fastcall LevelEditorLayer::addSpecialH(gd::LevelEditorLayer* self, void*, gd::GameObject* obj) {
 	LevelEditorLayer::addSpecial(self, obj);
 	if (setting().onRotateSaws && RotateSaws::objectIsSaw(obj)) RotateSaws::beginRotateSaw(obj);
+
+	//if (setting().onSmartStartPos) {
+	//	switch (obj->m_objectID)
+	//	{
+	//	case 31:
+	//		m_startPositions.push_back(static_cast<gd::StartPosObject*>(obj));
+	//		break;
+	//	case 12:
+	//	case 13:
+	//	case 47:
+	//	case 111:
+	//	case 660:
+	//	case 745: m_gamemodePortals.push_back(obj);
+	//		break;
+	//	case 45:
+	//	case 46: m_mirrorPortals.push_back(obj);
+	//		break;
+	//	case 99:
+	//	case 101: m_miniPortals.push_back(obj);
+	//		break;
+	//	case 286:
+	//	case 287: m_dualPortals.push_back(obj);
+	//		break;
+	//	case 200:
+	//	case 201:
+	//	case 202:
+	//	case 203: m_speedChanges.push_back(obj);
+	//		break;
+	//	default: break;
+	//	}
+	//}
 }
 
 void __fastcall LevelEditorLayer::removeObjectH(gd::LevelEditorLayer* self, void*, gd::GameObject* obj, bool idk) {

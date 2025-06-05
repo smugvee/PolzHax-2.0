@@ -8,5 +8,8 @@ namespace CustomizeObjectLayer {
 	inline void(__thiscall* highlightSelected)(gd::CustomizeObjectLayer*, gd::ButtonSprite*);
 	void __fastcall highlightSelectedH(gd::CustomizeObjectLayer*, gd::ButtonSprite*);
 
+	inline void(__thiscall* onHSV)(gd::CustomizeObjectLayer*, CCObject*);
+	void __fastcall onHSVH(gd::CustomizeObjectLayer*, void*, CCObject*);
+
 	void mem_init();
 }

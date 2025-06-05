@@ -702,7 +702,7 @@ void imgui_render() {
 		if (ImGui::Begin("PolzHax", nullptr, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize)); {
 			ImGui::SetWindowFontScale(setting().UISize);
 
-			ImGui::Text("2.011 - v1.0.1");
+			ImGui::Text("2.011 - v1.0.2");
 
 			ImGui::Checkbox("Auto Save", &setting().onAutoSave);
 			ImGui::SameLine();

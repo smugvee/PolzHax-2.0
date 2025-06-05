@@ -72,6 +72,15 @@ void __fastcall LevelEditorLayer::updateVisibilityH(gd::LevelEditorLayer* self, 
 	}
 }
 
+namespace gd {
+	class SpriteAnimationManager : public cocos2d::CCNode {
+	public:
+		void runAnimation(std::string anim) {
+			reinterpret_cast<void(__thiscall*)(SpriteAnimationManager*, std::string)>(base + 0x2c4f0)(this, anim);
+		}
+	};
+}
+
 void __fastcall LevelEditorLayer::updateH(gd::LevelEditorLayer* self, void*, float dt) {
 	LevelEditorLayer::update(self, dt);
 
@@ -84,25 +93,59 @@ void __fastcall LevelEditorLayer::updateH(gd::LevelEditorLayer* self, void*, flo
 			if (self->m_player2) Hitboxes::drawPlayerHitbox(self->m_player2, playerDrawNode);
 		}
 	}
+
+	//for (int i = self->m_firstVisibleSection + 1; i <= self->m_lastVisibleSection - 1; i++) {
+	//	if (i < 0) continue;
+	//	if (i >= self->m_levelSections->count()) break;
+
+	//	auto objectAtIndex = self->m_levelSections->objectAtIndex(i);
+	//	auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
+
+	//	for (int j = 0; j < objArr->count(); j++) {
+	//		auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+	//		obj->updateSyncedAnimation(self->m_time);
+	//	}
+	//}
 }
 
 void __fastcall DrawGridLayer::drawH(gd::DrawGridLayer* self) {
 	DrawGridLayer::draw(self);
 
-	//for (int i = self->m_editorLayer->m_firstVisibleSection + 1; i <= self->m_editorLayer->m_lastVisibleSection - 1; i++) {
-	//	if (i < 0) continue;
-	//	if (i >= self->m_editorLayer->m_levelSections->count()) break;
+	if (setting().onDurationLines) {
+		for (int i = self->m_editorLayer->m_firstVisibleSection + 1; i <= self->m_editorLayer->m_lastVisibleSection - 1; i++) {
+			if (i < 0) continue;
+			if (i >= self->m_editorLayer->m_levelSections->count()) break;
 
-	//	auto objectAtIndex = self->m_editorLayer->m_levelSections->objectAtIndex(i);
-	//	auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
+			auto objectAtIndex = self->m_editorLayer->m_levelSections->objectAtIndex(i);
+			auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
 
-	//	for (int j = 0; j < objArr->count(); j++) {
-	//		auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
-	//		glLineWidth(2);
-	//		ccDrawColor4B(100, 100, 100, 75);
-	//		ccDrawLine(obj->getOrientedBox()->m_center, { obj->getOrientedBox()->m_center.x + 100.f, obj->getOrientedBox()->m_center.y });
-	//	}
-	//}
+			for (int j = 0; j < objArr->count(); j++) {
+				auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+
+				switch (obj->m_objectID) {
+				case 29: case 30: case 900: case 915: case 105: case 744: case 899: case 1007: case 901:
+					gd::EffectGameObject * trig = static_cast<gd::EffectGameObject*>(obj);
+					auto triggerTimePos = self->m_editorLayer->timeForXPos(trig->getPositionX());
+					auto triggerFadeEnd = self->xPosForTime(triggerTimePos + trig->m_triggerDuration);
+
+					glLineWidth(2);
+					ccDrawColor4B(100, 100, 100, 75);
+					ccDrawLine(trig->getPosition(), { triggerFadeEnd, trig->getPositionY() });
+					break;
+				}
+
+				if (obj->m_objectID == 1006) {
+					gd::EffectGameObject* pulseTrig = static_cast<gd::EffectGameObject*>(obj);
+					auto pulseTimePos = self->m_editorLayer->timeForXPos(pulseTrig->getPositionX());
+					auto pulseTimeEnd = self->xPosForTime(pulseTimePos + pulseTrig->m_fadeInTime + pulseTrig->m_holdTime + pulseTrig->m_fadeOutTime);
+
+					glLineWidth(2);
+					ccDrawColor4B(100, 100, 100, 75);
+					ccDrawLine(pulseTrig->getPosition(), { pulseTimeEnd, pulseTrig->getPositionY() });
+				}
+			}
+		}
+	}
 }
 
 void LevelEditorLayer::mem_init() {

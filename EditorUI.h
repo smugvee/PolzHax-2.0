@@ -83,6 +83,9 @@ namespace EditorUI {
 	inline CCArray* (__thiscall* pasteObjects)(gd::EditorUI*, std::string);
 	CCArray* __fastcall pasteObjectsH(gd::EditorUI*, void*, std::string);
 
+	inline void(__thiscall* updateButtons)(gd::EditorUI*);
+	void __fastcall updateButtonsH(gd::EditorUI*);
+
 	void updateObjectHitbox(gd::EditorUI*);
 
 	class Callback : public gd::EditorUI {

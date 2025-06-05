@@ -128,7 +128,9 @@ void __fastcall EditorUI::dtorH(gd::EditorUI* self) {
 }
 
 void __fastcall EditorUI::onCopyH(gd::EditorUI* self, void*, CCObject* obj) {
+	if (setting().onRotateSaws) RotateSaws::stopRotations(self->m_editorLayer);
 	EditorUI::onCopy(self, obj);
+	if (setting().onRotateSaws) RotateSaws::beginRotations(self->m_editorLayer);
 	clipboard::write(self->m_clipboard);
 }
 
@@ -335,6 +337,7 @@ void __fastcall EditorUI::updateObjectInfoLabelH(gd::EditorUI* self) {
 		ss << "Y: " << self->m_selectedObject->getPositionY() << "\n";
 		ss << "ID: " << self->m_selectedObject->m_objectID << "\n";
 		ss << "Type: " << typeToString(static_cast<gd::GameObjectType>(self->m_selectedObject->m_objectType)) << "\n";
+		ss << "Time: " << self->m_editorLayer->timeForXPos(self->m_selectedObject->getPositionX()) << "\n";
 		ss << "Addr: 0x" << std::hex << reinterpret_cast<uintptr_t>(self->m_selectedObject) << std::dec << "\n";
 
 		self->m_objectInfo->setString(ss.str().c_str());
@@ -424,6 +427,17 @@ void __fastcall EditorUI::onDuplicateH(gd::EditorUI* self, void*, CCObject* send
 void __fastcall EditorUI::onCreateObjectH(gd::EditorUI* self, void*, int id) {
 	EditorUI::onCreateObject(self, id);
 	if (setting().onHitboxBugFix) updateObjectHitbox(self);
+}
+
+void __fastcall EditorUI::updateButtonsH(gd::EditorUI* self) {
+	EditorUI::updateButtons(self);
+	auto btn = static_cast<gd::CCMenuItemSpriteExtra*>(static_cast<CCMenu*>(self->m_copyBtn->getParent())->getChildByTag(45001));
+	if (btn) {
+		if (self->m_editorLayer->m_groupIDFilter == -1) {
+			btn->setVisible(false);
+			btn->setEnabled(false);
+		}
+	}
 }
 
 void __fastcall GJScaleControl::ccTouchMovedH(gd::GJScaleControl* self, void*, CCTouch* touch, CCEvent* event) {
@@ -526,6 +540,8 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bbd0), EditorUI::onPasteH, reinterpret_cast<void**>(&EditorUI::onPaste));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6b830), EditorUI::onDuplicateH, reinterpret_cast<void**>(&EditorUI::onDuplicate));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x699c0), EditorUI::onCreateObjectH, reinterpret_cast<void**>(&EditorUI::onCreateObject));
+
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5ed00), EditorUI::updateButtonsH, reinterpret_cast<void**>(&EditorUI::updateButtons));
 
 	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bd20), EditorUI::pasteObjectsH, reinterpret_cast<void**>(&EditorUI::pasteObjects));
 

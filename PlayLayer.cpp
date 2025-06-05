@@ -15,7 +15,6 @@ std::vector<gd::StartPosObject*> m_startPositions;
 std::vector<gd::GameObject*> m_dualPortals, m_gamemodePortals, m_miniPortals, m_speedChanges, m_mirrorPortals;
 
 int currentStartPos = 0;
-bool fadeOutFlag = false;
 std::vector<gd::StartPosObject*> startPosObjects;
 
 bool inPractice;
@@ -490,6 +489,7 @@ void __fastcall PlayLayer::updateVisibilityH(gd::PlayLayer* self) {
 		self->m_player->m_audioScale = 1.f;
 		self->m_player2->m_audioScale = 1.f;
 	}
+
 }
 
 void __fastcall PlayLayer::spawnPlayer2H(gd::PlayLayer* self) {

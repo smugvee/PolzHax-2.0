@@ -225,10 +225,9 @@ namespace gd {
 			return pRet;
 		}
 
-		void updateSyncedAnimation(float dt) {
-			__asm movss xmm1, dt
-
-			reinterpret_cast<void(__fastcall*)(GameObject*, float)>(base + 0xb3170)(this, dt);
+		void updateSyncedAnimation(float f) {
+			__asm movss xmm1, f
+			reinterpret_cast<void(__thiscall*)(GameObject*)>(base + 0xb3170)(this);
 		}
 
 		void activateObject() {

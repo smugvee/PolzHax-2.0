@@ -39,6 +39,14 @@ auto previewAnimsToggleSpr(CCSprite* on, CCSprite* off) {
 	return (setting().onRotateSaws) ? on : off;
 }
 
+void EditorOptionsLayer::Callback::onDurationLines(CCObject*) {
+	setting().onDurationLines = !setting().onDurationLines;
+}
+
+auto durLinesToggleSpr(CCSprite* on, CCSprite* off) {
+	return (setting().onDurationLines) ? on : off;
+}
+
 void __fastcall EditorOptionsLayer::initH(gd::EditorOptionsLayer* self) {
 	// this patch lowers the nodes 
 	sequence_patch((uint32_t)gd::base + 0xd9cae, { 0xf0, 0xcd, 0x60, 0x00 }); // Buttons Rows
@@ -117,4 +125,20 @@ void __fastcall EditorOptionsLayer::initH(gd::EditorOptionsLayer* self) {
 	onPreviewAnimationsLabel->setAnchorPoint({ 0.f, .5f });
 	onPreviewAnimationsLabel->setScale(.385f);
 	self->m_pLayer->addChild(onPreviewAnimationsLabel);
+
+	auto onDurationLines = gd::CCMenuItemToggler::create(
+		durLinesToggleSpr(toggleOn, toggleOff),
+		durLinesToggleSpr(toggleOff, toggleOn),
+		self,
+		menu_selector(EditorOptionsLayer::Callback::onDurationLines));
+
+	onDurationLines->setPosition({ -160.f, -40.f });
+	onDurationLines->setScale(.8f);
+	self->m_pButtonMenu->addChild(onDurationLines);
+
+	auto onDurationLinesLabel = CCLabelBMFont::create("Duration Lines", "bigFont.fnt");
+	onDurationLinesLabel->setPosition({ winSize.width / 2.f - 139.f, winSize.height / 2.f - 40.f });
+	onDurationLinesLabel->setAnchorPoint({ 0.f, .5f });
+	onDurationLinesLabel->setScale(.485f);
+	self->m_pLayer->addChild(onDurationLinesLabel);
 }

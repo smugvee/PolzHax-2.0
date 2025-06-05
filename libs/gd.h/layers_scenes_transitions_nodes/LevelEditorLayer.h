@@ -88,6 +88,10 @@ namespace gd {
 		void releaseButton(int button, bool idk) {
 			reinterpret_cast<void(__thiscall*)(LevelEditorLayer*, int, bool)>(base + 0xfa570)(this, button, idk);
 		}
+
+		float timeForXPos(float pos) {
+			return reinterpret_cast<float(__thiscall*)(LevelEditorLayer*, float)>(base + 0xf7150)(this, pos);
+		}
 	};
 }
 

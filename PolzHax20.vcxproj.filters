@@ -1524,6 +1524,9 @@
     <ClInclude Include="RotateSaws.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="EditorSmartStartPos.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1643,6 +1646,12 @@
     <ClCompile Include="RotateSaws.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="HSVWidgetPopup.cpp">
+      <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorSmartStartPos.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="libs\MinHook\libMinHook-x86-v141-mtd.lib">
@@ -1651,5 +1660,10 @@
     <Library Include="libs\glew32.lib">
       <Filter>Файлы заголовков\libs</Filter>
     </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HSVWidgetPopup.h">
+      <Filter>Файлы заголовков\Layers</Filter>
+    </None>
   </ItemGroup>
 </Project>

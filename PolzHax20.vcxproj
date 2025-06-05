@@ -155,6 +155,7 @@
     <ClInclude Include="CustomizeObjectLayer.h" />
     <ClInclude Include="EditorOptionsLayer.h" />
     <ClInclude Include="EditorPauseLayer.h" />
+    <ClInclude Include="EditorSmartStartPos.h" />
     <ClInclude Include="EditorUI.h" />
     <ClInclude Include="EndLevelLayer.h" />
     <ClInclude Include="explorer.h" />
@@ -649,12 +650,14 @@
     <ClCompile Include="CustomMoveButtons.cpp" />
     <ClCompile Include="EditorOptionsLayer.cpp" />
     <ClCompile Include="EditorPauseLayer.cpp" />
+    <ClCompile Include="EditorSmartStartPos.cpp" />
     <ClCompile Include="EditorUI.cpp" />
     <ClCompile Include="EndLevelLayer.cpp" />
     <ClCompile Include="explorer.cpp" />
     <ClCompile Include="GlobalClipboard.cpp" />
     <ClCompile Include="GlobalClipboard.h" />
     <ClCompile Include="Hitboxes.cpp" />
+    <ClCompile Include="HSVWidgetPopup.cpp" />
     <ClCompile Include="InfoLayer.cpp" />
     <ClCompile Include="LevelEditorLayer.cpp" />
     <ClCompile Include="libs\imgui-hook\imgui-hook.cpp" />
@@ -687,6 +690,9 @@
   <ItemGroup>
     <Library Include="libs\glew32.lib" />
     <Library Include="libs\MinHook\libMinHook-x86-v141-mtd.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="HSVWidgetPopup.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,7 +15,12 @@ namespace gd {
 	class ButtonSprite;
 	class ColorChannelSprite;
 
-	class GJRotationControl {};
+	class GJRotationControl : public cocos2d::CCLayer {
+	public:
+		void finishTouch() {
+			reinterpret_cast<void(__fastcall*)(GJRotationControl*)>(base + 0x73fa0)(this);
+		}
+	};
 	class GJScaleControl {};
 	class BoomScrollLayer : public cocos2d::CCNode {};
 	class ButtonPage : public cocos2d::CCNode {};
@@ -240,7 +245,11 @@ namespace gd {
 		}
 
 		void deactivateRotationControl() {
-			reinterpret_cast<void(__thiscall*)(EditorUI*)>(base + 0x73fa0)(this);
+			m_rotationTouchID = -1;
+			if (m_rotationControl->isVisible()) {
+				m_rotationControl->setVisible(false);
+				m_rotationControl->finishTouch();
+			}
 		}
 
 		void deactivateScaleControl() {
@@ -321,6 +330,10 @@ namespace gd {
 
 		void onSelectColor(cocos2d::CCObject* obj) {
 			reinterpret_cast<void(__thiscall*)(CustomizeObjectLayer*, cocos2d::CCObject*)>(base + 0x45920)(this, obj);
+		}
+
+		int getActiveMode(bool unknown) {
+			return reinterpret_cast<int(__thiscall*)(CustomizeObjectLayer*, bool)>(base + 0x45320)(this, unknown);
 		}
 	};
 

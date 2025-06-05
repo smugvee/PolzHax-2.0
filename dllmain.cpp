@@ -19,6 +19,7 @@
 #include "LevelEditorLayer.h"
 #include "EndLevelLayer.h"
 #include "EditorPauseLayer.h"
+#include "HSVWidgetPopup.h"
 
 #include "LevelShare.h"
 #include "nfd.h"
@@ -337,8 +338,8 @@ DWORD WINAPI my_thread(void* hModule) {
 	sequence_patch((uint32_t)gd::base + 0xfefdc, { 0x90, 0x90 }); // Lines editor fix
 	sequence_patch((uint32_t)gd::base + 0x1d13f6, { 0x0a }); // "EL: %s\n"
 
-	//AllocConsole();
-	//freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
+	AllocConsole();
+	freopen_s(reinterpret_cast<FILE**>(stdout), "CONOUT$", "w", stdout);
 
 	if (MH_Initialize() != MH_OK) {
 		FreeLibraryAndExitThread(reinterpret_cast<HMODULE>(hModule), 0);
@@ -356,6 +357,7 @@ DWORD WINAPI my_thread(void* hModule) {
 	CustomizeObjectLayer::mem_init();
 	EditButtonBar::mem_init();
 	LevelEditorLayer::mem_init();
+	HSVWidgetPopup::mem_init();
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9afc0), GameManager_isIconUnlockedH, reinterpret_cast<void**>(&GameManager_isIconUnlocked));
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x9b2a0), GameManager_isColorUnlockedH, reinterpret_cast<void**>(&GameManager_isColorUnlocked));

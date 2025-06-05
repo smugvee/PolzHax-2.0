@@ -133,6 +133,7 @@ struct SettingStruct {
 	bool onExtraObjectInfo;
 	bool onUnusedObjects;
 	bool onRotateSaws;
+	bool onDurationLines;
 	
 	// Hitboxes
 	bool onHitboxes;
@@ -274,6 +275,7 @@ DEF_SCHEMA(
 	onExtraObjectInfo,
 	onUnusedObjects,
 	onRotateSaws,
+	onDurationLines,
 
 	onHitboxes,
 	onHitboxesOnDeath,

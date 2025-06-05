@@ -17,5 +17,6 @@ namespace EditorOptionsLayer {
 		void onExtraObjectInfo(CCObject*);
 		void onUnusedObjects(CCObject*);
 		void onPreviewAnimations(CCObject*);
+		void onDurationLines(CCObject*);
 	};
 }

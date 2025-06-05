@@ -33,11 +33,9 @@ namespace gd {
 		PAD(0x2)
 		float m_activeGridNodeSize; // 0x190
 
-		float timeForXPos(float pos) {
-			return reinterpret_cast<float(__vectorcall*)(
-				float, float, float, float, float, float,
-				DrawGridLayer*
-				)>(base + 0xfdff0)(0.f, pos, 0.f, 0.f, 0.f, 0.f, this);
+		float xPosForTime(float time) {
+			__asm movss xmm1, time
+			return reinterpret_cast<float(__vectorcall*)(DrawGridLayer*)>(base + 0xfdff0)(this);
 		}
 	};
 }

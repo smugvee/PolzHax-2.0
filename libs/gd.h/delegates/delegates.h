@@ -11,8 +11,8 @@ namespace gd {
     class SongInfoObject;
     class GJSpecialColorSelect;
     class BoomScrollLayer;
-    class HSVWidgetPopup : public cocos2d::CCNode {};
     class GJDropDownLayer;
+    class HSVWidgetPopup;
 
     enum GJSongError {
         kGJSongErrorUnknown = 0,

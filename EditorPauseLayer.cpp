@@ -2,6 +2,7 @@
 #include "utils.hpp"
 #include "RotateSaws.h"
 #include "state.h"
+#include "patching.h"
 
 gd::EditorPauseLayer* m_editorPauseLayer{ nullptr };
 
@@ -33,15 +34,21 @@ void EditorPauseLayer::Callback::onSelectAll(CCObject*) {
 	auto editorUI = levelEditor->m_editorUI;
 
 	auto objs = CCArray::create();
-	for (int i = 0; i < levelEditor->m_levelSections->count(); i++)
-		objs->addObjectsFromArray(reinterpret_cast<CCArray*>(levelEditor->m_levelSections->objectAtIndex(i)));
+	for (int i = 0; i <= levelEditor->m_levelSections->count(); i++) {
+		if (i < 0) continue;
+		if (i >= levelEditor->m_levelSections->count()) break;
 
-	auto objs2 = CCArray::create();
-	for (int i = 0; i < objs2->count(); i++)
-		if (reinterpret_cast<gd::GameObject*>(objs->objectAtIndex(i))->m_editorLayer == levelEditor->m_groupIDFilter || levelEditor->m_groupIDFilter == -1)
-			objs2->addObject(objs->objectAtIndex(i));
+		auto objectAtIndex = levelEditor->m_levelSections->objectAtIndex(i);
+		auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
 
-	editorUI->selectObjects(objs2);
+		for (int j = 0; j < objArr->count(); j++) {
+			auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
+			if (obj->m_editorLayer == m_editorLayer->m_groupIDFilter || (obj->m_editorLayer2 == levelEditor->m_groupIDFilter && obj->m_editorLayer2 != 0) || levelEditor->m_groupIDFilter == -1)
+				objs->addObject(obj);
+		}
+	}
+
+	editorUI->selectObjects(objs);
 	editorUI->updateButtons();
 	editorUI->deactivateRotationControl();
 	editorUI->deactivateScaleControl();
@@ -49,6 +56,8 @@ void EditorPauseLayer::Callback::onSelectAll(CCObject*) {
 }
 
 void __fastcall EditorPauseLayer::customSetupH(gd::EditorPauseLayer* self) {
+	sequence_patch((uint32_t)gd::base + 0x5b803, { 0x00, 0x00, 0xa0, 0x42 }); // Keys button
+	sequence_patch((uint32_t)gd::base + 0x5b882, { 0x00, 0x00, 0xf0, 0x42 }); // Options button
 	EditorPauseLayer::customSetup(self);
 	m_editorPauseLayer = self;
 
@@ -85,6 +94,11 @@ void __fastcall EditorPauseLayer::customSetupH(gd::EditorPauseLayer* self) {
 	onSettings->setPosition(actionsMenu->convertToNodeSpace({ winSize.width - 32.f, winSize.height - 66.f }));
 
 	actionsMenu->addChild(onSettings);
+
+	auto onSelectAllSpr = gd::ButtonSprite::create("Select\nAll", 0x32, true, "bigFont.fnt", "GJ_button_04.png", 30.f, .4f);
+	auto onSelectAll = gd::CCMenuItemSpriteExtra::create(onSelectAllSpr, self, menu_selector(EditorPauseLayer::Callback::onSelectAll));
+	onSelectAll->setPosition(actionsMenu->convertToNodeSpace({ director->getScreenRight() - 50.f, director->getScreenBottom() + 110.f }));
+	actionsMenu->addChild(onSelectAll);
 }
 
 void __fastcall EditorPauseLayer::dtorH(gd::EditorPauseLayer* self) {

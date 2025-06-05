@@ -92,4 +92,5 @@ bool __fastcall CustomizeObjectLayer::initH(gd::CustomizeObjectLayer* self, void
 
 void CustomizeObjectLayer::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x41c60), CustomizeObjectLayer::initH, reinterpret_cast<void**>(&CustomizeObjectLayer::init));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x44860), CustomizeObjectLayer::onHSVH, reinterpret_cast<void**>(&CustomizeObjectLayer::onHSV));
 }
