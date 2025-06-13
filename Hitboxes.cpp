@@ -70,13 +70,14 @@ void Hitboxes::drawCircleObj(CCDrawNode* drawer, gd::GameObject* ob, ccColor4F c
 
 void Hitboxes::drawPlayerHitbox(gd::PlayerObject* player, CCDrawNode* drawNode)
 {
+    auto rect = player->getObjectRect();
     CCPoint pointRectangle[4];
     CCRect rectRectangle;
     CCRect rectRectangleSmall;
-    pointRectangle[0] = player->getOrientedBox()->m_p1_1;
-    pointRectangle[1] = player->getOrientedBox()->m_p1_2;
-    pointRectangle[2] = player->getOrientedBox()->m_p1_3;
-    pointRectangle[3] = player->getOrientedBox()->m_p1_4;
+    pointRectangle[0] = CCPointMake(rect.getMinX(), rect.getMinY());
+    pointRectangle[1] = CCPointMake(rect.getMinX(), rect.getMaxY());
+    pointRectangle[2] = CCPointMake(rect.getMaxX(), rect.getMaxY());
+    pointRectangle[3] = CCPointMake(rect.getMaxX(), rect.getMinY());
 
     auto p1x = pointRectangle[0].x - pointRectangle[1].x;
     auto p1y = pointRectangle[0].y - pointRectangle[1].y;
@@ -92,8 +93,17 @@ void Hitboxes::drawPlayerHitbox(gd::PlayerObject* player, CCDrawNode* drawNode)
     rectRectangle.setRect(player->getPositionX() - distance1 / 2, player->getPositionY() - distance2 / 2, distance1, distance2);
     rectRectangleSmall.setRect(player->getPositionX() - distanceS1 / 2, player->getPositionY() - distanceS2 / 2, distanceS1, distanceS2);
 
+    CCPoint vert[4];
+
+    if (player->getOrientedBox()) {
+        vert[0] = player->getOrientedBox()->m_p1_1;
+        vert[1] = player->getOrientedBox()->m_p1_2;
+        vert[2] = player->getOrientedBox()->m_p1_3;
+        vert[3] = player->getOrientedBox()->m_p1_4;
+    }
+
     Hitboxes::drawRect(drawNode, rectRectangleSmall, { setting().solidHitboxesR / 255.f, setting().solidHitboxesG / 255.f, setting().solidHitboxesB / 255.f, setting().hitboxesOpacity / 255.f });
-    drawNode->drawPolygon(pointRectangle, 4, { 0, 0, 0, 0 }, 0.5, { (setting().hazardHitboxesR / 255.f) / 2.f, (setting().hazardHitboxesG / 255.f) / 2.f, (setting().hazardHitboxesB / 255.f) / 2.f, setting().hitboxesOpacity / 255.f });
+    drawNode->drawPolygon(vert, 4, { 0, 0, 0, 0 }, 0.5, { (setting().hazardHitboxesR / 255.f) / 2.f, (setting().hazardHitboxesG / 255.f) / 2.f, (setting().hazardHitboxesB / 255.f) / 2.f, setting().hitboxesOpacity / 255.f });
     Hitboxes::drawRect(drawNode, rectRectangle, { setting().hazardHitboxesR / 255.f, setting().hazardHitboxesG / 255.f, setting().hazardHitboxesB / 255.f, setting().hitboxesOpacity / 255.f });
 }
 

@@ -86,6 +86,9 @@ namespace EditorUI {
 	inline void(__thiscall* updateButtons)(gd::EditorUI*);
 	void __fastcall updateButtonsH(gd::EditorUI*);
 
+	inline void(__thiscall* scaleObjects)(gd::EditorUI*, CCArray*, CCPoint);
+	void __fastcall scaleObjectsH(gd::EditorUI*, void*, CCArray*, CCPoint);
+
 	void updateObjectHitbox(gd::EditorUI*);
 
 	class Callback : public gd::EditorUI {

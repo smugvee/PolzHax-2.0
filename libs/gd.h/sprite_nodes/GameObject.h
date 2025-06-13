@@ -233,6 +233,10 @@ namespace gd {
 		void activateObject() {
 			reinterpret_cast<void(__fastcall*)(GameObject*)>(base + 0xa5800)(this);
 		}
+
+		void setRScale(float scale) {
+			reinterpret_cast<void(__thiscall*)(GameObject*, float)>(base + 0xb1c40)(this, scale);
+		}
 	};
 
 	class AnimatedGameObject : public GameObject, AnimatedSpriteDelegate, SpritePartDelegate {

@@ -89,6 +89,9 @@ namespace gd {
 #include "layers_scenes_transitions_nodes/DrawGridLayer.h"
 #include "layers_scenes_transitions_nodes/SetGroupIDLayer.h"
 #include "layers_scenes_transitions_nodes/EndLevelLayer.h"
+#include "layers_scenes_transitions_nodes/LevelInfoLayer.h"
+#include "layers_scenes_transitions_nodes/CustomSongWidget.h"
+#include "layers_scenes_transitions_nodes/LevelBrowserLayer.h"
 
 #include "scroll_nodes/CCContentLayer.h"
 #include "scroll_nodes/CCIndexPath.h"
@@ -132,5 +135,6 @@ namespace gd {
 #include "other_nodes/OBB2D.h"
 #include "other_nodes/UndoObject.h"
 #include "other_nodes/LevelTools.h"
+#include "other_nodes/GJSearchObject.h"
 
 #endif

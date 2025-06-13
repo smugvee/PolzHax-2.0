@@ -36,6 +36,9 @@ namespace gd {
             return reinterpret_cast<void(__thiscall*)(GameLevelManager*, char const*)>(gd::base + 0x82070)(this, key);
         }
 
+        const char* getLevelKey(int levelID) {
+            return cocos2d::CCString::createWithFormat("%i", levelID)->getCString();
+        }
     };
 }
 

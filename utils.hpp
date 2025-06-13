@@ -390,3 +390,12 @@ inline void safeModeOFF() {
 	sequence_patch((uint32_t)gd::base + 0x16c87b, { 0x0f, 0x85, 0x44, 0x03, 0x00, 0x00 });
 	sequence_patch((uint32_t)gd::base + 0x16c8fd, { 0x0f, 0x85, 0xc2, 0x02, 0x00, 0x00 });
 }
+
+inline std::vector<uint8_t> intToBytes(int paramInt, bool r = true) {
+	std::vector<uint8_t> arrayOfByte(4);
+	for (int i = 0; i < 4; i++)
+		arrayOfByte[3 - i] = (paramInt >> (i * 8));
+
+	if (r) std::reverse(arrayOfByte.begin(), arrayOfByte.end());
+	return arrayOfByte;
+}

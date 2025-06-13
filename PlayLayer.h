@@ -46,6 +46,8 @@ namespace PlayLayer {
 
 	void updateSameDualColor(gd::PlayLayer*);
 
+	void updateCheatIndicator(gd::PlayLayer*);
+
 	void onPrevStartPos();
 	void onNextStartPos();
 

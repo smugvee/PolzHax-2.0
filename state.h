@@ -61,6 +61,7 @@ struct SettingStruct {
 	bool onNoPulse;
 	bool onNoRespawnFlash;
 	bool onNoWavePulse;
+	bool onNoWaveTrailBehind;
 	bool onPracticePulse;
 	bool onSameDualColor;
 	bool onSolidWaveTrail;
@@ -162,6 +163,9 @@ struct SettingStruct {
 	int levelGColorR = 0;
 	int levelGColorG = 102;
 	int levelGColorB = 255;
+
+	int groupIDOffset;
+	bool onDeveloperMode;
 };
 
 LayersStruct& layers();
@@ -206,6 +210,7 @@ DEF_SCHEMA(
 	onNoPulse,
 	onNoRespawnFlash,
 	onNoWavePulse,
+	onNoWaveTrailBehind,
 	onPracticePulse,
 	onSameDualColor,
 	onSolidWaveTrail,
@@ -301,5 +306,7 @@ DEF_SCHEMA(
 	levelBGColorB,
 	levelGColorR,
 	levelGColorG,
-	levelGColorB
+	levelGColorB,
+
+	onDeveloperMode
 )

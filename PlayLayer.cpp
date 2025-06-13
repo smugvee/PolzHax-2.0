@@ -184,6 +184,19 @@ void PlayLayer::updateSameDualColor(gd::PlayLayer* self) {
 	////}
 }
 
+void PlayLayer::updateCheatIndicator(gd::PlayLayer* self) {
+	auto cheatIndicator = static_cast<CCLabelBMFont*>(self->m_uiLayer->getChildByTag(4900));
+	if (cheatIndicator) {
+		auto fontSprite = reinterpret_cast<CCSprite*>(cheatIndicator->getChildByTag(0));
+		if (fontSprite) {
+			if ((setting().cheatsCount != 0) && !setting().isSafeMode) fontSprite->setColor({ 255, 0, 0 });
+			else if ((setting().cheatsCount != 0) && setting().isSafeMode) fontSprite->setColor({ 255, 127, 0 });
+			else if ((setting().cheatsCount == 0) && (setting().isSafeMode || setting().onSafeMode)) fontSprite->setColor({ 255, 255, 0 });
+			else fontSprite->setColor({ 0, 255, 0 });
+		}
+	}
+}
+
 bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* level) {
 	startPosObjects.clear();
 	if (!PlayLayer::init(self, level)) return false;
@@ -277,6 +290,18 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 		}
 	}
 
+	if (setting().onDeveloperMode) {
+		auto cheatIndicator = CCLabelBMFont::create(".", "bigFont.fnt");
+		cheatIndicator->setAnchorPoint({ 0.f, 1.f });
+		cheatIndicator->setScale(.35f);
+		cheatIndicator->getChildByTag(0)->setScale(2.5f);
+		cheatIndicator->getChildByTag(0)->setAnchorPoint({ 0.f, .25f });
+		cheatIndicator->setPosition(director->getScreenLeft(), director->getScreenTop());
+		self->m_uiLayer->addChild(cheatIndicator, 99, 4900);
+
+		updateCheatIndicator(self);
+	}
+
 	return true;
 }
 
@@ -296,7 +321,7 @@ void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 	self->m_player->setVisible(!setting().onHidePlayer);
 	self->m_player2->setVisible(!setting().onHidePlayer);
 
-	if (setting().onAutoSafeMode && setting().cheatsCount > 0) safeModeON(), setting().isSafeMode = true;
+	if ((setting().onAutoSafeMode || setting().onSafeMode) && setting().cheatsCount > 0) safeModeON(), setting().isSafeMode = true;
 	else if (!setting().onSafeMode) safeModeOFF(), setting().isSafeMode = false;
 
 	if (setting().onLockCursor && !setting().show && !self->m_hasLevelCompletedMenu && !self->m_isDead) {
@@ -361,6 +386,10 @@ void __fastcall PlayLayer::updateH(gd::PlayLayer* self, void*, float dt) {
 				obj->m_detailColorID = 1011;
 			}
 		}
+	}
+
+	if (setting().onDeveloperMode) {
+		updateCheatIndicator(self);
 	}
 }
 
@@ -489,12 +518,14 @@ void __fastcall PlayLayer::updateVisibilityH(gd::PlayLayer* self) {
 		self->m_player->m_audioScale = 1.f;
 		self->m_player2->m_audioScale = 1.f;
 	}
-
 }
 
 void __fastcall PlayLayer::spawnPlayer2H(gd::PlayLayer* self) {
 	PlayLayer::spawnPlayer2(self);
 	if (setting().onInvisibleDualFix) self->m_player2->setVisible(true);
+}
+
+static inline void updateSwing(gd::PlayerObject* self, const float dt) {
 }
 
 void PlayLayer::mem_init() {

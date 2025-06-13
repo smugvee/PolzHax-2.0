@@ -48,10 +48,6 @@ auto durLinesToggleSpr(CCSprite* on, CCSprite* off) {
 }
 
 void __fastcall EditorOptionsLayer::initH(gd::EditorOptionsLayer* self) {
-	// this patch lowers the nodes 
-	sequence_patch((uint32_t)gd::base + 0xd9cae, { 0xf0, 0xcd, 0x60, 0x00 }); // Buttons Rows
-	sequence_patch((uint32_t)gd::base + 0xd9a48, { 0xf0, 0xcd, 0x60, 0x00 }); // Buttons Per Row
-
 	EditorOptionsLayer::init(self);
 
 	std::cout << "EditorOptionsLayer::init" << std::endl;

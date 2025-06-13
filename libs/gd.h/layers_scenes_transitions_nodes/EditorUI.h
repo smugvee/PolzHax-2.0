@@ -14,6 +14,7 @@ namespace gd {
 	class CreateMenuItem;
 	class ButtonSprite;
 	class ColorChannelSprite;
+	class UndoObject;
 
 	class GJRotationControl : public cocos2d::CCLayer {
 	public:
@@ -65,14 +66,18 @@ namespace gd {
 		}
 	};
 
-	class EditorUI : public cocos2d::CCLayer {
+	class EditorUI : public cocos2d::CCLayer, FLAlertLayerProtocol, ColorSelectDelegate, GJRotationControlDelegate, GJScaleControlDelegate, MusicDownloadDelegate {
 	public:
-		PAD(20)
 		EditButtonBar* m_customObjButtonBar; // 0x12c
-		PAD(4)
+		PAD(4) // something related to FLAlerts
 		cocos2d::CCArray* m_hideableUIElement; // 0x134
 		float m_activeGridSize; // 0x138
-		PAD(20)
+		int m_playerTouchID; // 0x13c
+		int m_player2TouchID; // 0x140
+		bool m_playtestMusic; // 0x144
+		PAD(0x3)
+		UndoObject* m_storedUndoObject; // 0x148
+		PAD(4)
 		int m_rotationTouchID; // 0x150
 		int m_scaleTouchID; // 0x154
 		int m_touchID; // 0x158
@@ -259,28 +264,72 @@ namespace gd {
 		void onStopPlaytest(CCObject* sender) {
 			reinterpret_cast<void(__thiscall*)(EditorUI*, cocos2d::CCObject*)>(base + 0x6b310)(this, sender);
 		}
+
+		void moveObject(GameObject* obj, cocos2d::CCPoint position) {
+			reinterpret_cast<void(__thiscall*)(EditorUI*, GameObject*, cocos2d::CCPoint)>(base + 0x6e330)(this, obj, position);
+		}
+	};
+
+	class ConfigureHSVWidget : public cocos2d::CCNode {
+	public:
+		cocos2d::CCLabelBMFont* m_hueLabel; // 0xe8
+		cocos2d::CCLabelBMFont* m_saturationLabel; // 0xec
+		cocos2d::CCLabelBMFont* m_brightnessLabel; // 0xf0
+		Slider* m_hueSlider; // 0xf4
+		Slider* m_saturationSlider; // 0xf8
+		Slider* m_brightnessSlider; // 0xfc
+		cocos2d::ccHSVValue m_value; // 0x100
+	};
+
+	class HSVWidgetPopup : public FLAlertLayer {
+	public:
+		ConfigureHSVWidget* m_configureWidget;
+		HSVWidgetPopupDelegate* m_delegate;
 	};
 
 	class ColorSelectPopup : public FLAlertLayer {
 	public:
 		PAD(12)
 		cocos2d::extension::CCControlColourPicker* m_colorPicker; // 0x1d4
-		PAD(8)
-		void* m_fadeTimeSlider; // 0x1e0
-		void* m_opacitySlider; // 0x1e4
+		PAD(4)
+		cocos2d::CCLabelBMFont* m_opacityLabel; // 0x1dc
+		Slider* m_fadeTimeSlider; // 0x1e0
+		Slider* m_opacitySlider; // 0x1e4
 		EffectGameObject* m_targetObject; // 0x1e8
 		cocos2d::CCArray* m_targetObjects; // 0x1ec
 		CCMenuItemToggler* m_playerColorToggler; // 0x1f0
 		CCMenuItemToggler* m_playerColor2Toggler; // 0x1f4
 		cocos2d::ccColor3B m_lastColor; // 0x1f8
+		PAD(0x1)
 		cocos2d::CCSprite* m_colorOldRef; // 0x1fc
 		cocos2d::CCSprite* m_colorNewRef; // 0x200
 		cocos2d::ccColor3B m_selectedColor; // 0x204
+		PAD(0x1)
 		void* m_colorSetupLayer; // 0x208
 		float m_fadeTime; // 0x20c
 		int m_playerColor; // 0x210
 		bool m_isBlending; // 0x214
+		PAD(0x3)
 		float m_opacity; // 0x218
+		ColorAction* m_colorAction; // 0x21ñ
+		CCTextInputNode* m_colorIDInput; // 0x220
+		bool m_unkBool; // 0x224 // activates when moving slider?
+		bool m_touchTriggered; // 0x225
+		bool m_hasTintGround; // 0x226
+		bool m_tintGround; // 0x227
+		bool m_hasOpacity; // 0x228
+		bool m_isColorTrigger; // 0x229 applied only for 899 object
+		PAD(0x2)
+		int m_colorID; // 0x22c
+		bool m_unkBool2; // 0x230
+		PAD(0x3)
+		int m_copyColorID; // 0x234
+		bool m_copyOpacity; // 0x238
+		PAD(0x3)
+		ConfigureHSVWidget* m_hsvWidget; // 0x23c
+		PAD(16)
+
+
 
 		auto getPickerColor() { return *reinterpret_cast<cocos2d::ccColor3B*>(reinterpret_cast<uintptr_t>(m_colorPicker) + 0x140); }
 		void setPickerColor(cocos2d::ccColor3B color) {

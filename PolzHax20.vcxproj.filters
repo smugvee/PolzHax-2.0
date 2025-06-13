@@ -1527,6 +1527,30 @@
     <ClInclude Include="EditorSmartStartPos.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="LevelInfoLayer.h">
+      <Filter>Файлы заголовков\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\LevelInfoLayer.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\CustomSongWidget.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerObject.h">
+      <Filter>Файлы заголовков\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="FindLevelPopup.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\layers_scenes_transitions_nodes\LevelBrowserLayer.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\gd.h\other_nodes\GJSearchObject.h">
+      <Filter>Файлы заголовков\libs\gd.h</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorLiveEditPopup.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -1650,6 +1674,18 @@
       <Filter>Исходные файлы\Layers</Filter>
     </ClCompile>
     <ClCompile Include="EditorSmartStartPos.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelInfoLayer.cpp">
+      <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerObject.cpp">
+      <Filter>Исходные файлы\Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="FindLevelPopup.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorLiveEditPopup.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

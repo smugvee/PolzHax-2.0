@@ -93,19 +93,6 @@ void __fastcall LevelEditorLayer::updateH(gd::LevelEditorLayer* self, void*, flo
 			if (self->m_player2) Hitboxes::drawPlayerHitbox(self->m_player2, playerDrawNode);
 		}
 	}
-
-	//for (int i = self->m_firstVisibleSection + 1; i <= self->m_lastVisibleSection - 1; i++) {
-	//	if (i < 0) continue;
-	//	if (i >= self->m_levelSections->count()) break;
-
-	//	auto objectAtIndex = self->m_levelSections->objectAtIndex(i);
-	//	auto objArr = reinterpret_cast<CCArray*>(objectAtIndex);
-
-	//	for (int j = 0; j < objArr->count(); j++) {
-	//		auto obj = reinterpret_cast<gd::GameObject*>(objArr->objectAtIndex(j));
-	//		obj->updateSyncedAnimation(self->m_time);
-	//	}
-	//}
 }
 
 void __fastcall DrawGridLayer::drawH(gd::DrawGridLayer* self) {

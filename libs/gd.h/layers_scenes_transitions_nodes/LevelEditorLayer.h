@@ -92,6 +92,10 @@ namespace gd {
 		float timeForXPos(float pos) {
 			return reinterpret_cast<float(__thiscall*)(LevelEditorLayer*, float)>(base + 0xf7150)(this, pos);
 		}
+
+		int getNextFreeGroupID(cocos2d::CCArray* objs) {
+			return reinterpret_cast<int(__thiscall*)(LevelEditorLayer*, cocos2d::CCArray*)>(base + 0xf2e40)(this, objs);
+		}
 	};
 }
 

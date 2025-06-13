@@ -67,12 +67,13 @@ void EditorUI::Callback::onAllEditorLayer(CCObject*) {
 
 bool __fastcall EditorUI::initH(gd::EditorUI* self, void*, gd::LevelEditorLayer* editorLayer) {
 	editorUI = self;
+	setting().groupIDOffset = 1;
 	if (!EditorUI::init(self, editorLayer)) return false;
 
 	auto director = CCDirector::sharedDirector();
 	auto winSize = director->getWinSize();
 
-	if (setting().onHideUI) self->setVisible(!setting().onHideUI);
+	self->setVisible(!setting().onHideUI);
 
 	loadClipboard(self);
 
@@ -440,6 +441,30 @@ void __fastcall EditorUI::updateButtonsH(gd::EditorUI* self) {
 	}
 }
 
+void __fastcall EditorUI::scaleObjectsH(gd::EditorUI* self, void*, CCArray* objs, CCPoint center) { // HJFod / Alk1m123 (altalk23)
+	float scale;
+	__asm movss scale, xmm2;
+	CCObject* obj;
+
+	if (scale > -.01f && scale < .01f)
+		scale = std::copysign(.01f, scale);
+
+	CCARRAY_FOREACH(objs, obj) {
+		auto object = reinterpret_cast<gd::GameObject*>(obj);
+		auto pos = object->getPosition();
+		float newScale = from<float>(object, 0x394) * scale;
+		float newMultiplier = newScale / object->m_scale;
+		auto newPos = (pos - center) * newMultiplier + (center - pos);
+
+		object->m_scale = newScale;
+		object->setRScale(1.f);
+		from<bool>(object, 0x274) = true;
+		object->m_isObjectRectDirty = true;
+
+		self->moveObject(object, newPos);
+	}
+}
+
 void __fastcall GJScaleControl::ccTouchMovedH(gd::GJScaleControl* self, void*, CCTouch* touch, CCEvent* event) {
 	GJScaleControl::ccTouchMoved(self, touch, event);
 	gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->updateObjectInfoLabel();
@@ -542,6 +567,7 @@ void EditorUI::mem_init() {
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x699c0), EditorUI::onCreateObjectH, reinterpret_cast<void**>(&EditorUI::onCreateObject));
 
 	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x5ed00), EditorUI::updateButtonsH, reinterpret_cast<void**>(&EditorUI::updateButtons));
+	MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6f6e0), EditorUI::scaleObjectsH, reinterpret_cast<void**>(&EditorUI::scaleObjects));
 
 	//MH_CreateHook(reinterpret_cast<void*>(gd::base + 0x6bd20), EditorUI::pasteObjectsH, reinterpret_cast<void**>(&EditorUI::pasteObjects));
 

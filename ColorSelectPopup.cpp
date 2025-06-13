@@ -1,7 +1,17 @@
 #include "ColorSelectPopup.h"
 #include "RGBColorInputWidget.hpp"
+#include "ColorLiveEditPopup.h"
+#include "state.h"
 
 RGBColorInputWidget* m_colorInputWidget{ nullptr };
+
+void ColorSelectPopup::Callback::onDefaultColor(CCObject* obj) {
+
+}
+
+void ColorSelectPopup::Callback::onLiveEdit(CCObject*) {
+	//gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->addChild(ColorLiveEditPopup::create(this->m_colorAction->m_colorID));
+}
 
 bool __fastcall ColorSelectPopup::initH(gd::ColorSelectPopup* self, void*, gd::GameObject* obj, CCArray* objs, void* colorAction) {
 	if (!ColorSelectPopup::init(self, obj, objs, colorAction)) return false;
@@ -15,6 +25,20 @@ bool __fastcall ColorSelectPopup::initH(gd::ColorSelectPopup* self, void*, gd::G
 	m_colorInputWidget->setPosition({ winSize.width / 2.f - 155.f, winSize.height / 2.f + 34.f });
 
 	m_colorInputWidget->setVisible(!from<bool>(self, 0x271));
+
+	if (setting().onDeveloperMode) {
+		auto liveEditSpr = extension::CCScale9Sprite::create("square02_small.png");
+		liveEditSpr->setOpacity(100);
+		liveEditSpr->setScale(.3f);
+		auto liveEditSprPlus = CCLabelBMFont::create("+", "bigFont.fnt");
+		liveEditSprPlus->setPosition(liveEditSpr->getContentSize().width / 2.f + 2.f, liveEditSpr->getContentSize().height / 2.f + 2.f);
+		liveEditSprPlus->setScale(1.4f);
+		liveEditSpr->addChild(liveEditSprPlus);
+
+		auto onLiveEdit = gd::CCMenuItemSpriteExtra::create(liveEditSpr, self, menu_selector(ColorSelectPopup::Callback::onLiveEdit));
+		onLiveEdit->setPosition(90.f, 260.f);
+		self->m_pButtonMenu->addChild(onLiveEdit, 0, 9807);
+	}
 
 	return true;
 }

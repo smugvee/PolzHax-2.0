@@ -9,28 +9,14 @@ namespace gd {
 			__asm add esp, 0x14
 		}
 	}
-
-	class ConfigureHSVWidget : public cocos2d::CCNode {
-	public:
-		cocos2d::CCLabelBMFont* m_hueLabel; // 0xe8
-		cocos2d::CCLabelBMFont* m_saturationLabel; // 0xec
-		cocos2d::CCLabelBMFont* m_brightnessLabel; // 0xf0
-		Slider* m_hueSlider; // 0xf4
-		Slider* m_saturationSlider; // 0xf8
-		Slider* m_brightnessSlider; // 0xfc
-		cocos2d::ccHSVValue m_value; // 0x100
-	};
-
-	class HSVWidgetPopup : public FLAlertLayer {
-	public:
-		ConfigureHSVWidget* m_configureWidget;
-		HSVWidgetPopupDelegate* m_delegate;
-	};
 }
 
 namespace HSVWidgetPopup {
 	inline bool(__thiscall* init)(gd::HSVWidgetPopup*, gd::HSVWidgetPopupDelegate*, ccHSVValue, std::string);
 	bool __fastcall initH(gd::HSVWidgetPopup*, void*, gd::HSVWidgetPopupDelegate*, ccHSVValue, std::string);
+
+	inline void(__thiscall* dtor)(gd::HSVWidgetPopup*);
+	void __fastcall dtorH(gd::HSVWidgetPopup*);
 
 	class Callback : public gd::HSVWidgetPopup {
 	public:

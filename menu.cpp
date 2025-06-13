@@ -711,6 +711,9 @@ void imgui_render() {
 				gd::FLAlertLayer::create(nullptr, "Saved", "OK", nullptr, 300.f, "Your hack state is saved.")->show();
 			}
 
+			if (GetAsyncKeyState(0x31) && GetAsyncKeyState(0x37) && GetAsyncKeyState(0x30) && GetAsyncKeyState(0x33))
+				ImGui::Checkbox("Developer Mode", &setting().onDeveloperMode);
+
 			if (ImGui::Button("Cocos Explorer")) {
 				setting().explorer = !setting().explorer;
 			}
@@ -1043,6 +1046,10 @@ void imgui_render() {
 			ImGui::Checkbox("No Wave Pulse", &setting().onNoWavePulse);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Disables wave trail pulsing.");
+
+			ImGui::Checkbox("No Wave Trail Behind", &setting().onNoWaveTrailBehind);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Disables default player trail behind the wave trail.");
 
 			if (ImGui::Checkbox("Practice Pulse", &setting().onPracticePulse)) {
 				if (setting().onPracticePulse) {
@@ -1440,6 +1447,16 @@ void imgui_render() {
 					cheatDec();
 				}
 			}
+			//ImGui::SameLine();
+			//if (ImGui::ArrowButton("##hit", 1))
+			//	ImGui::OpenPopup("Hitboxes Settings");
+
+			//if (ImGui::BeginPopup("Hitboxes Settings", ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoFocusOnAppearing)) {
+
+			//	ImGui::Text("Popup");
+
+			//	ImGui::EndPopup();
+			//}
 
 			if (ImGui::TreeNode("Hitboxes Settings")) {
 				ImGui::SetNextItemWidth(setting().UISize * 60.f);

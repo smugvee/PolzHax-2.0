@@ -56,8 +56,6 @@ void EditorPauseLayer::Callback::onSelectAll(CCObject*) {
 }
 
 void __fastcall EditorPauseLayer::customSetupH(gd::EditorPauseLayer* self) {
-	sequence_patch((uint32_t)gd::base + 0x5b803, { 0x00, 0x00, 0xa0, 0x42 }); // Keys button
-	sequence_patch((uint32_t)gd::base + 0x5b882, { 0x00, 0x00, 0xf0, 0x42 }); // Options button
 	EditorPauseLayer::customSetup(self);
 	m_editorPauseLayer = self;
 
@@ -99,6 +97,14 @@ void __fastcall EditorPauseLayer::customSetupH(gd::EditorPauseLayer* self) {
 	auto onSelectAll = gd::CCMenuItemSpriteExtra::create(onSelectAllSpr, self, menu_selector(EditorPauseLayer::Callback::onSelectAll));
 	onSelectAll->setPosition(actionsMenu->convertToNodeSpace({ director->getScreenRight() - 50.f, director->getScreenBottom() + 110.f }));
 	actionsMenu->addChild(onSelectAll);
+
+	auto btn = static_cast<gd::CCMenuItemSpriteExtra*>(static_cast<CCMenu*>(gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->m_copyBtn->getParent())->getChildByTag(45001));
+	if (btn) {
+		if (gd::GameManager::sharedState()->getLevelEditorLayer()->m_editorUI->m_editorLayer->m_groupIDFilter == -1) {
+			btn->setVisible(false);
+			btn->setEnabled(false);
+		}
+	}
 }
 
 void __fastcall EditorPauseLayer::dtorH(gd::EditorPauseLayer* self) {

@@ -179,7 +179,9 @@ void render_node_properties(CCNode* node) {
 				break;
 			}
 			case 5: {
-				_child = extension::CCScale9Sprite::create(text);
+				extension::CCScale9Sprite* child;
+				child = extension::CCScale9Sprite::create(text);
+				_child = child;
 				break;
 			}
 			}

@@ -14,6 +14,12 @@ namespace ColorSelectPopup {
 	inline void(__thiscall* updateCopyColorTextInputLabel)(gd::ColorSelectPopup*);
 	void __fastcall updateCopyColorTextInputLabelH(gd::ColorSelectPopup*);
 
+	class Callback : public gd::ColorSelectPopup {
+	public:
+		void onDefaultColor(CCObject*);
+		void onLiveEdit(CCObject*);
+	};
+
 	void mem_init();
 }
 

@@ -76,7 +76,7 @@ public:
     
 public:
     RT_REMOVE(
-        static CCControlColourPicker* create();
+       static CCControlColourPicker* create();
     )
     RT_ADD(
         static CCControlColourPicker* colourPicker();
