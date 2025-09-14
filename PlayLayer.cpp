@@ -185,14 +185,22 @@ void PlayLayer::updateSameDualColor(gd::PlayLayer* self) {
 }
 
 void PlayLayer::updateCheatIndicator(gd::PlayLayer* self) {
-	auto cheatIndicator = static_cast<CCLabelBMFont*>(self->m_uiLayer->getChildByTag(4900));
-	if (cheatIndicator) {
+	if (setting().onCheatIndicator) {
+		auto director = CCDirector::sharedDirector();
+		auto winSize = director->getWinSize();
+		auto cheatIndicator = CCLabelBMFont::create(".", "bigFont.fnt");
+		cheatIndicator->setAnchorPoint({ 0.f, 1.f });
+		cheatIndicator->setScale(.35f);
+		cheatIndicator->getChildByTag(0)->setScale(2.5f);
+		cheatIndicator->getChildByTag(0)->setAnchorPoint({ 0.f, .25f });
+		cheatIndicator->setPosition(director->getScreenLeft(), director->getScreenTop());
+		self->m_uiLayer->addChild(cheatIndicator, 99, 4900);
 		auto fontSprite = reinterpret_cast<CCSprite*>(cheatIndicator->getChildByTag(0));
 		if (fontSprite) {
 			if ((setting().cheatsCount != 0) && !setting().isSafeMode) fontSprite->setColor({ 255, 0, 0 });
 			else if ((setting().cheatsCount != 0) && setting().isSafeMode) fontSprite->setColor({ 255, 127, 0 });
 			else if ((setting().cheatsCount == 0) && (setting().isSafeMode || setting().onSafeMode)) fontSprite->setColor({ 255, 255, 0 });
-			else fontSprite->setColor({ 0, 255, 0 });
+			else fontSprite->setOpacity(0);
 		}
 	}
 }
@@ -291,15 +299,7 @@ bool __fastcall PlayLayer::initH(gd::PlayLayer* self, void*, gd::GJGameLevel* le
 	}
 
 	if (setting().onDeveloperMode) {
-		auto cheatIndicator = CCLabelBMFont::create(".", "bigFont.fnt");
-		cheatIndicator->setAnchorPoint({ 0.f, 1.f });
-		cheatIndicator->setScale(.35f);
-		cheatIndicator->getChildByTag(0)->setScale(2.5f);
-		cheatIndicator->getChildByTag(0)->setAnchorPoint({ 0.f, .25f });
-		cheatIndicator->setPosition(director->getScreenLeft(), director->getScreenTop());
-		self->m_uiLayer->addChild(cheatIndicator, 99, 4900);
-
-		updateCheatIndicator(self);
+		return true; //useless ahhhhhhh
 	}
 
 	return true;

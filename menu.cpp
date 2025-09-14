@@ -1656,6 +1656,10 @@ void imgui_render() {
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Locks cursor position while playing.");
 
+			ImGui::Checkbox("Cheat Indicator", &setting().onCheatIndicator);
+			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
+				ImGui::SetTooltip("Enables cheat indicator.");
+
 			ImGui::Checkbox("No Transition", &setting().onNoTransition);
 			if (ImGui::IsItemHovered() && GImGui->HoveredIdTimer > 0.5f)
 				ImGui::SetTooltip("Shorterns scene transition time to 0s.");

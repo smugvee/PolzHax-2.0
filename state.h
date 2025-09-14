@@ -37,6 +37,8 @@ struct SettingStruct {
 	bool onTextLength;
 	bool onTheVault;
 
+	bool onCheatIndicator;
+
 	bool onForceDontEnter;
 	bool onForceDontFade;
 	bool onHideAttempts;
@@ -185,6 +187,8 @@ DEF_SCHEMA(
 	onMainLevels,
 	onSliderLimit,
 	onTextLength,
+
+	onCheatIndicator,
 
 	onForceDontEnter,
 	onForceDontFade,
